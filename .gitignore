@@ -1,0 +1,28 @@
+﻿# Entornos virtuales
+venv/
+.venv/
+env/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+
+# Bases de datos locales
+*.db
+
+# Subidas y estado local
+uploads/
+*.log
+
+# Entorno / IDE
+.env
+.idea/
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+# Restos del monolito (opcional)
+gestor_tareas/
