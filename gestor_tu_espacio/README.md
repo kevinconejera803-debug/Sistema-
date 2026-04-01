@@ -1,53 +1,55 @@
 # Tu espacio — aplicación independiente
 
-Consola personal: dashboard, calendario, **Trading Lab**, tareas, hábitos, universidad, correo, etc. **Sin** cargar el código pesado del simulador de Historia en el mismo proceso.
+Dashboard, calendario, **Trading Lab**, tareas, hábitos, universidad, correo, etc. **Sin** el simulador de Historia en el mismo proceso.
+
+## Documentación en esta carpeta
+
+| Archivo | Contenido |
+|---------|-----------|
+| **[GUIA.md](GUIA.md)** | Tutorial completo: venv, PowerShell / CMD / Bash, `pip`, `FLASK_PORT`, `HISTORIA_APP_URL`, Trading Lab, base de datos |
+| Este `README.md` | Resumen corto |
 
 ## Requisitos
 
 - Python 3.10+
 
-## Entorno virtual (primera vez)
+## Resumen (detalle en GUIA.md)
+
+**Crear venv (primera vez)** — PowerShell:
 
 ```powershell
-cd "ruta\a\Ejercicios practicos\gestor_tu_espacio"
+cd "C:\Users\kevin\.cursor\Kevin\Ejercicios practicos\gestor_tu_espacio"
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 python -m pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-## Cómo entrar al venv (cada sesión)
+**Activar venv** — PowerShell:
 
 ```powershell
-cd "ruta\a\Ejercicios practicos\gestor_tu_espacio"
+cd "C:\Users\kevin\.cursor\Kevin\Ejercicios practicos\gestor_tu_espacio"
 .\.venv\Scripts\Activate.ps1
 ```
 
-Debes ver el prefijo `(.venv)`. Para salir: `deactivate`.
-
-## Ejecutar
+**Ejecutar** — PowerShell:
 
 ```powershell
 python app.py
 ```
 
-Puerto típico: **5000** (`FLASK_PORT`). Navegador: `http://127.0.0.1:5000/`.
-
-## Base de datos
-
-**`tu_espacio.db`** en esta carpeta (no comparte archivo con Historia).
-
-## Enlace a la app Historia (opcional)
-
-Si Historia corre en otro puerto (por ejemplo 5001):
+**Historia en otro puerto (opcional)** — PowerShell:
 
 ```powershell
 $env:HISTORIA_APP_URL = "http://127.0.0.1:5001"
 python app.py
 ```
 
-## Guía general y tutoriales
+- Base de datos: **`tu_espacio.db`**.  
+- Código principal: **`app.py`**.
 
-Pasos detallados (activar venv, dos apps a la vez, Git): **[../GUIA_DESARROLLO.md](../GUIA_DESARROLLO.md)**.
+## Otra app del repo
 
-El código principal está en **`app.py`** de esta carpeta.
+Historia (simulador): [../gestor_historia/GUIA.md](../gestor_historia/GUIA.md)
+
+Git y repo: [../GUIA_DESARROLLO.md](../GUIA_DESARROLLO.md)
