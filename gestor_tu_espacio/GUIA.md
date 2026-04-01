@@ -176,8 +176,28 @@ No actives los dos venv en la misma terminal; usa una ventana por proyecto.
 
 ---
 
-## 11. Más ayuda en el repo
+## 11. Limpieza de plantillas obsoletas
+
+Con `app.py` y `templates/` en esta carpeta:
+
+```powershell
+cd "C:\Users\kevin\.cursor\Kevin\Ejercicios practicos\gestor_tu_espacio"
+python scripts/limpiar_templates_muertos.py
+```
+
+Tras revisar:
+
+```powershell
+python scripts/limpiar_templates_muertos.py --apply
+```
+
+Ver [../ESTRUCTURA.md](../ESTRUCTURA.md).
+
+---
+
+## 12. Más ayuda en el repo
 
 - Resumen: [README.md](README.md)
 - Historia (otra app): [../gestor_historia/GUIA.md](../gestor_historia/GUIA.md)
 - Git en la raíz del repo: [../GUIA_DESARROLLO.md](../GUIA_DESARROLLO.md)
+

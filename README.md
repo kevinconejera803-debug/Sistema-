@@ -7,6 +7,10 @@ Dos aplicaciones **independientes**: cada una con su **venv**, su **`requirement
 | [`gestor_tu_espacio/`](gestor_tu_espacio/) | **5000** | [README](gestor_tu_espacio/README.md) · **[GUIA](gestor_tu_espacio/GUIA.md)** |
 | [`gestor_historia/`](gestor_historia/) | **5001** | [README](gestor_historia/README.md) · **[GUIA](gestor_historia/GUIA.md)** |
 
+## Estructura y limpieza
+
+**[ESTRUCTURA.md](ESTRUCTURA.md)** — árbol de carpetas, reglas de orden y uso de `scripts/limpiar_templates_muertos.py` en cada app.
+
 ## Guía del repositorio (Git, ambas apps)
 
 **[GUIA_DESARROLLO.md](GUIA_DESARROLLO.md)** — commits, `.gitignore`, cómo conviven las dos apps; **no** sustituye a las guías de cada carpeta.

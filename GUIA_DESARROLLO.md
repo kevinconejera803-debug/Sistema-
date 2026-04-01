@@ -2,6 +2,7 @@
 
 Esta guía en la **raíz** del repo sirve para lo **común**: Git, convivencia de las dos apps y enlaces a la documentación **dentro de cada carpeta**.
 
+- **Estructura y scripts de limpieza:** [ESTRUCTURA.md](ESTRUCTURA.md)
 - **Solo Historia (venv, pip, puerto 5001, `historia.db`):** [gestor_historia/GUIA.md](gestor_historia/GUIA.md)  
 - **Solo Tu espacio (venv, pip, puerto 5000, Trading Lab, `tu_espacio.db`):** [gestor_tu_espacio/GUIA.md](gestor_tu_espacio/GUIA.md)
 

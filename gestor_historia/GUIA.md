@@ -171,7 +171,26 @@ python app.py
 
 ---
 
-## 10. Más ayuda en el repo
+## 10. Limpieza de plantillas obsoletas
+
+Si hubo copias desde el monolito, puede quedar HTML sin usar. Con `app.py` y `templates/` en esta carpeta:
+
+```powershell
+cd "C:\Users\kevin\.cursor\Kevin\Ejercicios practicos\gestor_historia"
+python scripts/limpiar_templates_muertos.py
+```
+
+Revisa la lista; para borrar (tras commit/copia de seguridad):
+
+```powershell
+python scripts/limpiar_templates_muertos.py --apply
+```
+
+Detalle: [../ESTRUCTURA.md](../ESTRUCTURA.md).
+
+---
+
+## 11. Más ayuda en el repo
 
 - Resumen: [README.md](README.md)
 - Tu espacio (otra app): [../gestor_tu_espacio/GUIA.md](../gestor_tu_espacio/GUIA.md)
