@@ -278,3 +278,16 @@ git config user.email "tu@email.com"
 ```
 
 Lo ignorado por defecto: `.venv/`, `*.db`, `uploads/`, `.env`, etc. (ver `.gitignore`).
+
+### Subir a GitHub
+
+Crea un repositorio **vacío** en GitHub (sin README si ya tienes uno local). En la carpeta del proyecto:
+
+```powershell
+cd "ruta\a\Ejercicios practicos"
+git remote add origin https://github.com/TU_USUARIO/TU_REPO.git
+git branch -M main
+git push -u origin main
+```
+
+Sustituye `TU_USUARIO` y `TU_REPO`. Si `origin` ya existe, solo ejecuta `git push` o `git push -u origin main` la primera vez.
