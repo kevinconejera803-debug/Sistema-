@@ -1,45 +1,54 @@
-# Historia / desarrollo — aplicación independiente
+# Historia (`gestor_historia`)
 
-Simulador del núcleo (Nexo, Quests, NEXUS CORE, Estado, Inventario, Asistente, Tienda). **No** incluye Trading Lab ni calendario de productividad.
+Simulador (Nexo, misiones, NEXUS CORE, tienda, etc.). Puerto típico **5001**, base **`historia.db`**.
 
-## Documentación en esta carpeta
+**Venv, instalación y Git:** [README del repositorio](../README.md#install) · [Entornos virtuales](../README.md#venv)
 
-| Archivo | Contenido |
-|---------|-----------|
-| **[GUIA.md](GUIA.md)** | Tutorial completo: venv, PowerShell / CMD / Bash, `pip`, `FLASK_PORT`, base de datos, estructura del proyecto |
-| Este `README.md` | Resumen corto |
-
-## Resumen (detalle en GUIA.md)
-
-**Crear venv (primera vez)** — PowerShell:
+## Arranque rápido
 
 ```powershell
-cd "C:\Users\kevin\.cursor\Kevin\Ejercicios practicos\gestor_historia"
-python -m venv .venv
+cd gestor_historia
 .\.venv\Scripts\Activate.ps1
-python -m pip install --upgrade pip
 pip install -r requirements.txt
-```
-
-**Activar venv** — PowerShell:
-
-```powershell
-cd "C:\Users\kevin\.cursor\Kevin\Ejercicios practicos\gestor_historia"
-.\.venv\Scripts\Activate.ps1
-```
-
-**Ejecutar** — PowerShell:
-
-```powershell
 $env:FLASK_PORT = "5001"
 python app.py
 ```
 
-- Base de datos: **`historia.db`** (solo esta app).  
-- Código principal: **`app.py`**.
+Navegador: **http://127.0.0.1:5001/**
 
-## Otra app del repo
+### Variables opcionales (`.env` o sesión)
 
-Tu espacio (productividad + Trading Lab): [../gestor_tu_espacio/GUIA.md](../gestor_tu_espacio/GUIA.md)
+```ini
+FLASK_PORT=5001
+FLASK_HOST=0.0.0.0
+```
 
-Git y repo: [../GUIA_DESARROLLO.md](../GUIA_DESARROLLO.md)
+## Estructura relevante
+
+| Ruta | Uso |
+|------|-----|
+| `app.py` | Flask |
+| `database.py` | SQLite |
+| `templates/` · `static/` | Front |
+| `nucleo_game.py`, `nexus_core.py`, `game_shop.py`, … | Lógica del juego |
+
+## Problemas frecuentes
+
+| Síntoma | Qué hacer |
+|---------|-----------|
+| Puerto ocupado | Cambiar `FLASK_PORT` o cerrar la otra app |
+| Módulo no encontrado | Activar **este** venv y `pip install -r requirements.txt` |
+| `python` incorrecto | `.\.venv\Scripts\python.exe app.py` |
+
+## Limpieza de plantillas
+
+```powershell
+cd gestor_historia
+python scripts/limpiar_templates_muertos.py
+```
+
+Detalle: [README raíz — Mantenimiento](../README.md#maint).
+
+## Otra app
+
+**Tu espacio:** [../gestor_tu_espacio/README.md](../gestor_tu_espacio/README.md)

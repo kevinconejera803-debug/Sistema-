@@ -1,0 +1,3 @@
+# Historia — instalar con: pip install -r requirements.txt (venv activado)
+flask>=3.0,<4
+python-dotenv>=1.0.0

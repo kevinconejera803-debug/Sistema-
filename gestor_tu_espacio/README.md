@@ -1,55 +1,49 @@
-# Tu espacio — aplicación independiente
+# Tu espacio (`gestor_tu_espacio`)
 
-Dashboard, calendario, **Trading Lab**, tareas, hábitos, universidad, correo, etc. **Sin** el simulador de Historia en el mismo proceso.
+Productividad, calendario, **Trading Lab**, tareas y hábitos. Puerto típico **5000**, base **`tu_espacio.db`**.
 
-## Documentación en esta carpeta
+**Venv, instalación y Git:** [README del repositorio](../README.md#install) · [Entornos virtuales](../README.md#venv)
 
-| Archivo | Contenido |
-|---------|-----------|
-| **[GUIA.md](GUIA.md)** | Tutorial completo: venv, PowerShell / CMD / Bash, `pip`, `FLASK_PORT`, `HISTORIA_APP_URL`, Trading Lab, base de datos |
-| Este `README.md` | Resumen corto |
-
-## Requisitos
-
-- Python 3.10+
-
-## Resumen (detalle en GUIA.md)
-
-**Crear venv (primera vez)** — PowerShell:
+## Arranque rápido
 
 ```powershell
-cd "C:\Users\kevin\.cursor\Kevin\Ejercicios practicos\gestor_tu_espacio"
-python -m venv .venv
+cd gestor_tu_espacio
 .\.venv\Scripts\Activate.ps1
-python -m pip install --upgrade pip
 pip install -r requirements.txt
-```
-
-**Activar venv** — PowerShell:
-
-```powershell
-cd "C:\Users\kevin\.cursor\Kevin\Ejercicios practicos\gestor_tu_espacio"
-.\.venv\Scripts\Activate.ps1
-```
-
-**Ejecutar** — PowerShell:
-
-```powershell
 python app.py
 ```
 
-**Historia en otro puerto (opcional)** — PowerShell:
+Navegador: **http://127.0.0.1:5000/tu-espacio** (o la raíz `/`, redirige allí).
+
+### Puerto
 
 ```powershell
-$env:HISTORIA_APP_URL = "http://127.0.0.1:5001"
+$env:FLASK_PORT = "5000"
 python app.py
 ```
 
-- Base de datos: **`tu_espacio.db`**.  
-- Código principal: **`app.py`**.
+## Estructura relevante
 
-## Otra app del repo
+| Ruta | Uso |
+|------|-----|
+| `app.py` | Flask |
+| `database.py` | SQLite |
+| `trading_lab/` | Trading Lab |
+| `templates/` · `static/` | Front (incl. fondo matrix RGB en `static/js/matrix_bg.js`) |
+| `requirements.txt` | Dependencias (**yfinance**, etc.) |
 
-Historia (simulador): [../gestor_historia/GUIA.md](../gestor_historia/GUIA.md)
+## Problemas frecuentes
 
-Git y repo: [../GUIA_DESARROLLO.md](../GUIA_DESARROLLO.md)
+| Síntoma | Qué hacer |
+|---------|-----------|
+| Trading Lab sin datos | Firewall; comprobar `yfinance` en **este** venv |
+| Puerto 5000 ocupado | `$env:FLASK_PORT = "5002"` |
+
+## Limpieza de plantillas
+
+```powershell
+cd gestor_tu_espacio
+python scripts/limpiar_templates_muertos.py
+```
+
+Detalle: [README raíz — Mantenimiento](../README.md#maint).
