@@ -281,14 +281,24 @@ Lo ignorado por defecto: `.venv/`, `*.db`, `uploads/`, `.env`, etc. (ver `.gitig
 
 ### Subir a GitHub
 
-**Actualizar un repo que ya existe en GitHub** (apps separadas, commits locales listos):
+**Subir sin ventanas de login (recomendado, una vez):** crea un [Personal Access Token](https://github.com/settings/tokens) con permiso **repo**, luego:
+
+```powershell
+cd "ruta\a\Ejercicios practicos"
+$env:GITHUB_TOKEN = "ghp_pega_aqui_el_token"
+.\push_con_token.ps1
+```
+
+El remoto configurado por defecto es `kevinconejera803-debug/Sistema-` (ajusta el script si el repo tiene otro nombre).
+
+**Actualizar un repo (URL genérica):**
 
 ```powershell
 cd "ruta\a\Ejercicios practicos"
 .\sync_github.ps1 https://github.com/TU_USUARIO/TU_REPO.git
 ```
 
-La segunda vez, si `origin` ya está bien: `.\sync_github.ps1` (solo hace `git push -u origin main`).
+Si `origin` ya existe: `.\sync_github.ps1` (solo `git push`).
 
 **Opción automática** (repo nuevo con GitHub CLI `gh`):
 
