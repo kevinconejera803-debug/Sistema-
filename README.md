@@ -281,7 +281,16 @@ Lo ignorado por defecto: `.venv/`, `*.db`, `uploads/`, `.env`, etc. (ver `.gitig
 
 ### Subir a GitHub
 
-**Opción automática** (GitHub CLI `gh` instalado): en la carpeta del repo, inicia sesión una vez y ejecuta el script:
+**Actualizar un repo que ya existe en GitHub** (apps separadas, commits locales listos):
+
+```powershell
+cd "ruta\a\Ejercicios practicos"
+.\sync_github.ps1 https://github.com/TU_USUARIO/TU_REPO.git
+```
+
+La segunda vez, si `origin` ya está bien: `.\sync_github.ps1` (solo hace `git push -u origin main`).
+
+**Opción automática** (repo nuevo con GitHub CLI `gh`):
 
 ```powershell
 cd "ruta\a\Ejercicios practicos"
