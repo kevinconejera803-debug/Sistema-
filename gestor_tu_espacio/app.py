@@ -111,7 +111,7 @@ MODULES = [
         "desc": "Científica · math.js",
         "icon": "🔢",
         "theme": "orange",
-        "lead": "Panel workspace: KaTeX + pasos, dos columnas en pantalla ancha, math.js, historial.",
+        "lead": "Diseño tipo calculadora: pantalla LCD + teclado, KaTeX, math.js, historial.",
     },
 ]
 
