@@ -333,20 +333,33 @@ git push -u origin main
 
 ### Error `CONNECT tunnel failed, response 403` (Cursor `/workspace`, Linux, CI)
 
-Suele ser un **proxy** del entorno que intercepta `https://github.com` y devuelve 403 al método **CONNECT**. El repo incluye:
+Suele ser **red/proxy**: el entorno define `HTTP_PROXY` / `HTTPS_PROXY` o un proxy que **niega el túnel CONNECT** hacia `github.com:443`. No es un fallo del repo en sí.
 
-1. **`.vscode/settings.json`** — `http.noProxy` para GitHub y `proxySupport: fallback` (Cursor/VS Code).
-2. **Scripts** (una vez por máquina o sesión antes de `git push`):
-   - **Linux / `/workspace/Sistema-`:**  
-     `source gestor_tu_espacio/scripts/repo/setup_git_cloud.sh`  
-     luego `git push -u origin work`  
-     o en un solo paso:  
-     `chmod +x gestor_tu_espacio/scripts/repo/push_with_cloud_fix.sh`  
-     `./gestor_tu_espacio/scripts/repo/push_with_cloud_fix.sh work`
-   - **Windows (PowerShell):**  
-     `. .\gestor_tu_espacio\scripts\repo\setup_git_cloud.ps1`  
-     luego `git push -u origin work`
+**Orden recomendado (prueba el siguiente si el anterior falla):**
 
-3. Si el push sigue sin credenciales: **`export GITHUB_TOKEN=ghp_...`** y `./gestor_tu_espacio/scripts/repo/push_con_token.sh` (Linux) o el `push_con_token.ps1` de siempre.
+1. **Push “directo”** (limpia variables de proxy de la sesión **solo para ese comando** y usa HTTP/1.1, que a veces evita proxies rotos):
+   - **Linux / `/workspace`:**  
+     `chmod +x gestor_tu_espacio/scripts/repo/push_github_direct.sh`  
+     `./gestor_tu_espacio/scripts/repo/push_github_direct.sh push -u origin main`
+   - **Windows (PowerShell, desde la raíz del repo):**  
+     `.\gestor_tu_espacio\scripts\repo\push_github_direct.ps1`  
+     o con rama:  
+     `.\gestor_tu_espacio\scripts\repo\push_github_direct.ps1 push -u origin work`
+
+2. **Solo configuración Git** (sin tocar variables de entorno):  
+   `. .\gestor_tu_espacio\scripts\repo\setup_git_cloud.ps1` y luego `git push`, o  
+   `source gestor_tu_espacio/scripts/repo/setup_git_cloud.sh`  
+   También (Linux): `./gestor_tu_espacio/scripts/repo/push_with_cloud_fix.sh work`
+
+3. **`.vscode/settings.json`** en el repo — `http.noProxy` para GitHub; recarga Cursor tras `git pull`.
+
+4. **Credenciales:** si pide usuario/contraseña o 401/403 de auth:  
+   `export GITHUB_TOKEN=ghp_...` y `./gestor_tu_espacio/scripts/repo/push_con_token.sh` (Linux) o `push_con_token.ps1` (Windows).
+
+5. **SSH** en lugar de HTTPS (si el remoto es `https://github.com/...`):  
+   `git remote set-url origin git@github.com:USUARIO/Sistema-.git`  
+   (clave SSH cargada en ese entorno).
+
+6. **Red corporativa:** si nada de lo anterior funciona, hace falta que **IT** permita salida HTTPS a `github.com` o un proxy explícito compatible con Git.
 
 Vuelve a instalar el hook si lo usas: `.\gestor_tu_espacio\scripts\install-git-hooks.ps1` (el `post-commit` ya exporta `NO_PROXY` para GitHub).

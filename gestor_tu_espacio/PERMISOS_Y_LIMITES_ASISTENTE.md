@@ -13,7 +13,7 @@
 |--------|----------------------|
 | **Instalar Node, Python, Git** en tu máquina | Instaladores oficiales + opción “Add to PATH”. Luego cerrar y abrir la terminal. |
 | **Credenciales de GitHub** (PAT, contraseña, SSH) | Crear token en GitHub y usar `push_con_token` / Credential Manager / `gh auth login`. No debo pegar tokens en el chat ni en archivos del repo. |
-| **Push / pull desde `/workspace` o agente en la nube** | Ese entorno no tiene tus mismas credenciales. Ejecuta `git pull` / `git push` en **tu PC** o configura token/SSH **en ese entorno** (documentado en el README raíz, sección Git 403). |
+| **Push / pull desde `/workspace` o agente en la nube** | Ese entorno no tiene tus mismas credenciales. Usa `push_github_direct.ps1` / `push_github_direct.sh` (README) o configura token/SSH **en ese entorno**. |
 | **Políticas de red, proxy corporativo, firewall** | IT o `NO_PROXY` / proxy correcto; el repo solo puede sugerir `setup_git_cloud`. |
 | **Permisos de administrador en Windows** | Ejecutar instaladores o cambiar `ExecutionPolicy` como administrador si tu organización lo exige. |
 | **Garantizar que `pip install` termine en X segundos** | Red lenta o mirrors; repetir o usar `pip install -r requirements.txt` en venv. |
