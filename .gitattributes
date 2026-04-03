@@ -1,0 +1,9 @@
+# Scripts POSIX: LF (Linux, /workspace, Git Bash, CI)
+*.sh text eol=lf
+# PowerShell en Windows: CRLF
+*.ps1 text eol=crlf
+# Python y plantillas: normalizar LF en el repo
+*.py text eol=lf
+*.html text eol=lf
+*.css text eol=lf
+*.js text eol=lf

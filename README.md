@@ -280,6 +280,8 @@ git config user.email "tu@email.com"
 
 Lo ignorado por defecto: `.venv/`, `*.db`, `uploads/`, `.env`, etc. (ver `.gitignore`).
 
+**Comprobar Python/Git en tu PC:** `.\gestor_tu_espacio\scripts\repo\verificar_entorno.ps1` (desde la raíz del repo). **Qué el asistente no puede hacer por sí solo** (tokens, instalar Node, `/workspace`): [gestor_tu_espacio/PERMISOS_Y_LIMITES_ASISTENTE.md](gestor_tu_espacio/PERMISOS_Y_LIMITES_ASISTENTE.md).
+
 ### Subir a GitHub
 
 Los scripts `.ps1` están en **`gestor_tu_espacio/scripts/repo/`** y usan la raíz del repositorio como directorio de trabajo (donde está el `.git`).
