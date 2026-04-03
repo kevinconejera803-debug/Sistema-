@@ -2,26 +2,62 @@
 
 Panel principal del repositorio (SYSTEM INTERFACE). Puerto típico **5000**, base **`tu_espacio.db`**.
 
-**Instalación y Git (raíz del repo):** [README del repositorio](../README.md#install)
+**Instalación general y Git:** [README del repositorio](../README.md#install)
 
-## Arranque rápido
+---
+
+## Cómo entrar
+
+Sustituye la ruta si tu carpeta del repo está en otro sitio.
+
+### Primera vez (crear entorno e instalar)
+
+Copia y pega en **PowerShell** (una sola vez por máquina):
 
 ```powershell
-cd gestor_tu_espacio
+$REPO = "C:\Users\kevin\.cursor\Kevin\Ejercicios practicos"
+cd "$REPO\gestor_tu_espacio"
+python -m venv .venv
 .\.venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip
 pip install -r requirements.txt
+deactivate
+```
+
+Si `Activate.ps1` está bloqueado:
+
+```powershell
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+```
+
+### Cada vez que quieras usar Tu espacio
+
+Copia y pega en **PowerShell** (terminal 1):
+
+```powershell
+$REPO = "C:\Users\kevin\.cursor\Kevin\Ejercicios practicos"
+cd "$REPO\gestor_tu_espacio"
+.\.venv\Scripts\Activate.ps1
 python app.py
 ```
 
-Navegador: **http://127.0.0.1:5000/tu-espacio** (la raíz `/` redirige allí).
-
-No hay URLs ni dependencias hacia **gestor_historia** en el código: cada app se ejecuta por separado.
-
-### Puerto
+Opcional — otro puerto antes de `python app.py`:
 
 ```powershell
 $env:FLASK_PORT = "5000"
 ```
+
+### Abrir en el navegador
+
+Pega esta URL (o ábrela al ver el mensaje de Flask en la consola):
+
+**http://127.0.0.1:5000/tu-espacio**
+
+La raíz **http://127.0.0.1:5000/** redirige a `/tu-espacio`. Para parar el servidor: **Ctrl+C** en esa terminal.
+
+---
+
+No hay URLs ni dependencias hacia **gestor_historia** en el código: cada app se ejecuta por separado.
 
 ## Estructura
 
@@ -46,7 +82,8 @@ Hook opcional (auto-push tras cada commit): **`gestor_tu_espacio/scripts/install
 ## Limpieza de plantillas
 
 ```powershell
-cd gestor_tu_espacio
+cd "C:\Users\kevin\.cursor\Kevin\Ejercicios practicos\gestor_tu_espacio"
+.\.venv\Scripts\Activate.ps1
 python scripts/limpiar_templates_muertos.py
 ```
 
