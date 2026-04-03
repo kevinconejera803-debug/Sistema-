@@ -5,6 +5,66 @@
 <div class="mod-wrap">
   {% include "modulos/_header.html" %}
 
+  <div
+    id="uni-defaults"
+    hidden
+    data-intranet="{{ university_intranet_url|e }}"
+    data-aula="{{ university_aula_url|e }}"
+  ></div>
+
+  <section class="mod-uni-portals" aria-label="Accesos a la universidad">
+    <a
+      id="uni-link-intranet"
+      class="mod-uni-portal mod-uni-portal--disabled"
+      href="#"
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-disabled="true"
+    >
+      <span class="mod-uni-portal__icon" aria-hidden="true">🏛</span>
+      <span class="mod-uni-portal__text">
+        <span class="mod-uni-portal__title">Intranet</span>
+        <span class="mod-uni-portal__sub">Portal y servicios corporativos</span>
+      </span>
+      <span class="mod-uni-portal__arrow" aria-hidden="true">→</span>
+    </a>
+    <a
+      id="uni-link-aula"
+      class="mod-uni-portal mod-uni-portal--disabled"
+      href="#"
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-disabled="true"
+    >
+      <span class="mod-uni-portal__icon" aria-hidden="true">💻</span>
+      <span class="mod-uni-portal__text">
+        <span class="mod-uni-portal__title">Aula virtual</span>
+        <span class="mod-uni-portal__sub">Campus, materiales y clases online</span>
+      </span>
+      <span class="mod-uni-portal__arrow" aria-hidden="true">→</span>
+    </a>
+  </section>
+
+  <details class="mod-uni-portals-config">
+    <summary>Personalizar enlaces (este navegador)</summary>
+    <p class="mod-toolbar__hint">
+      Opcional en el servidor:
+      <code>TU_ESPACIO_INTRANET_URL</code> y <code>TU_ESPACIO_AULA_URL</code>.
+      Si las rellenas aquí, tienen prioridad sobre el entorno.
+    </p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:0.75rem;">
+      <div class="mod-field">
+        <label for="uni-input-intranet">URL intranet</label>
+        <input type="url" id="uni-input-intranet" placeholder="https://intranet.universidad.edu" autocomplete="off">
+      </div>
+      <div class="mod-field">
+        <label for="uni-input-aula">URL aula virtual</label>
+        <input type="url" id="uni-input-aula" placeholder="https://campus.universidad.edu" autocomplete="off">
+      </div>
+    </div>
+    <button type="button" class="mod-btn" id="uni-save-links" style="margin-top:0.65rem;">Guardar enlaces</button>
+  </details>
+
   <div class="mod-toolbar">
     <span class="mod-toolbar__label">NUEVA ENTREGA</span>
   </div>
@@ -50,5 +110,6 @@
 {% endblock %}
 
 {% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/university-portals.js') }}?v=1"></script>
 <script src="{{ url_for('static', filename='js/assignments.js') }}?v=2"></script>
 {% endblock %}

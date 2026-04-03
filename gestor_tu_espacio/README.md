@@ -73,10 +73,19 @@ Cada apartado tiene su ruta; también están en el menú lateral y en las tarjet
 
 Ejemplo: **http://127.0.0.1:5000/noticias**
 
+**Enlaces Universidad (intranet / aula virtual):** antes de `python app.py` puedes definir, por ejemplo:
+
+```powershell
+$env:TU_ESPACIO_INTRANET_URL = "https://tu-intranet.ejemplo.edu"
+$env:TU_ESPACIO_AULA_URL = "https://tu-campus.ejemplo.edu"
+```
+
+Si no las defines, usa **Personalizar enlaces** en el módulo Universidad para guardarlas solo en tu navegador.
+
 **Qué hace cada módulo (funcional):**
 
-- **Calendario** — Vistas mes, semana y día; eventos en SQLite (`tu_espacio.db`) con índices en fechas; exportación **.ics** (`/api/calendar/export.ics`); alta y borrado por día.
-- **Universidad** — Entregas con curso, fecha límite, peso % y estado (pendiente / entregado).
+- **Calendario** — Horario en hora local (24 h): vistas mes, semana y día; eventos en SQLite (`tu_espacio.db`) con índices; alta y borrado por día.
+- **Universidad** — Accesos a **intranet** y **aula virtual** (URLs vía `TU_ESPACIO_INTRANET_URL` / `TU_ESPACIO_AULA_URL` o enlaces guardados en el navegador) y tabla de **entregas** (curso, fecha límite, peso %, estado).
 - **Trading Lab** — Cotizaciones con **yfinance** (caché ~60 s); la tabla se carga por **`GET /api/trading`** (skeleton y botón Actualizar).
 - **Ciberseguridad** — Checklist por categorías; progreso en **localStorage**.
 - **Herramientas** — QR (servicio público de imagen), copiar y descargar texto.

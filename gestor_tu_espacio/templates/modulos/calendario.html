@@ -5,7 +5,7 @@
 <div class="mod-wrap" id="cal-root">
   {% include "modulos/_header.html" %}
 
-  <div class="mod-toolbar" role="toolbar" aria-label="Calendario">
+  <div class="mod-toolbar" role="toolbar" aria-label="Horario y vistas del calendario">
     <span class="mod-toolbar__label">VISTA</span>
     <button type="button" class="mod-btn mod-btn--active" id="cal-view-month" aria-pressed="true">MES</button>
     <button type="button" class="mod-btn mod-btn--ghost" id="cal-view-week" aria-pressed="false">SEMANA</button>
@@ -14,14 +14,14 @@
     <button type="button" class="mod-btn mod-btn--ghost" id="cal-prev">← ANTERIOR</button>
     <button type="button" class="mod-btn mod-btn--ghost" id="cal-today">HOY</button>
     <button type="button" class="mod-btn mod-btn--ghost" id="cal-next">SIGUIENTE →</button>
-    <a class="mod-btn mod-btn--ghost" id="cal-export-ics" href="{{ url_for('export_calendar_ics') }}" download>EXPORTAR .ICS</a>
   </div>
 
   <div id="cal-toast" class="mod-toast" role="status" aria-live="polite" hidden></div>
 
   <div class="mod-cal">
     <div class="mod-cal__main">
-      <div style="display:flex;align-items:center;margin-bottom:0.65rem;gap:0.75rem;flex-wrap:wrap;">
+      <div class="mod-cal__heading">
+        <p class="mod-cal__kicker">Horario en hora local · formato 24 h · eventos con hora o día completo</p>
         <span id="cal-month-label" class="mod-cal__month-label">—</span>
       </div>
 
@@ -45,7 +45,7 @@
     </div>
 
     <aside class="mod-cal__side">
-      <h3>DÍA SELECCIONADO</h3>
+      <h3>AGENDA DEL DÍA</h3>
       <ul class="mod-cal__event-list" id="cal-event-list"></ul>
 
       <h3 class="mod-cal__form-title">NUEVO EVENTO</h3>
@@ -55,7 +55,7 @@
           <input type="text" id="cal-title" name="title" required placeholder="Reunión, bloque de estudio…" autocomplete="off">
         </div>
         <div class="mod-field">
-          <label for="cal-start">Inicio (local)</label>
+          <label for="cal-start">Inicio (24 h, hora local)</label>
           <input type="datetime-local" id="cal-start" name="start">
         </div>
         <div class="mod-field">
@@ -79,5 +79,5 @@
 {% endblock %}
 
 {% block extra_scripts %}
-<script src="{{ url_for('static', filename='js/calendar.js') }}?v=3"></script>
+<script src="{{ url_for('static', filename='js/calendar.js') }}?v=4"></script>
 {% endblock %}

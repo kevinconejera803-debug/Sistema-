@@ -43,6 +43,23 @@
     return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate());
   }
 
+  function formatTimeLocal(iso) {
+    if (!iso) return "";
+    var d = new Date(iso);
+    if (isNaN(d.getTime())) return "";
+    return pad(d.getHours()) + ":" + pad(d.getMinutes());
+  }
+
+  function isAllDay(ev) {
+    return ev.all_day === 1 || ev.all_day === true;
+  }
+
+  function formatEventTime(ev) {
+    if (isAllDay(ev)) return "Día completo";
+    var ft = formatTimeLocal(ev.start_iso);
+    return ft || "—";
+  }
+
   function toast(msg) {
     if (!toastEl) return;
     toastEl.textContent = msg;
@@ -228,7 +245,7 @@
         if (diso === todayIso) cell.classList.add("mod-cal__cell--today");
         if (diso === isoDay(selectedDay)) cell.classList.add("mod-cal__cell--selected");
 
-        var evs = eventsForDay(diso);
+        var evs = sortEventsByTime(eventsForDay(diso));
         var dots = document.createElement("div");
         dots.className = "mod-cal__dots";
         evs.slice(0, 5).forEach(function (ev) {
@@ -239,6 +256,16 @@
 
         cell.innerHTML = '<span class="mod-cal__day-num">' + dd + "</span>";
         cell.appendChild(dots);
+        if (evs.length) {
+          var timesEl = document.createElement("div");
+          timesEl.className = "mod-cal__cell-times";
+          var bits = [];
+          evs.slice(0, 3).forEach(function (ev) {
+            bits.push(formatEventTime(ev));
+          });
+          timesEl.textContent = bits.join(" · ");
+          cell.appendChild(timesEl);
+        }
         function selectDay() {
           selectedDay = cellDate;
           weekMonday = mondayOf(selectedDay);
@@ -288,7 +315,7 @@
         if (diso === isoDay(selectedDay)) cell.classList.add("mod-cal__cell--selected");
         cell.setAttribute("role", "button");
         cell.tabIndex = 0;
-        var evs = eventsForDay(diso);
+        var evs = sortEventsByTime(eventsForDay(diso));
         var dots = document.createElement("div");
         dots.className = "mod-cal__dots";
         evs.slice(0, 4).forEach(function (ev) {
@@ -303,6 +330,16 @@
           d.getDate() +
           "</span>";
         cell.appendChild(dots);
+        if (evs.length) {
+          var wtimes = document.createElement("div");
+          wtimes.className = "mod-cal-week__times";
+          var wb = [];
+          evs.slice(0, 4).forEach(function (ev) {
+            wb.push(formatEventTime(ev));
+          });
+          wtimes.textContent = wb.join(" · ");
+          cell.appendChild(wtimes);
+        }
         function sel() {
           selectedDay = d;
           weekMonday = mondayOf(selectedDay);
@@ -362,11 +399,9 @@
     evs.forEach(function (ev) {
       var card = document.createElement("div");
       card.className = cardClassForColor(ev.color);
-      var t = (ev.start_iso || "").split("T")[1] || "";
-      if (t) t = t.slice(0, 5);
       var timeEl = document.createElement("div");
       timeEl.className = "mod-cal-day__time";
-      timeEl.textContent = t || "—";
+      timeEl.textContent = formatEventTime(ev);
       var body = document.createElement("div");
       body.className = "mod-cal-day__card-body";
       var st = document.createElement("strong");
@@ -418,8 +453,6 @@
     sortEventsByTime(evs).forEach(function (ev) {
       var li = document.createElement("li");
       li.className = "mod-cal__event-row";
-      var t = (ev.start_iso || "").split("T")[1] || "";
-      if (t) t = t.slice(0, 5);
       var main = document.createElement("div");
       var st = document.createElement("strong");
       st.textContent = ev.title || "";
@@ -427,7 +460,7 @@
       main.appendChild(document.createElement("br"));
       var sp = document.createElement("span");
       sp.className = "mod-cal__event-time";
-      sp.textContent = t || "Todo el día";
+      sp.textContent = formatEventTime(ev);
       main.appendChild(sp);
       var del = document.createElement("button");
       del.type = "button";
