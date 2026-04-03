@@ -73,6 +73,18 @@ Cada apartado tiene su ruta; también están en el menú lateral y en las tarjet
 
 Ejemplo: **http://127.0.0.1:5000/noticias**
 
+**Qué hace cada módulo (funcional):**
+
+- **Calendario** — Vista mensual interactiva, eventos en SQLite (`tu_espacio.db`), alta y borrado por día.
+- **Universidad** — Entregas con curso, fecha límite, peso % y estado (pendiente / entregado).
+- **Trading Lab** — Cotizaciones con **yfinance** (caché ~60 s).
+- **Ciberseguridad** — Checklist por categorías; progreso en **localStorage**.
+- **Herramientas** — QR (servicio público de imagen), copiar y descargar texto.
+- **Contactos** — CRM ligero en SQLite.
+- **Noticias** — RSS (**feedparser**: Xataka, El País).
+- **Buscar** — Cruza eventos, contactos y entregas vía `/api/search`.
+- **Calculadora** — Operaciones encadenadas con historial local en pantalla.
+
 ---
 
 No hay URLs ni dependencias hacia **gestor_historia** en el código: cada app se ejecuta por separado.
@@ -83,7 +95,7 @@ No hay URLs ni dependencias hacia **gestor_historia** en el código: cada app se
 |------|-----|
 | `app.py` | Flask |
 | `database.py` | SQLite |
-| `templates/` (`base.html`, `tu_espacio.html`, `seccion.html`) · `static/` | Front (matrix en `static/js/matrix_bg.js`) |
+| `templates/` (`base.html`, `tu_espacio.html`, `modulos/*.html`) · `static/` | Front + `css/modules.css`, JS por módulo |
 | `scripts/` | Utilidades y scripts de repo (`scripts/repo/` para GitHub) |
 | `requirements.txt` | Dependencias |
 

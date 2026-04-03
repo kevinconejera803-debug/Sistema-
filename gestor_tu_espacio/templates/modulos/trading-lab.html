@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}SYSTEM INTERFACE — Trading Lab{% endblock %}
+
+{% block main_area %}
+<div class="mod-wrap">
+  {% include "modulos/_header.html" %}
+
+  {% if trading_rows %}
+  <div class="trade-strip">
+    {% for r in trading_rows %}
+    <span class="trade-chip">
+      {{ r.symbol }}
+      <strong>{{ r.price_fmt }}</strong>
+      {% if r.chg_fmt %}<span class="{% if r.chg_pct is defined and r.chg_pct >= 0 %}up{% else %}down{% endif %}">{{ r.chg_fmt }}</span>{% endif %}
+    </span>
+    {% endfor %}
+  </div>
+
+  <div class="mod-table-wrap trade-table">
+    <table class="mod-table">
+      <thead>
+        <tr>
+          <th>SÍMBOLO</th>
+          <th>PRECIO</th>
+          <th>VAR. 1D</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in trading_rows %}
+        <tr>
+          <td><strong>{{ r.symbol }}</strong></td>
+          <td>{{ r.price_fmt }}</td>
+          <td><span class="{% if r.chg_pct is defined and r.chg_pct >= 0 %}up{% else %}down{% endif %}">{{ r.chg_fmt }}</span></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="news-empty">No hay datos de mercado en este momento (revisa red o vuelve a intentar).</p>
+  {% endif %}
+
+  <p style="color:var(--muted);font-size:0.78rem;margin-top:1rem;">Datos vía yfinance; uso educativo. Puede haber retraso según el proveedor.</p>
+</div>
+{% endblock %}

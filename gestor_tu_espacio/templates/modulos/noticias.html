@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}SYSTEM INTERFACE — Noticias{% endblock %}
+
+{% block main_area %}
+<div class="mod-wrap">
+  {% include "modulos/_header.html" %}
+
+  <div class="mod-toolbar">
+    <span class="mod-toolbar__label">FUENTES RSS</span>
+    <span style="color:var(--muted);font-size:0.78rem;">Xataka · El País · Genbeta — actualización al cargar la página</span>
+  </div>
+
+  {% if news_items and news_items|length > 0 %}
+  <div class="news-grid">
+    {% for it in news_items %}
+    <article class="news-card">
+      <span class="news-card__src">{{ it.source }}</span>
+      <h3 class="news-card__title"><a href="{{ it.link }}" target="_blank" rel="noopener noreferrer">{{ it.title }}</a></h3>
+      {% if it.published %}<div class="news-card__meta">{{ it.published }}</div>{% endif %}
+      {% if it.summary %}<p class="news-card__sum">{{ it.summary }}</p>{% endif %}
+    </article>
+    {% endfor %}
+  </div>
+  {% else %}
+  <p class="news-empty">No se pudieron cargar los feeds ahora mismo. Comprueba la conexión o vuelve en unos minutos.</p>
+  {% endif %}
+</div>
+{% endblock %}

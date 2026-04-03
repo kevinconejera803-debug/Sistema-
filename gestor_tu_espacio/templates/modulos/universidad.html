@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}SYSTEM INTERFACE — Universidad{% endblock %}
+
+{% block main_area %}
+<div class="mod-wrap">
+  {% include "modulos/_header.html" %}
+
+  <div class="mod-toolbar">
+    <span class="mod-toolbar__label">NUEVA ENTREGA</span>
+  </div>
+
+  <form id="assign-form" class="mod-cal__side" style="margin-bottom:1.25rem;">
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:0.75rem;">
+      <div class="mod-field">
+        <label for="af-course">Curso</label>
+        <input type="text" id="af-course" required placeholder="Ej. Econometría">
+      </div>
+      <div class="mod-field">
+        <label for="af-title">Título / entrega</label>
+        <input type="text" id="af-title" required placeholder="Informe, examen…">
+      </div>
+      <div class="mod-field">
+        <label for="af-due">Fecha límite</label>
+        <input type="datetime-local" id="af-due" required>
+      </div>
+      <div class="mod-field">
+        <label for="af-weight">Peso (%)</label>
+        <input type="number" id="af-weight" min="0" max="100" value="10" placeholder="10">
+      </div>
+    </div>
+    <button type="submit" class="mod-btn" style="margin-top:0.75rem;">REGISTRAR ENTREGA</button>
+  </form>
+
+  <div class="mod-table-wrap">
+    <table class="mod-table">
+      <thead>
+        <tr>
+          <th>CURSO</th>
+          <th>ENTREGA</th>
+          <th>LÍMITE</th>
+          <th>PESO</th>
+          <th>ESTADO</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="assign-tbody"></tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/assignments.js') }}?v=1"></script>
+{% endblock %}

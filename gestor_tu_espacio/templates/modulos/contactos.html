@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}SYSTEM INTERFACE — Contactos{% endblock %}
+
+{% block main_area %}
+<div class="mod-wrap">
+  {% include "modulos/_header.html" %}
+
+  <div class="mod-toolbar">
+    <span class="mod-toolbar__label">NUEVO CONTACTO</span>
+  </div>
+
+  <form id="contact-form" class="mod-cal__side" style="margin-bottom:1.5rem;">
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:0.75rem;">
+      <div class="mod-field">
+        <label for="cf-name">Nombre *</label>
+        <input type="text" id="cf-name" required placeholder="Nombre completo">
+      </div>
+      <div class="mod-field">
+        <label for="cf-email">Email</label>
+        <input type="email" id="cf-email" placeholder="correo@ejemplo.com">
+      </div>
+      <div class="mod-field">
+        <label for="cf-phone">Teléfono</label>
+        <input type="text" id="cf-phone" placeholder="+34 …">
+      </div>
+      <div class="mod-field">
+        <label for="cf-company">Empresa / rol</label>
+        <input type="text" id="cf-company" placeholder="Opcional">
+      </div>
+      <div class="mod-field" style="grid-column:1/-1;">
+        <label for="cf-notes">Notas</label>
+        <textarea id="cf-notes" placeholder="Contexto, próximo seguimiento…"></textarea>
+      </div>
+    </div>
+    <button type="submit" class="mod-btn" style="margin-top:0.75rem;">GUARDAR CONTACTO</button>
+  </form>
+
+  <div class="contact-grid" id="contact-grid"></div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/contacts.js') }}?v=1"></script>
+{% endblock %}

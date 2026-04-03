@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}SYSTEM INTERFACE — Herramientas{% endblock %}
+
+{% block main_area %}
+<div class="mod-wrap">
+  {% include "modulos/_header.html" %}
+
+  <div class="tool-tabs">
+    <button type="button" class="mod-btn mod-btn--active tool-tab" data-panel="qr">QR</button>
+    <button type="button" class="mod-btn tool-tab" data-panel="text">TEXTO</button>
+  </div>
+
+  <div id="panel-qr" class="tool-panel">
+    <p style="color:var(--muted);font-size:0.85rem;margin-top:0;">Genera un código QR a partir de cualquier texto o URL.</p>
+    <textarea id="tool-text" rows="5" style="width:100%;margin-top:0.75rem;" placeholder="Pega URL, texto o comando…"></textarea>
+    <button type="button" class="mod-btn" id="btn-qr" style="margin-top:0.75rem;">GENERAR QR</button>
+    <div id="qr-canvas-wrap"></div>
+  </div>
+
+  <div id="panel-text" class="tool-panel" style="display:none;">
+    <p style="color:var(--muted);font-size:0.85rem;">Copia al portapapeles o descarga como <code>.txt</code>.</p>
+    <p style="margin-top:0.75rem;">
+      <button type="button" class="mod-btn mod-btn--ghost" id="btn-copy">COPIAR</button>
+      <button type="button" class="mod-btn" id="btn-download-txt">DESCARGAR .TXT</button>
+    </p>
+    <p style="font-size:0.75rem;color:var(--muted);">Usa el mismo cuadro de texto que en la pestaña QR.</p>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/tools.js') }}?v=1"></script>
+{% endblock %}

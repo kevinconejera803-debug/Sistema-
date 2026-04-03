@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}SYSTEM INTERFACE — Buscar{% endblock %}
+
+{% block main_area %}
+<div class="mod-wrap">
+  {% include "modulos/_header.html" %}
+
+  <div class="search-hero">
+    <input type="search" id="search-q" placeholder="Buscar en eventos, contactos y entregas…" autocomplete="off" autofocus>
+  </div>
+
+  <div id="search-results">
+    <p style="color:var(--muted);">Escribe al menos 2 caracteres.</p>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/search.js') }}?v=1"></script>
+{% endblock %}
