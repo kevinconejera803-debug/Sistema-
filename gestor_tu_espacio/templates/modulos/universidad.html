@@ -15,9 +15,38 @@
   <div id="uni-toast" class="mod-toast mod-uni-toast" role="status" aria-live="polite" hidden></div>
 
   <section class="mod-uni-hero" aria-labelledby="uni-hero-title">
-    <div class="mod-uni-hero__intro">
-      <h2 id="uni-hero-title" class="mod-uni-hero__title">Acceso rápido</h2>
-      <p class="mod-uni-hero__lead">Intranet y aula virtual en un clic. Las URLs se pueden fijar abajo o por variables de entorno.</p>
+    <div class="mod-uni-hero__head">
+      <div class="mod-uni-hero__intro">
+        <h2 id="uni-hero-title" class="mod-uni-hero__title">Acceso rápido</h2>
+        <p class="mod-uni-hero__lead">
+          Todo lo que necesitas del <strong class="mod-uni-hero__strong">ámbito universitario</strong>: seguir asignaturas,
+          cumplir entregas y conectar con la institución cuando toque.
+        </p>
+      </div>
+      <details class="mod-uni-settings mod-uni-settings--mini" id="uni-settings">
+        <summary class="mod-uni-settings__summary mod-uni-settings__summary--mini" title="URLs de intranet y aula (este navegador)">
+          <span class="mod-uni-settings__icon mod-uni-settings__icon--mini" aria-hidden="true">⚙</span>
+          <span class="mod-uni-settings__label--mini">Enlaces</span>
+        </summary>
+        <div class="mod-uni-settings__body mod-uni-settings__body--mini">
+          <p class="mod-uni-settings__hint">
+            Variables opcionales en servidor:
+            <code>TU_ESPACIO_INTRANET_URL</code> · <code>TU_ESPACIO_AULA_URL</code>.
+            Lo guardado aquí tiene prioridad.
+          </p>
+          <div class="mod-uni-settings__grid">
+            <div class="mod-field">
+              <label for="uni-input-intranet">URL intranet</label>
+              <input type="url" id="uni-input-intranet" placeholder="https://intranet.tu-universidad.edu" autocomplete="off">
+            </div>
+            <div class="mod-field">
+              <label for="uni-input-aula">URL aula virtual</label>
+              <input type="url" id="uni-input-aula" placeholder="https://campus.tu-universidad.edu" autocomplete="off">
+            </div>
+          </div>
+          <button type="button" class="mod-btn mod-uni-save-btn mod-uni-save-btn--mini" id="uni-save-links">Guardar</button>
+        </div>
+      </details>
     </div>
     <div class="mod-uni-portals" aria-label="Enlaces externos">
       <a
@@ -61,37 +90,13 @@
     </div>
   </section>
 
-  <details class="mod-uni-settings" id="uni-settings">
-    <summary class="mod-uni-settings__summary">
-      <span class="mod-uni-settings__icon" aria-hidden="true">⚙</span>
-      <span class="mod-uni-settings__label">Configurar enlaces en este navegador</span>
-      <span class="mod-uni-settings__chev" aria-hidden="true">▼</span>
-    </summary>
-    <div class="mod-uni-settings__body">
-      <p class="mod-uni-settings__hint">
-        Opcional en servidor:
-        <code>TU_ESPACIO_INTRANET_URL</code> · <code>TU_ESPACIO_AULA_URL</code>.
-        Lo que guardes aquí tiene prioridad.
-      </p>
-      <div class="mod-uni-settings__grid">
-        <div class="mod-field">
-          <label for="uni-input-intranet">URL intranet</label>
-          <input type="url" id="uni-input-intranet" placeholder="https://intranet.tu-universidad.edu" autocomplete="off">
-        </div>
-        <div class="mod-field">
-          <label for="uni-input-aula">URL aula virtual</label>
-          <input type="url" id="uni-input-aula" placeholder="https://campus.tu-universidad.edu" autocomplete="off">
-        </div>
-      </div>
-      <button type="button" class="mod-btn mod-uni-save-btn" id="uni-save-links">Guardar enlaces</button>
-    </div>
-  </details>
-
   <section class="mod-uni-panel" aria-labelledby="uni-deliveries-title">
     <div class="mod-uni-panel__head">
       <div>
         <h2 id="uni-deliveries-title" class="mod-uni-panel__title">Entregas y evaluación</h2>
-        <p class="mod-uni-panel__subtitle">Registra entregas, peso en la nota y marca el estado sin fricción.</p>
+        <p class="mod-uni-panel__subtitle">
+          Organiza el curso como en la guía docente: ponderación por actividades, fechas de corte y seguimiento de cada entrega.
+        </p>
       </div>
       <div class="mod-uni-stats" id="uni-stats" aria-live="polite">
         <div class="mod-uni-stat">
@@ -142,8 +147,8 @@
 
     <div class="mod-table-wrap mod-uni-table-wrap">
       <div id="assign-empty" class="mod-uni-empty" hidden>
-        <p class="mod-uni-empty__title">No hay entregas todavía</p>
-        <p class="mod-uni-empty__text">Usa el formulario de arriba para añadir la primera, o cambia el filtro si ocultaste todas.</p>
+        <p class="mod-uni-empty__title">Sin actividades registradas</p>
+        <p class="mod-uni-empty__text">Añade tu primera entrega con curso y fecha límite, o revisa el filtro: quizá todas están ya entregadas.</p>
       </div>
       <div class="mod-uni-table-scroll">
         <table class="mod-table mod-uni-table">
@@ -166,6 +171,6 @@
 {% endblock %}
 
 {% block extra_scripts %}
-<script src="{{ url_for('static', filename='js/university-portals.js') }}?v=2"></script>
+<script src="{{ url_for('static', filename='js/university-portals.js') }}?v=3"></script>
 <script src="{{ url_for('static', filename='js/assignments.js') }}?v=3"></script>
 {% endblock %}

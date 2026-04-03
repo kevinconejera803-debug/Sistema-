@@ -83,7 +83,7 @@
     linkIn.addEventListener("click", function (e) {
       if (!merged("intranet")) {
         e.preventDefault();
-        uniToast("Añade la URL de intranet en «Configurar enlaces».");
+        uniToast("Indica la URL de intranet en «Enlaces».");
         var det = document.getElementById("uni-settings");
         if (det && !det.open) det.open = true;
       }
@@ -93,7 +93,7 @@
     linkAu.addEventListener("click", function (e) {
       if (!merged("aula")) {
         e.preventDefault();
-        uniToast("Añade la URL del aula virtual en «Configurar enlaces».");
+        uniToast("Indica la URL del aula virtual en «Enlaces».");
         var det = document.getElementById("uni-settings");
         if (det && !det.open) det.open = true;
       }

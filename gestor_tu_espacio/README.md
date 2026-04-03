@@ -80,7 +80,7 @@ $env:TU_ESPACIO_INTRANET_URL = "https://tu-intranet.ejemplo.edu"
 $env:TU_ESPACIO_AULA_URL = "https://tu-campus.ejemplo.edu"
 ```
 
-Si no las defines, usa **Personalizar enlaces** en el módulo Universidad para guardarlas solo en tu navegador.
+Si no las defines, usa el botón **Enlaces** (esquina del bloque de acceso rápido) en Universidad para guardarlas solo en tu navegador.
 
 **Qué hace cada módulo (funcional):**
 

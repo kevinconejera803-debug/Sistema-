@@ -50,7 +50,7 @@ MODULES = [
         "desc": "Aula y entregas",
         "icon": "🎓",
         "theme": "purple",
-        "lead": "Accesos rápidos al campus, entregas con filtros y estadísticas en tiempo real.",
+        "lead": "Plan de estudios y vida académica: campus, créditos y entregas en un solo espacio.",
     },
     {
         "slug": "trading-lab",
