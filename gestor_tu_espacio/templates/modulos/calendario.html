@@ -9,10 +9,12 @@
     <span class="mod-toolbar__label">VISTA</span>
     <button type="button" class="mod-btn mod-btn--active" id="cal-view-month" aria-pressed="true">MES</button>
     <button type="button" class="mod-btn mod-btn--ghost" id="cal-view-week" aria-pressed="false">SEMANA</button>
+    <button type="button" class="mod-btn mod-btn--ghost" id="cal-view-day" aria-pressed="false">DÍA</button>
     <span class="mod-toolbar__label mod-toolbar__label--gap">NAVEGACIÓN</span>
     <button type="button" class="mod-btn mod-btn--ghost" id="cal-prev">← ANTERIOR</button>
     <button type="button" class="mod-btn mod-btn--ghost" id="cal-today">HOY</button>
     <button type="button" class="mod-btn mod-btn--ghost" id="cal-next">SIGUIENTE →</button>
+    <a class="mod-btn mod-btn--ghost" id="cal-export-ics" href="{{ url_for('export_calendar_ics') }}" download>EXPORTAR .ICS</a>
   </div>
 
   <div id="cal-toast" class="mod-toast" role="status" aria-live="polite" hidden></div>
@@ -34,6 +36,11 @@
 
       <div id="cal-week-block" class="mod-cal-week" hidden>
         <div class="mod-cal-week__strip" id="cal-week-strip"></div>
+      </div>
+
+      <div id="cal-day-block" class="mod-cal-day" hidden>
+        <div id="cal-day-hero" class="mod-cal-day__hero" aria-live="polite"></div>
+        <div id="cal-day-timeline" class="mod-cal-day__timeline"></div>
       </div>
     </div>
 
@@ -72,5 +79,5 @@
 {% endblock %}
 
 {% block extra_scripts %}
-<script src="{{ url_for('static', filename='js/calendar.js') }}?v=2"></script>
+<script src="{{ url_for('static', filename='js/calendar.js') }}?v=3"></script>
 {% endblock %}

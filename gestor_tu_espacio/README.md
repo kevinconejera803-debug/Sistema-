@@ -75,13 +75,13 @@ Ejemplo: **http://127.0.0.1:5000/noticias**
 
 **Qué hace cada módulo (funcional):**
 
-- **Calendario** — Vista mensual interactiva, eventos en SQLite (`tu_espacio.db`), alta y borrado por día.
+- **Calendario** — Vistas mes, semana y día; eventos en SQLite (`tu_espacio.db`) con índices en fechas; exportación **.ics** (`/api/calendar/export.ics`); alta y borrado por día.
 - **Universidad** — Entregas con curso, fecha límite, peso % y estado (pendiente / entregado).
 - **Trading Lab** — Cotizaciones con **yfinance** (caché ~60 s); la tabla se carga por **`GET /api/trading`** (skeleton y botón Actualizar).
 - **Ciberseguridad** — Checklist por categorías; progreso en **localStorage**.
 - **Herramientas** — QR (servicio público de imagen), copiar y descargar texto.
 - **Contactos** — CRM ligero en SQLite.
-- **Noticias** — RSS (**feedparser**: Xataka, El País).
+- **Noticias** — RSS (**feedparser**: Xataka, El País); **`?refresh=1`** en la URL o botón “Actualizar feeds” invalida caché (~5 min).
 - **Buscar** — Cruza eventos, contactos y entregas vía `/api/search`.
 - **Calculadora** — Operaciones encadenadas con historial local en pantalla.
 

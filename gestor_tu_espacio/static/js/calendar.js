@@ -12,6 +12,10 @@
   var weekStrip = document.getElementById("cal-week-strip");
   var btnMonth = document.getElementById("cal-view-month");
   var btnWeek = document.getElementById("cal-view-week");
+  var btnDay = document.getElementById("cal-view-day");
+  var dayBlock = document.getElementById("cal-day-block");
+  var dayHero = document.getElementById("cal-day-hero");
+  var dayTimeline = document.getElementById("cal-day-timeline");
   var toastEl = document.getElementById("cal-toast");
 
   if (!grid || !monthLabel) return;
@@ -88,19 +92,61 @@
       btnWeek.classList.toggle("mod-btn--active", viewMode === "week");
       btnWeek.setAttribute("aria-pressed", viewMode === "week" ? "true" : "false");
     }
+    if (btnDay) {
+      btnDay.classList.toggle("mod-btn--active", viewMode === "day");
+      btnDay.setAttribute("aria-pressed", viewMode === "day" ? "true" : "false");
+    }
     if (monthBlock) monthBlock.hidden = viewMode !== "month";
     if (weekBlock) weekBlock.hidden = viewMode !== "week";
+    if (dayBlock) dayBlock.hidden = viewMode !== "day";
   }
 
   function render() {
     setViewButtons();
     if (viewMode === "week") {
       renderWeek();
+    } else if (viewMode === "day") {
+      renderDay();
     } else {
       renderMonth();
     }
     renderDayList();
     updateRangeLabel();
+  }
+
+  function formatDayLong(d) {
+    var wd = [
+      "DOMINGO",
+      "LUNES",
+      "MARTES",
+      "MIÉRCOLES",
+      "JUEVES",
+      "VIERNES",
+      "SÁBADO",
+    ];
+    var names = [
+      "ENERO",
+      "FEBRERO",
+      "MARZO",
+      "ABRIL",
+      "MAYO",
+      "JUNIO",
+      "JULIO",
+      "AGOSTO",
+      "SEPTIEMBRE",
+      "OCTUBRE",
+      "NOVIEMBRE",
+      "DICIEMBRE",
+    ];
+    return (
+      wd[d.getDay()] +
+      ", " +
+      d.getDate() +
+      " DE " +
+      names[d.getMonth()] +
+      " DE " +
+      d.getFullYear()
+    );
   }
 
   function updateRangeLabel() {
@@ -130,6 +176,8 @@
         mo[weekMonday.getMonth()] +
         " " +
         weekMonday.getFullYear();
+    } else if (viewMode === "day") {
+      monthLabel.textContent = "DÍA · " + formatDayLong(selectedDay);
     }
   }
 
@@ -278,6 +326,85 @@
     updateRangeLabel();
   }
 
+  function cardClassForColor(color) {
+    var c = (color || "teal").toLowerCase();
+    if (c === "yellow") return "mod-cal-day__card mod-cal-day__card--yellow";
+    if (c === "purple") return "mod-cal-day__card mod-cal-day__card--purple";
+    if (c === "red") return "mod-cal-day__card mod-cal-day__card--red";
+    return "mod-cal-day__card";
+  }
+
+  function renderDay() {
+    if (!dayHero || !dayTimeline) return;
+    var todayIso = isoDay(new Date());
+    var diso = isoDay(selectedDay);
+    dayHero.innerHTML = "";
+    var span = document.createElement("span");
+    span.textContent = formatDayLong(selectedDay);
+    dayHero.appendChild(span);
+    if (diso === todayIso) {
+      var badge = document.createElement("span");
+      badge.className = "mod-cal-day__badge";
+      badge.textContent = "HOY";
+      dayHero.appendChild(badge);
+    }
+
+    dayTimeline.innerHTML = "";
+    var evs = sortEventsByTime(eventsForDay(diso));
+    if (evs.length === 0) {
+      var empty = document.createElement("p");
+      empty.className = "mod-cal__empty";
+      empty.style.margin = "0";
+      empty.textContent = "Sin eventos este día.";
+      dayTimeline.appendChild(empty);
+      return;
+    }
+    evs.forEach(function (ev) {
+      var card = document.createElement("div");
+      card.className = cardClassForColor(ev.color);
+      var t = (ev.start_iso || "").split("T")[1] || "";
+      if (t) t = t.slice(0, 5);
+      var timeEl = document.createElement("div");
+      timeEl.className = "mod-cal-day__time";
+      timeEl.textContent = t || "—";
+      var body = document.createElement("div");
+      body.className = "mod-cal-day__card-body";
+      var st = document.createElement("strong");
+      st.textContent = ev.title || "";
+      body.appendChild(st);
+      if (ev.notes && String(ev.notes).trim()) {
+        var nt = document.createElement("div");
+        nt.className = "mod-cal-day__notes";
+        nt.textContent = ev.notes;
+        body.appendChild(nt);
+      }
+      var del = document.createElement("button");
+      del.type = "button";
+      del.className = "mod-btn mod-btn--ghost mod-cal__del";
+      del.textContent = "Borrar";
+      del.addEventListener("click", function () {
+        fetch("/api/calendar/events/" + ev.id, { method: "DELETE" })
+          .then(function (r) {
+            if (!r.ok) throw new Error();
+            loadEvents();
+          })
+          .catch(function () {
+            toast("No se pudo borrar el evento.");
+          });
+      });
+      card.appendChild(timeEl);
+      card.appendChild(body);
+      card.appendChild(del);
+      dayTimeline.appendChild(card);
+    });
+  }
+
+  function sortEventsByTime(evs) {
+    return evs.slice().sort(function (a, b) {
+      return (a.start_iso || "").localeCompare(b.start_iso || "");
+    });
+  }
+
   function renderDayList() {
     if (!eventList) return;
     var diso = isoDay(selectedDay);
@@ -288,7 +415,7 @@
         '<li class="mod-cal__empty">Sin eventos este día.</li>';
       return;
     }
-    evs.forEach(function (ev) {
+    sortEventsByTime(evs).forEach(function (ev) {
       var li = document.createElement("li");
       li.className = "mod-cal__event-row";
       var t = (ev.start_iso || "").split("T")[1] || "";
@@ -325,13 +452,21 @@
   document.getElementById("cal-prev") &&
     document.getElementById("cal-prev").addEventListener("click", function () {
       if (viewMode === "week") weekMonday.setDate(weekMonday.getDate() - 7);
-      else viewDate.setMonth(viewDate.getMonth() - 1);
+      else if (viewMode === "day") {
+        selectedDay.setDate(selectedDay.getDate() - 1);
+        weekMonday = mondayOf(selectedDay);
+        viewDate = new Date(selectedDay.getFullYear(), selectedDay.getMonth(), 1);
+      } else viewDate.setMonth(viewDate.getMonth() - 1);
       render();
     });
   document.getElementById("cal-next") &&
     document.getElementById("cal-next").addEventListener("click", function () {
       if (viewMode === "week") weekMonday.setDate(weekMonday.getDate() + 7);
-      else viewDate.setMonth(viewDate.getMonth() + 1);
+      else if (viewMode === "day") {
+        selectedDay.setDate(selectedDay.getDate() + 1);
+        weekMonday = mondayOf(selectedDay);
+        viewDate = new Date(selectedDay.getFullYear(), selectedDay.getMonth(), 1);
+      } else viewDate.setMonth(viewDate.getMonth() + 1);
       render();
     });
   document.getElementById("cal-today") &&
@@ -355,6 +490,12 @@
     btnWeek.addEventListener("click", function () {
       viewMode = "week";
       weekMonday = mondayOf(selectedDay);
+      render();
+    });
+  }
+  if (btnDay) {
+    btnDay.addEventListener("click", function () {
+      viewMode = "day";
       render();
     });
   }

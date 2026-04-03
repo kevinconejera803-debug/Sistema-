@@ -51,6 +51,9 @@ def init_db() -> None:
                 status TEXT DEFAULT 'pendiente',
                 weight INTEGER DEFAULT 0
             );
+            CREATE INDEX IF NOT EXISTS idx_events_start ON events(start_iso);
+            CREATE INDEX IF NOT EXISTS idx_contacts_name ON contacts(name COLLATE NOCASE);
+            CREATE INDEX IF NOT EXISTS idx_assignments_due ON assignments(due_iso);
             """
         )
         _seed_demo(conn)

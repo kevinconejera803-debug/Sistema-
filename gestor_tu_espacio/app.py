@@ -6,9 +6,9 @@ from __future__ import annotations
 import os
 import re
 import time
-from datetime import datetime
+from datetime import datetime, timezone
 
-from flask import Flask, abort, jsonify, redirect, render_template, request, url_for
+from flask import Flask, Response, abort, jsonify, redirect, render_template, request, url_for
 
 from database import get_db, init_db, row_to_dict
 
@@ -42,7 +42,7 @@ MODULES = [
         "desc": "Día - semana - mes",
         "icon": "🕐",
         "theme": "teal",
-        "lead": "Agenda con vista mensual, eventos persistentes y bloques por día.",
+        "lead": "Mes, semana y día; exportación .ics; eventos en SQLite con índices optimizados.",
     },
     {
         "slug": "universidad",
@@ -329,6 +329,97 @@ def api_calendar_delete(eid):
     with get_db() as conn:
         conn.execute("DELETE FROM events WHERE id = ?", (eid,))
     return jsonify({"ok": True})
+
+
+def _ical_escape(s: str) -> str:
+    if not s:
+        return ""
+    return (
+        s.replace("\\", "\\\\")
+        .replace(";", "\\;")
+        .replace(",", "\\,")
+        .replace("\n", "\\n")
+        .replace("\r", "")
+    )
+
+
+def _ical_fold_line(line: str, max_len: int = 75) -> list[str]:
+    """RFC 5545: líneas largas; cada continuación empieza con un espacio."""
+    if len(line) <= max_len:
+        return [line]
+    out: list[str] = []
+    while len(line) > max_len:
+        out.append(line[:max_len])
+        line = " " + line[max_len:]
+    out.append(line)
+    return out
+
+
+@app.route("/api/calendar/export.ics")
+def export_calendar_ics():
+    """Exporta todos los eventos como iCalendar (.ics)."""
+    raw_lines: list[str] = [
+        "BEGIN:VCALENDAR",
+        "VERSION:2.0",
+        "PRODID:-//Tu espacio//ES",
+        "CALSCALE:GREGORIAN",
+        "METHOD:PUBLISH",
+    ]
+    stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+
+    with get_db() as conn:
+        rows = conn.execute("SELECT * FROM events ORDER BY start_iso").fetchall()
+
+    for row in rows:
+        ev = row_to_dict(row)
+        start_raw = (ev.get("start_iso") or "").strip()
+        if not start_raw:
+            continue
+        uid = f"event-{ev.get('id', 0)}@tu-espacio.local"
+        ev_lines = [
+            "BEGIN:VEVENT",
+            f"UID:{uid}",
+            f"DTSTAMP:{stamp}",
+        ]
+        all_day = bool(ev.get("all_day"))
+        try:
+            iso_norm = start_raw.replace("Z", "+00:00")
+            dt = datetime.fromisoformat(iso_norm)
+            if all_day:
+                d_part = start_raw.split("T", 1)[0].replace("-", "")
+                if len(d_part) < 8:
+                    continue
+                ev_lines.append(f"DTSTART;VALUE=DATE:{d_part[:8]}")
+            else:
+                if dt.tzinfo is not None:
+                    dt_utc = dt.astimezone(timezone.utc)
+                    ds = dt_utc.strftime("%Y%m%dT%H%M%SZ")
+                else:
+                    ds = dt.strftime("%Y%m%dT%H%M%S")
+                ev_lines.append(f"DTSTART:{ds}")
+        except (ValueError, TypeError):
+            continue
+        title = _ical_escape(str(ev.get("title") or ""))
+        ev_lines.append(f"SUMMARY:{title}")
+        notes = ev.get("notes") or ""
+        if str(notes).strip():
+            ev_lines.append(f"DESCRIPTION:{_ical_escape(str(notes))}")
+        ev_lines.append("END:VEVENT")
+        raw_lines.extend(ev_lines)
+
+    raw_lines.append("END:VCALENDAR")
+    folded: list[str] = []
+    for ln in raw_lines:
+        folded.extend(_ical_fold_line(ln))
+    body = "\r\n".join(folded) + "\r\n"
+    return Response(
+        body,
+        mimetype="text/calendar; charset=utf-8",
+        headers={
+            "Content-Disposition": 'attachment; filename="tu-espacio-calendario.ics"',
+            "Cache-Control": "no-store",
+        },
+    )
 
 
 # ——— API contactos ———

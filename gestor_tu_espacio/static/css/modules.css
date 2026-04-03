@@ -253,6 +253,80 @@
   margin-top: 0.2rem;
 }
 
+.mod-cal-day {
+  border-radius: 8px;
+  border: 1px solid var(--mod-line);
+  background: var(--mod-glass);
+  padding: 0.85rem 1rem;
+  box-shadow: var(--mod-glow);
+}
+.mod-cal-day__hero {
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  color: var(--muted);
+  margin-bottom: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+}
+.mod-cal-day__badge {
+  font-size: 0.52rem;
+  padding: 0.2rem 0.45rem;
+  border-radius: 4px;
+  border: 1px solid rgba(46, 230, 214, 0.4);
+  color: var(--teal);
+  letter-spacing: 0.12em;
+}
+.mod-cal-day__timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  min-height: 2rem;
+}
+.mod-cal-day__card {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.65rem 0.85rem;
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.35);
+  border-left: 4px solid var(--teal);
+}
+.mod-cal-day__card--yellow {
+  border-left-color: var(--yellow);
+}
+.mod-cal-day__card--purple {
+  border-left-color: var(--purple);
+}
+.mod-cal-day__card--red {
+  border-left-color: var(--red);
+}
+.mod-cal-day__time {
+  font-family: var(--font-display);
+  font-size: 0.58rem;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  flex-shrink: 0;
+  min-width: 3.2rem;
+}
+.mod-cal-day__card-body {
+  flex: 1;
+  min-width: 0;
+  font-size: 0.88rem;
+}
+.mod-cal-day__card-body strong {
+  display: block;
+  margin-bottom: 0.2rem;
+}
+.mod-cal-day__notes {
+  font-size: 0.78rem;
+  color: var(--muted);
+  margin-top: 0.25rem;
+}
+
 .mod-cal__side {
   border-radius: 8px;
   border: 1px solid var(--mod-line);
