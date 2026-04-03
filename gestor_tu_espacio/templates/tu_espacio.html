@@ -1,38 +1,7 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>SYSTEM INTERFACE — Tu espacio</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,400;0,500;0,600;1,400&family=Noto+Sans+JP:wght@400;500&family=Orbitron:wght@500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/tu_espacio.css') }}?v=7">
-</head>
-<body>
-  {# Fondo: capa CSS RGB + canvas con katakana (transparente entre letras) #}
-  <div class="matrix-rgb-layer" aria-hidden="true"></div>
-  <canvas id="matrix-bg" class="matrix-bg" aria-hidden="true"></canvas>
+{% extends "base.html" %}
+{% block title %}SYSTEM INTERFACE — Tu espacio{% endblock %}
 
-  <div class="app-shell">
-    <aside class="sidebar-left">
-      <div class="brand">SYSTEM INTERFACE</div>
-      <div class="operator-box">
-        <div class="operator-label">PERFIL PROFESIONAL</div>
-        <div class="operator-title">Ingeniero comercial</div>
-        <p class="operator-sub">Analista de datos · Programación · Estrategia y excelencia analítica</p>
-      </div>
-      <nav class="nav-main">
-        <span class="nav-item nav-item--active">TU ESPACIO</span>
-      </nav>
-      <div class="sidebar-footer">
-        <a href="#">SETTINGS</a>
-        <span> / </span>
-        <a href="#">CORREO</a>
-      </div>
-    </aside>
-
-    <main class="main-area">
+{% block main_area %}
       <header class="main-header">
         <div>
           <h1 class="main-title">TU ESPACIO</h1>
@@ -46,11 +15,11 @@
 
       <section class="access-grid" aria-label="Accesos">
         {% for item in access_cards %}
-        <article class="access-card access-card--{{ item.theme }}" data-href="{{ item.href }}">
+        <a href="{{ item.href }}" class="access-card access-card--{{ item.theme }}">
           <div class="access-card__icon" aria-hidden="true">{{ item.icon }}</div>
           <h2 class="access-card__title">{{ item.title }}</h2>
           <p class="access-card__desc">{{ item.desc }}</p>
-        </article>
+        </a>
         {% endfor %}
       </section>
 
@@ -58,7 +27,7 @@
         <div>
           <h4>PRÓXIMAS HOY</h4>
           <p>Sin bloques próximos.</p>
-          <a class="link-arrow" href="#">Calendario completo →</a>
+          <a class="link-arrow" href="{{ url_for('modulo', slug='calendario') }}">Calendario completo →</a>
         </div>
         <div>
           <h4>ARCHIVOS &amp; RED</h4>
@@ -67,41 +36,7 @@
         <div>
           <h4>MERCADOS</h4>
           <p>Panorama en el lab.</p>
-          <a class="btn-inline" href="#">Trading Lab →</a>
+          <a class="btn-inline" href="{{ url_for('modulo', slug='trading-lab') }}">Trading Lab →</a>
         </div>
       </section>
-    </main>
-
-    <aside class="sidebar-right">
-      <div class="status-icons" aria-hidden="true" title="Estado">
-        <span>🔋</span><span>📶</span><span>✉</span>
-      </div>
-      <div class="clock-box">
-        <div class="clock-time" id="clock-time">--:--</div>
-        <div class="clock-date" id="clock-date">—</div>
-      </div>
-      <div class="panel">
-        <h3>AGENDA</h3>
-        <p>Sin bloques próximos.</p>
-      </div>
-      <div class="panel quotes">
-        <h3>INSPIRACIÓN</h3>
-        <blockquote>“Sobre toda cosa guardada, guarda tu corazón.” — Proverbios 4:23</blockquote>
-        <blockquote>“El tiempo es una cosa importante: crea la presente, la pasada y el futuro.” — Jimi Hendrix</blockquote>
-        <blockquote>“La educación es el arma más poderosa que puedes usar para cambiar el mundo.” — Nelson Mandela</blockquote>
-      </div>
-    </aside>
-  </div>
-
-  <script src="{{ url_for('static', filename='js/matrix_bg.js') }}?v=5"></script>
-  <script src="{{ url_for('static', filename='js/tu_espacio.js') }}?v=5"></script>
-  <script>
-    document.querySelectorAll('.access-card[data-href]').forEach(function (el) {
-      el.addEventListener('click', function () {
-        var h = el.getAttribute('data-href');
-        if (h && h !== '#') window.location.href = h;
-      });
-    });
-  </script>
-</body>
-</html>
+{% endblock %}

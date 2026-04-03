@@ -173,7 +173,24 @@ a:hover {
 .nav-main {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.35rem;
+}
+
+.nav-main--scroll {
+  flex: 1;
+  min-height: 0;
+  max-height: min(52vh, 420px);
+  overflow-y: auto;
+  padding-right: 0.35rem;
+  margin-right: -0.35rem;
+}
+
+.nav-main--scroll::-webkit-scrollbar {
+  width: 4px;
+}
+.nav-main--scroll::-webkit-scrollbar-thumb {
+  background: rgba(46, 230, 214, 0.25);
+  border-radius: 2px;
 }
 
 .nav-item {
@@ -201,6 +218,16 @@ span.nav-item {
   color: var(--teal);
   border-color: var(--teal);
   box-shadow: inset 0 0 20px rgba(46, 230, 214, 0.12);
+}
+
+a.nav-item {
+  text-decoration: none;
+}
+
+.nav-item--module {
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  padding: 0.5rem 0.65rem;
 }
 
 .nav-item--secondary {
@@ -326,6 +353,13 @@ span.nav-item {
   min-height: 118px;
   transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s;
   cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+}
+
+a.access-card:focus-visible {
+  outline: 2px solid var(--teal);
+  outline-offset: 2px;
 }
 
 .access-card:hover {
@@ -503,4 +537,135 @@ span.nav-item {
 
 .quotes blockquote:last-child {
   margin-bottom: 0;
+}
+
+/* Páginas de módulo */
+.main-header--module {
+  margin-bottom: 1rem;
+}
+
+.module-breadcrumb {
+  margin: 0 0 0.5rem;
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+.module-breadcrumb a {
+  color: var(--teal);
+}
+
+.module-breadcrumb__sep {
+  opacity: 0.5;
+  margin: 0 0.35rem;
+}
+
+.main-title--module {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+}
+
+.module-title-icon {
+  font-size: 1.5rem;
+  line-height: 1;
+  filter: drop-shadow(0 0 8px rgba(46, 230, 214, 0.35));
+}
+
+.market-strip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.25rem;
+  padding: 0.65rem 1rem;
+  margin-bottom: 1rem;
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(232, 212, 74, 0.25);
+  font-family: var(--font-display);
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+}
+
+.market-strip__item {
+  color: var(--muted);
+}
+
+.market-strip__item strong {
+  color: var(--text);
+  font-weight: 600;
+  margin-left: 0.25rem;
+}
+
+.market-strip__up {
+  color: var(--green) !important;
+}
+
+.market-strip__down {
+  color: var(--red) !important;
+}
+
+.market-strip__hint {
+  margin-left: auto;
+  opacity: 0.65;
+  font-size: 0.55rem;
+}
+
+.module-page {
+  padding-bottom: 1rem;
+}
+
+.module-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.85rem;
+}
+
+@media (max-width: 1100px) {
+  .module-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.module-tile {
+  padding: 1rem 1.1rem;
+  border-radius: 6px;
+  background: var(--bg-panel);
+  border: 1px solid rgba(46, 230, 214, 0.15);
+}
+
+.module-tile__h {
+  margin: 0 0 0.5rem;
+  font-family: var(--font-display);
+  font-size: 0.62rem;
+  letter-spacing: 0.18em;
+  color: var(--muted);
+}
+
+.module-tile__p {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--text);
+  line-height: 1.5;
+}
+
+.module-page--purple .module-tile {
+  border-color: rgba(167, 139, 250, 0.25);
+}
+.module-page--yellow .module-tile {
+  border-color: rgba(232, 212, 74, 0.25);
+}
+.module-page--red .module-tile {
+  border-color: rgba(255, 77, 94, 0.22);
+}
+.module-page--blue .module-tile {
+  border-color: rgba(96, 165, 250, 0.25);
+}
+.module-page--green .module-tile {
+  border-color: rgba(74, 222, 128, 0.22);
+}
+.module-page--orange .module-tile {
+  border-color: rgba(251, 146, 60, 0.25);
 }

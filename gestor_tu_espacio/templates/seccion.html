@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}SYSTEM INTERFACE — {{ mod.title }}{% endblock %}
+
+{% block main_area %}
+      <header class="main-header main-header--module">
+        <div>
+          <p class="module-breadcrumb"><a href="{{ url_for('tu_espacio') }}">Tu espacio</a> <span class="module-breadcrumb__sep">/</span> {{ mod.title }}</p>
+          <h1 class="main-title main-title--module"><span class="module-title-icon" aria-hidden="true">{{ mod.icon }}</span> {{ mod.title }}</h1>
+          <p class="main-sub">{{ mod.lead }}</p>
+        </div>
+        <div class="badges">
+          <span class="badge badge--live">LIVE</span>
+          <span class="badge badge--date">{{ month_badge }}</span>
+        </div>
+      </header>
+
+      {% if mod.slug == 'trading-lab' %}
+      <div class="market-strip" aria-hidden="true">
+        <span class="market-strip__item">SPX <strong class="market-strip__up">+0.42%</strong></span>
+        <span class="market-strip__item">NDX <strong class="market-strip__down">−0.11%</strong></span>
+        <span class="market-strip__item">VIX <strong>14.2</strong></span>
+        <span class="market-strip__item">BTC <strong class="market-strip__up">+1.05%</strong></span>
+        <span class="market-strip__hint">Datos de ejemplo — conecta tu feed cuando lo integres</span>
+      </div>
+      {% endif %}
+
+      <div class="module-page module-page--{{ mod.theme }}">
+        <div class="module-grid">
+          <article class="module-tile">
+            <h3 class="module-tile__h">Panel A</h3>
+            <p class="module-tile__p">Espacio para listas, tablas o widgets específicos de este módulo.</p>
+          </article>
+          <article class="module-tile">
+            <h3 class="module-tile__h">Panel B</h3>
+            <p class="module-tile__p">Aquí puedes enlazar API, SQLite o formularios según avances el proyecto.</p>
+          </article>
+          <article class="module-tile">
+            <h3 class="module-tile__h">Panel C</h3>
+            <p class="module-tile__p">Misma interfaz SYSTEM INTERFACE en todas las rutas para mantener coherencia visual.</p>
+          </article>
+        </div>
+      </div>
+{% endblock %}

@@ -1,11 +1,10 @@
 """
-Tu espacio — Flask: SYSTEM INTERFACE / dashboard principal.
-Sin acoplamiento a otras apps del repositorio (cada app es independiente).
+Tu espacio — Flask: SYSTEM INTERFACE / dashboard y módulos navegables.
 """
 import os
 from datetime import datetime
 
-from flask import Flask, redirect, render_template, url_for
+from flask import Flask, abort, redirect, render_template, url_for
 
 app = Flask(__name__)
 
@@ -24,81 +23,104 @@ _MONTHS_ES = (
     "DIC",
 )
 
-# Módulos del panel (enlaza rutas internas cuando existan las vistas)
-ACCESS_CARDS = [
+# Cada entrada = una ruta /<slug> con la misma interfaz SYSTEM INTERFACE
+MODULES = [
     {
+        "slug": "calendario",
         "title": "CALENDARIO",
         "desc": "Día - semana - mes",
         "icon": "🕐",
         "theme": "teal",
-        "href": "#",
+        "lead": "Agenda unificada: revisa el día, la semana o el mes y enlaza recordatorios.",
     },
     {
+        "slug": "universidad",
         "title": "UNIVERSIDAD",
         "desc": "Aula y entregas",
         "icon": "🎓",
         "theme": "purple",
-        "href": "#",
+        "lead": "Seguimiento de asignaturas, entregas y material del aula en un solo panel.",
     },
     {
+        "slug": "trading-lab",
         "title": "TRADING LAB",
         "desc": "Mercados",
         "icon": "📈",
         "theme": "yellow",
-        "href": "#",
+        "lead": "Laboratorio de mercados: cotizaciones, listas y espacio para tus indicadores.",
     },
     {
+        "slug": "ciberseguridad",
         "title": "CIBERSEGURIDAD",
         "desc": "Shadow Network",
         "icon": "🛡",
         "theme": "teal",
-        "href": "#",
+        "lead": "Mapa de superficie de ataque, notas de hardening y checklist de buenas prácticas.",
     },
     {
+        "slug": "herramientas",
         "title": "HERRAMIENTAS",
         "desc": "PDF - exportar - QR",
         "icon": "🧰",
         "theme": "red",
-        "href": "#",
+        "lead": "Utilidades rápidas: documentos, exportaciones y códigos QR desde un mismo sitio.",
     },
     {
+        "slug": "contactos",
         "title": "CONTACTOS",
         "desc": "Tarjetas y agenda",
         "icon": "✉",
         "theme": "purple",
-        "href": "#",
+        "lead": "Agenda de personas, tarjetas de contacto y seguimiento de conversaciones.",
     },
     {
+        "slug": "noticias",
         "title": "NOTICIAS",
         "desc": "Fuentes y feeds",
         "icon": "📰",
         "theme": "blue",
-        "href": "#",
+        "lead": "Fuentes configurables y lectura de titulares en modo concentración.",
     },
     {
+        "slug": "buscar",
         "title": "BUSCAR",
         "desc": "Búsqueda global",
         "icon": "🔍",
         "theme": "green",
-        "href": "#",
+        "lead": "Busca en calendario, archivos y notas cuando conectes índices.",
     },
     {
+        "slug": "calculadora",
         "title": "CALCULADORA",
         "desc": "Paso a paso",
         "icon": "🔢",
         "theme": "orange",
-        "href": "#",
+        "lead": "Cálculos con historial y desglose paso a paso para repasar operaciones.",
     },
 ]
 
 
-def _tu_espacio_context():
+def _month_badge():
     now = datetime.now()
-    month_badge = f"{_MONTHS_ES[now.month - 1]} - {now.year}"
-    return {
-        "access_cards": ACCESS_CARDS,
-        "month_badge": month_badge,
-    }
+    return f"{_MONTHS_ES[now.month - 1]} - {now.year}"
+
+
+@app.context_processor
+def _ctx():
+    return {"month_badge": _month_badge(), "nav_modules": MODULES}
+
+
+def _access_cards():
+    return [
+        {
+            "title": m["title"],
+            "desc": m["desc"],
+            "icon": m["icon"],
+            "theme": m["theme"],
+            "href": url_for("modulo", slug=m["slug"]),
+        }
+        for m in MODULES
+    ]
 
 
 @app.route("/")
@@ -108,7 +130,19 @@ def index():
 
 @app.route("/tu-espacio")
 def tu_espacio():
-    return render_template("tu_espacio.html", **_tu_espacio_context())
+    return render_template(
+        "tu_espacio.html",
+        access_cards=_access_cards(),
+        active_nav="home",
+    )
+
+
+@app.route("/<slug>")
+def modulo(slug):
+    mod = next((m for m in MODULES if m["slug"] == slug), None)
+    if not mod:
+        abort(404)
+    return render_template("seccion.html", mod=mod, active_nav=slug)
 
 
 if __name__ == "__main__":

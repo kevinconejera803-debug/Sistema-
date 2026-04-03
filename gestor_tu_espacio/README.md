@@ -55,6 +55,24 @@ Pega esta URL (o ábrela al ver el mensaje de Flask en la consola):
 
 La raíz **http://127.0.0.1:5000/** redirige a `/tu-espacio`. Para parar el servidor: **Ctrl+C** en esa terminal.
 
+### Módulos (misma interfaz SYSTEM INTERFACE)
+
+Cada apartado tiene su ruta; también están en el menú lateral y en las tarjetas del panel:
+
+| Sección | URL (puerto 5000) |
+|---------|-------------------|
+| Calendario | `/calendario` |
+| Universidad | `/universidad` |
+| Trading Lab | `/trading-lab` |
+| Ciberseguridad | `/ciberseguridad` |
+| Herramientas | `/herramientas` |
+| Contactos | `/contactos` |
+| Noticias | `/noticias` |
+| Buscar | `/buscar` |
+| Calculadora | `/calculadora` |
+
+Ejemplo: **http://127.0.0.1:5000/noticias**
+
 ---
 
 No hay URLs ni dependencias hacia **gestor_historia** en el código: cada app se ejecuta por separado.
@@ -65,7 +83,7 @@ No hay URLs ni dependencias hacia **gestor_historia** en el código: cada app se
 |------|-----|
 | `app.py` | Flask |
 | `database.py` | SQLite |
-| `templates/` · `static/` | Front (incl. fondo matrix en `static/js/matrix_bg.js`) |
+| `templates/` (`base.html`, `tu_espacio.html`, `seccion.html`) · `static/` | Front (matrix en `static/js/matrix_bg.js`) |
 | `scripts/` | Utilidades y scripts de repo (`scripts/repo/` para GitHub) |
 | `requirements.txt` | Dependencias |
 
