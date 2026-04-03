@@ -111,7 +111,7 @@ MODULES = [
         "desc": "Científica · math.js",
         "icon": "🔢",
         "theme": "orange",
-        "lead": "Vista Photomath sin cámara: KaTeX + pasos. Dos pestañas, math.js, historial modal.",
+        "lead": "Panel workspace: KaTeX + pasos, dos columnas en pantalla ancha, math.js, historial.",
     },
 ]
 
