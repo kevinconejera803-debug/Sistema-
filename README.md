@@ -357,10 +357,14 @@ Suele ser **red/proxy**: el entorno define `HTTP_PROXY` / `HTTPS_PROXY` o un pro
    `export GITHUB_TOKEN=ghp_...` y `./gestor_tu_espacio/scripts/repo/push_con_token.sh` (Linux) o `push_con_token.ps1` (Windows).
 
 5. **SSH** en lugar de HTTPS (si el remoto es `https://github.com/...`): el 403 suele desaparecer porque SSH no usa el túnel CONNECT HTTP.  
-   - Script (Linux / `/workspace`):  
-     `chmod +x gestor_tu_espacio/scripts/repo/switch_origin_to_ssh.sh && ./gestor_tu_espacio/scripts/repo/switch_origin_to_ssh.sh`  
-   - O a mano: `git remote set-url origin git@github.com:kevinconejera803-debug/Sistema-.git`  
-   Requiere **clave SSH en ese entorno** y `ssh -T git@github.com` OK (puedes copiar `~/.ssh` o generar otra clave y subir la `.pub` a GitHub).
+   - **Linux / `/workspace`:**  
+     `chmod +x gestor_tu_espacio/scripts/repo/switch_origin_to_ssh.sh`  
+     `./gestor_tu_espacio/scripts/repo/switch_origin_to_ssh.sh work`  
+   - **Windows (PowerShell, raíz del repo):**  
+     `.\gestor_tu_espacio\scripts\repo\switch_origin_to_ssh.ps1`  
+     (opcional: `-Branch main`)  
+   - Manual: `git remote set-url origin git@github.com:kevinconejera803-debug/Sistema-.git`  
+   Requiere **clave SSH en ese entorno** y `ssh -T git@github.com` OK (nueva clave en GitHub si hace falta).
 
 6. **Red corporativa:** si nada de lo anterior funciona, hace falta que **IT** permita salida HTTPS a `github.com` o un proxy explícito compatible con Git.
 
