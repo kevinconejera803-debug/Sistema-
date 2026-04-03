@@ -328,3 +328,23 @@ git remote add origin https://github.com/TU_USUARIO/TU_REPO.git
 git branch -M main
 git push -u origin main
 ```
+
+### Error `CONNECT tunnel failed, response 403` (Cursor `/workspace`, Linux, CI)
+
+Suele ser un **proxy** del entorno que intercepta `https://github.com` y devuelve 403 al método **CONNECT**. El repo incluye:
+
+1. **`.vscode/settings.json`** — `http.noProxy` para GitHub y `proxySupport: fallback` (Cursor/VS Code).
+2. **Scripts** (una vez por máquina o sesión antes de `git push`):
+   - **Linux / `/workspace/Sistema-`:**  
+     `source gestor_tu_espacio/scripts/repo/setup_git_cloud.sh`  
+     luego `git push -u origin work`  
+     o en un solo paso:  
+     `chmod +x gestor_tu_espacio/scripts/repo/push_with_cloud_fix.sh`  
+     `./gestor_tu_espacio/scripts/repo/push_with_cloud_fix.sh work`
+   - **Windows (PowerShell):**  
+     `. .\gestor_tu_espacio\scripts\repo\setup_git_cloud.ps1`  
+     luego `git push -u origin work`
+
+3. Si el push sigue sin credenciales: **`export GITHUB_TOKEN=ghp_...`** y `./gestor_tu_espacio/scripts/repo/push_con_token.sh` (Linux) o el `push_con_token.ps1` de siempre.
+
+Vuelve a instalar el hook si lo usas: `.\gestor_tu_espacio\scripts\install-git-hooks.ps1` (el `post-commit` ya exporta `NO_PROXY` para GitHub).
