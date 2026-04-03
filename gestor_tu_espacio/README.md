@@ -108,13 +108,17 @@ No hay URLs ni dependencias hacia **gestor_historia** en el código: cada app se
 
 ## Scripts de Git (subir a GitHub)
 
-Desde la raíz del repositorio, los `.ps1` están en **`gestor_tu_espacio/scripts/repo/`** (operan sobre el `.git` de la raíz):
+Desde la raíz del repositorio, **`gestor_tu_espacio/scripts/repo/`** (el `.git` está en la raíz del monorepo):
 
-- `push_con_token.ps1` — push con PAT
-- `sync_github.ps1` — `git push` al `origin` configurado
-- `setup_github.ps1` — creación de repo con `gh`
+- `switch_origin_to_ssh.ps1` / `switch_origin_to_ssh.sh` — pasar `origin` de HTTPS a SSH (evita error CONNECT 403)
+- `setup_git_cloud.ps1` / `setup_git_cloud.sh` — quitar proxy roto solo para `github.com`
+- `push_github_direct.ps1` / `push_github_direct.sh` — `git` con HTTP/1.1 y sin variables de proxy
+- `push_con_token.ps1` / `push_con_token.sh` — push con token (HTTPS)
+- `sync_github.ps1` — `git push` si `origin` ya existe
+- `setup_github.ps1` — crear repo en GitHub con `gh` (primera vez)
+- `verificar_entorno.ps1` — comprobar Python, imports y `git`
 
-Hook opcional (auto-push tras cada commit): **`gestor_tu_espacio/scripts/install-git-hooks.ps1`**
+Hook opcional: **`gestor_tu_espacio/scripts/install-git-hooks.ps1`** (Windows) o **`install-git-hooks.sh`** (Linux).
 
 ## Limpieza de plantillas
 

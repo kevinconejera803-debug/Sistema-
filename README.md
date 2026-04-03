@@ -154,10 +154,9 @@ Ejercicios practicos/
 │   ├── static/
 │   └── scripts/
 │       ├── limpiar_templates_muertos.py
-│       ├── eliminar_gestor_tareas_restante.ps1
-│       ├── install-git-hooks.ps1
+│       ├── install-git-hooks.ps1 · install-git-hooks.sh
 │       ├── git-hooks/
-│       └── repo/             # push_con_token, sync_github, setup_github
+│       └── repo/             # GitHub: setup_git_cloud, push_github_direct, switch_origin_to_ssh, …
 └── gestor_historia/          # App «Historia» (puerto 5001)
     ├── app.py
     ├── database.py
@@ -191,14 +190,9 @@ Haz commit o copia de seguridad antes de `--apply`.
 
 Si quitas CSS o plantillas, actualiza la lista `STATIC_ASSETS` en `static/sw.js`.
 
-### Monolito `gestor_tareas`
+### Monolito antiguo `gestor_tareas`
 
-Si quedara esa carpeta y no puedes borrarla a mano, cierra procesos Python y ejecuta:
-
-```powershell
-cd gestor_tu_espacio\scripts
-.\eliminar_gestor_tareas_restante.ps1
-```
+Ya no forma parte del repositorio. Si en una copia antigua aún existiera esa carpeta, bórrala a mano con el Explorador de archivos (cierra antes cualquier `python` que use ese proyecto).
 
 ---
 
@@ -347,9 +341,8 @@ Suele ser **red/proxy**: el entorno define `HTTP_PROXY` / `HTTPS_PROXY` o un pro
      `.\gestor_tu_espacio\scripts\repo\push_github_direct.ps1 push -u origin work`
 
 2. **Solo configuración Git** (sin tocar variables de entorno):  
-   `. .\gestor_tu_espacio\scripts\repo\setup_git_cloud.ps1` y luego `git push`, o  
-   `source gestor_tu_espacio/scripts/repo/setup_git_cloud.sh`  
-   También (Linux): `./gestor_tu_espacio/scripts/repo/push_with_cloud_fix.sh work`
+   `. .\gestor_tu_espacio\scripts\repo\setup_git_cloud.ps1` y luego `git push`, o en Linux:  
+   `source gestor_tu_espacio/scripts/repo/setup_git_cloud.sh && git push -u origin work`
 
 3. **`.vscode/settings.json`** en el repo — `http.noProxy` para GitHub; recarga Cursor tras `git pull`.
 
