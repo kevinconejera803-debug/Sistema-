@@ -12,6 +12,17 @@
   var inpIn = document.getElementById("uni-input-intranet");
   var inpAu = document.getElementById("uni-input-aula");
   var btnSave = document.getElementById("uni-save-links");
+  var toastEl = document.getElementById("uni-toast");
+
+  function uniToast(msg) {
+    if (!toastEl) return;
+    toastEl.textContent = msg;
+    toastEl.hidden = false;
+    clearTimeout(uniToast._t);
+    uniToast._t = setTimeout(function () {
+      toastEl.hidden = true;
+    }, 3200);
+  }
 
   function readStored() {
     try {
@@ -54,6 +65,8 @@
     }
     if (inpIn && !inpIn.dataset.touched) inpIn.value = iu;
     if (inpAu && !inpAu.dataset.touched) inpAu.value = au;
+    if (linkIn) linkIn.classList.toggle("mod-uni-portal--ready", !!iu);
+    if (linkAu) linkAu.classList.toggle("mod-uni-portal--ready", !!au);
   }
 
   function save() {
@@ -63,16 +76,27 @@
     if (inpIn) delete inpIn.dataset.touched;
     if (inpAu) delete inpAu.dataset.touched;
     apply();
+    uniToast("Enlaces guardados en este navegador.");
   }
 
   if (linkIn) {
     linkIn.addEventListener("click", function (e) {
-      if (!merged("intranet")) e.preventDefault();
+      if (!merged("intranet")) {
+        e.preventDefault();
+        uniToast("Añade la URL de intranet en «Configurar enlaces».");
+        var det = document.getElementById("uni-settings");
+        if (det && !det.open) det.open = true;
+      }
     });
   }
   if (linkAu) {
     linkAu.addEventListener("click", function (e) {
-      if (!merged("aula")) e.preventDefault();
+      if (!merged("aula")) {
+        e.preventDefault();
+        uniToast("Añade la URL del aula virtual en «Configurar enlaces».");
+        var det = document.getElementById("uni-settings");
+        if (det && !det.open) det.open = true;
+      }
     });
   }
 

@@ -2,7 +2,7 @@
 {% block title %}SYSTEM INTERFACE — Universidad{% endblock %}
 
 {% block main_area %}
-<div class="mod-wrap">
+<div class="mod-wrap mod-uni" id="uni-root">
   {% include "modulos/_header.html" %}
 
   <div
@@ -12,104 +12,160 @@
     data-aula="{{ university_aula_url|e }}"
   ></div>
 
-  <section class="mod-uni-portals" aria-label="Accesos a la universidad">
-    <a
-      id="uni-link-intranet"
-      class="mod-uni-portal mod-uni-portal--disabled"
-      href="#"
-      target="_blank"
-      rel="noopener noreferrer"
-      aria-disabled="true"
-    >
-      <span class="mod-uni-portal__icon" aria-hidden="true">🏛</span>
-      <span class="mod-uni-portal__text">
-        <span class="mod-uni-portal__title">Intranet</span>
-        <span class="mod-uni-portal__sub">Portal y servicios corporativos</span>
-      </span>
-      <span class="mod-uni-portal__arrow" aria-hidden="true">→</span>
-    </a>
-    <a
-      id="uni-link-aula"
-      class="mod-uni-portal mod-uni-portal--disabled"
-      href="#"
-      target="_blank"
-      rel="noopener noreferrer"
-      aria-disabled="true"
-    >
-      <span class="mod-uni-portal__icon" aria-hidden="true">💻</span>
-      <span class="mod-uni-portal__text">
-        <span class="mod-uni-portal__title">Aula virtual</span>
-        <span class="mod-uni-portal__sub">Campus, materiales y clases online</span>
-      </span>
-      <span class="mod-uni-portal__arrow" aria-hidden="true">→</span>
-    </a>
+  <div id="uni-toast" class="mod-toast mod-uni-toast" role="status" aria-live="polite" hidden></div>
+
+  <section class="mod-uni-hero" aria-labelledby="uni-hero-title">
+    <div class="mod-uni-hero__intro">
+      <h2 id="uni-hero-title" class="mod-uni-hero__title">Acceso rápido</h2>
+      <p class="mod-uni-hero__lead">Intranet y aula virtual en un clic. Las URLs se pueden fijar abajo o por variables de entorno.</p>
+    </div>
+    <div class="mod-uni-portals" aria-label="Enlaces externos">
+      <a
+        id="uni-link-intranet"
+        class="mod-uni-portal mod-uni-portal--intranet mod-uni-portal--disabled"
+        href="#"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-disabled="true"
+      >
+        <span class="mod-uni-portal__glow" aria-hidden="true"></span>
+        <span class="mod-uni-portal__glyph" aria-hidden="true">🏛</span>
+        <span class="mod-uni-portal__body">
+          <span class="mod-uni-portal__title">Intranet</span>
+          <span class="mod-uni-portal__sub">Portal institucional y trámites</span>
+        </span>
+        <span class="mod-uni-portal__cta">
+          <span class="mod-uni-portal__cta-text">Abrir</span>
+          <span class="mod-uni-portal__arrow">→</span>
+        </span>
+      </a>
+      <a
+        id="uni-link-aula"
+        class="mod-uni-portal mod-uni-portal--aula mod-uni-portal--disabled"
+        href="#"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-disabled="true"
+      >
+        <span class="mod-uni-portal__glow" aria-hidden="true"></span>
+        <span class="mod-uni-portal__glyph" aria-hidden="true">💻</span>
+        <span class="mod-uni-portal__body">
+          <span class="mod-uni-portal__title">Aula virtual</span>
+          <span class="mod-uni-portal__sub">Campus, materiales y sesiones</span>
+        </span>
+        <span class="mod-uni-portal__cta">
+          <span class="mod-uni-portal__cta-text">Abrir</span>
+          <span class="mod-uni-portal__arrow">→</span>
+        </span>
+      </a>
+    </div>
   </section>
 
-  <details class="mod-uni-portals-config">
-    <summary>Personalizar enlaces (este navegador)</summary>
-    <p class="mod-toolbar__hint">
-      Opcional en el servidor:
-      <code>TU_ESPACIO_INTRANET_URL</code> y <code>TU_ESPACIO_AULA_URL</code>.
-      Si las rellenas aquí, tienen prioridad sobre el entorno.
-    </p>
-    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:0.75rem;">
-      <div class="mod-field">
-        <label for="uni-input-intranet">URL intranet</label>
-        <input type="url" id="uni-input-intranet" placeholder="https://intranet.universidad.edu" autocomplete="off">
+  <details class="mod-uni-settings" id="uni-settings">
+    <summary class="mod-uni-settings__summary">
+      <span class="mod-uni-settings__icon" aria-hidden="true">⚙</span>
+      <span class="mod-uni-settings__label">Configurar enlaces en este navegador</span>
+      <span class="mod-uni-settings__chev" aria-hidden="true">▼</span>
+    </summary>
+    <div class="mod-uni-settings__body">
+      <p class="mod-uni-settings__hint">
+        Opcional en servidor:
+        <code>TU_ESPACIO_INTRANET_URL</code> · <code>TU_ESPACIO_AULA_URL</code>.
+        Lo que guardes aquí tiene prioridad.
+      </p>
+      <div class="mod-uni-settings__grid">
+        <div class="mod-field">
+          <label for="uni-input-intranet">URL intranet</label>
+          <input type="url" id="uni-input-intranet" placeholder="https://intranet.tu-universidad.edu" autocomplete="off">
+        </div>
+        <div class="mod-field">
+          <label for="uni-input-aula">URL aula virtual</label>
+          <input type="url" id="uni-input-aula" placeholder="https://campus.tu-universidad.edu" autocomplete="off">
+        </div>
       </div>
-      <div class="mod-field">
-        <label for="uni-input-aula">URL aula virtual</label>
-        <input type="url" id="uni-input-aula" placeholder="https://campus.universidad.edu" autocomplete="off">
-      </div>
+      <button type="button" class="mod-btn mod-uni-save-btn" id="uni-save-links">Guardar enlaces</button>
     </div>
-    <button type="button" class="mod-btn" id="uni-save-links" style="margin-top:0.65rem;">Guardar enlaces</button>
   </details>
 
-  <div class="mod-toolbar">
-    <span class="mod-toolbar__label">NUEVA ENTREGA</span>
-  </div>
-
-  <form id="assign-form" class="mod-cal__side" style="margin-bottom:1.25rem;">
-    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:0.75rem;">
-      <div class="mod-field">
-        <label for="af-course">Curso</label>
-        <input type="text" id="af-course" required placeholder="Ej. Econometría">
+  <section class="mod-uni-panel" aria-labelledby="uni-deliveries-title">
+    <div class="mod-uni-panel__head">
+      <div>
+        <h2 id="uni-deliveries-title" class="mod-uni-panel__title">Entregas y evaluación</h2>
+        <p class="mod-uni-panel__subtitle">Registra entregas, peso en la nota y marca el estado sin fricción.</p>
       </div>
-      <div class="mod-field">
-        <label for="af-title">Título / entrega</label>
-        <input type="text" id="af-title" required placeholder="Informe, examen…">
-      </div>
-      <div class="mod-field">
-        <label for="af-due">Fecha límite</label>
-        <input type="datetime-local" id="af-due" required>
-      </div>
-      <div class="mod-field">
-        <label for="af-weight">Peso (%)</label>
-        <input type="number" id="af-weight" min="0" max="100" value="10" placeholder="10">
+      <div class="mod-uni-stats" id="uni-stats" aria-live="polite">
+        <div class="mod-uni-stat">
+          <span class="mod-uni-stat__val" id="uni-stat-pending">—</span>
+          <span class="mod-uni-stat__lbl">pendientes</span>
+        </div>
+        <div class="mod-uni-stat">
+          <span class="mod-uni-stat__val" id="uni-stat-next">—</span>
+          <span class="mod-uni-stat__lbl">próximo límite</span>
+        </div>
       </div>
     </div>
-    <button type="submit" class="mod-btn" style="margin-top:0.75rem;">REGISTRAR ENTREGA</button>
-  </form>
 
-  <div class="mod-table-wrap">
-    <table class="mod-table">
-      <thead>
-        <tr>
-          <th>CURSO</th>
-          <th>ENTREGA</th>
-          <th>LÍMITE</th>
-          <th>PESO</th>
-          <th>ESTADO</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody id="assign-tbody"></tbody>
-    </table>
-  </div>
+    <div class="mod-uni-filters" role="group" aria-label="Filtrar entregas">
+      <button type="button" class="mod-uni-chip mod-uni-chip--active" data-filter="all" id="uni-filter-all">Todas</button>
+      <button type="button" class="mod-uni-chip" data-filter="pending" id="uni-filter-pending">Pendientes</button>
+      <button type="button" class="mod-uni-chip" data-filter="done" id="uni-filter-done">Entregadas</button>
+    </div>
+
+    <form id="assign-form" class="mod-uni-form" autocomplete="off">
+      <div class="mod-uni-form__head">
+        <span class="mod-uni-form__badge">Nueva</span>
+        <span class="mod-uni-form__hint">Todos los campos son obligatorios salvo el peso (por defecto 10%).</span>
+      </div>
+      <div class="mod-uni-form__grid">
+        <div class="mod-field">
+          <label for="af-course">Curso</label>
+          <input type="text" id="af-course" required placeholder="Ej. Econometría aplicada">
+        </div>
+        <div class="mod-field">
+          <label for="af-title">Entrega</label>
+          <input type="text" id="af-title" required placeholder="Informe, examen, práctica…">
+        </div>
+        <div class="mod-field">
+          <label for="af-due">Fecha y hora límite</label>
+          <input type="datetime-local" id="af-due" required>
+        </div>
+        <div class="mod-field mod-field--narrow">
+          <label for="af-weight">Peso <span class="mod-uni-muted">(%)</span></label>
+          <input type="number" id="af-weight" min="0" max="100" value="10" placeholder="10">
+        </div>
+      </div>
+      <button type="submit" class="mod-btn mod-uni-submit">
+        <span class="mod-uni-submit__icon" aria-hidden="true">+</span>
+        Registrar entrega
+      </button>
+    </form>
+
+    <div class="mod-table-wrap mod-uni-table-wrap">
+      <div id="assign-empty" class="mod-uni-empty" hidden>
+        <p class="mod-uni-empty__title">No hay entregas todavía</p>
+        <p class="mod-uni-empty__text">Usa el formulario de arriba para añadir la primera, o cambia el filtro si ocultaste todas.</p>
+      </div>
+      <div class="mod-uni-table-scroll">
+        <table class="mod-table mod-uni-table">
+          <thead>
+            <tr>
+              <th>Curso</th>
+              <th>Entrega</th>
+              <th>Límite</th>
+              <th>Peso</th>
+              <th>Estado</th>
+              <th class="mod-uni-th-actions">Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="assign-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
 </div>
 {% endblock %}
 
 {% block extra_scripts %}
-<script src="{{ url_for('static', filename='js/university-portals.js') }}?v=1"></script>
-<script src="{{ url_for('static', filename='js/assignments.js') }}?v=2"></script>
+<script src="{{ url_for('static', filename='js/university-portals.js') }}?v=2"></script>
+<script src="{{ url_for('static', filename='js/assignments.js') }}?v=3"></script>
 {% endblock %}

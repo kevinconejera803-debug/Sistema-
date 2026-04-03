@@ -445,75 +445,515 @@
   padding: 0.2rem 0.45rem !important;
 }
 
-/* ——— Universidad: accesos portal ——— */
-.mod-uni-portals {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 0.75rem;
+/* ——— Universidad (dashboard) ——— */
+.mod-uni {
+  --uni-line: rgba(167, 139, 250, 0.22);
+  --uni-glow: 0 0 48px rgba(167, 139, 250, 0.12);
+}
+
+.mod-uni-toast {
+  border-color: rgba(167, 139, 250, 0.45);
+  background: rgba(167, 139, 250, 0.12);
+}
+
+.mod-uni-hero {
   margin-bottom: 1.25rem;
 }
+.mod-uni-hero__intro {
+  margin-bottom: 1rem;
+}
+.mod-uni-hero__title {
+  margin: 0 0 0.35rem;
+  font-family: var(--font-display);
+  font-size: 0.78rem;
+  letter-spacing: 0.22em;
+  color: var(--purple);
+}
+.mod-uni-hero__lead {
+  margin: 0;
+  font-size: 0.88rem;
+  color: var(--muted);
+  max-width: 52ch;
+  line-height: 1.45;
+}
+
+.mod-uni-portals {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
 .mod-uni-portal {
+  position: relative;
   display: flex;
-  align-items: center;
-  gap: 0.85rem;
-  padding: 0.85rem 1rem;
-  border-radius: 8px;
-  border: 1px solid var(--mod-line);
-  background: var(--mod-glass);
-  box-shadow: var(--mod-glow);
+  align-items: stretch;
+  gap: 0;
+  padding: 0;
+  border-radius: 12px;
+  border: 1px solid var(--uni-line);
+  background: linear-gradient(145deg, rgba(18, 14, 28, 0.95), rgba(8, 10, 16, 0.88));
+  box-shadow: var(--uni-glow), inset 0 1px 0 rgba(255, 255, 255, 0.04);
   text-decoration: none;
   color: var(--text);
-  transition: border-color 0.15s, background 0.15s;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+.mod-uni-portal__glow {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  pointer-events: none;
+}
+.mod-uni-portal--intranet .mod-uni-portal__glow {
+  background: radial-gradient(ellipse 80% 60% at 20% 30%, rgba(167, 139, 250, 0.2), transparent 55%);
+}
+.mod-uni-portal--aula .mod-uni-portal__glow {
+  background: radial-gradient(ellipse 80% 60% at 80% 40%, rgba(96, 165, 250, 0.18), transparent 55%);
 }
 .mod-uni-portal:hover:not(.mod-uni-portal--disabled) {
-  border-color: rgba(46, 230, 214, 0.35);
-  background: rgba(46, 230, 214, 0.06);
+  transform: translateY(-4px);
+  border-color: rgba(167, 139, 250, 0.45);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.45), 0 0 60px rgba(167, 139, 250, 0.15);
+}
+.mod-uni-portal:hover:not(.mod-uni-portal--disabled) .mod-uni-portal__glow {
+  opacity: 1;
+}
+.mod-uni-portal:focus-visible {
+  outline: 2px solid var(--purple);
+  outline-offset: 3px;
 }
 .mod-uni-portal--disabled {
-  opacity: 0.55;
+  opacity: 0.5;
   cursor: not-allowed;
 }
-.mod-uni-portal__icon {
-  font-size: 1.5rem;
-  line-height: 1;
+.mod-uni-portal--disabled:hover {
+  transform: none;
+  box-shadow: var(--uni-glow);
 }
-.mod-uni-portal__text {
+.mod-uni-portal--ready:not(.mod-uni-portal--disabled) {
+  animation: modUniPulse 0.7s ease-out 1;
+}
+@keyframes modUniPulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(167, 139, 250, 0.35);
+  }
+  100% {
+    box-shadow: 0 0 0 12px transparent;
+  }
+}
+
+.mod-uni-portal__glyph {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 4.25rem;
+  flex-shrink: 0;
+  font-size: 1.75rem;
+  background: rgba(0, 0, 0, 0.35);
+  border-right: 1px solid var(--uni-line);
+}
+.mod-uni-portal--intranet .mod-uni-portal__glyph {
+  background: linear-gradient(180deg, rgba(167, 139, 250, 0.12), rgba(0, 0, 0, 0.2));
+}
+.mod-uni-portal--aula .mod-uni-portal__glyph {
+  background: linear-gradient(180deg, rgba(96, 165, 250, 0.12), rgba(0, 0, 0, 0.2));
+}
+
+.mod-uni-portal__body {
   flex: 1;
   min-width: 0;
+  padding: 1rem 0.85rem;
   display: flex;
   flex-direction: column;
-  gap: 0.15rem;
+  justify-content: center;
+  gap: 0.25rem;
+  z-index: 1;
 }
 .mod-uni-portal__title {
   font-family: var(--font-display);
   font-size: 0.72rem;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.16em;
+  color: var(--text);
 }
 .mod-uni-portal__sub {
-  font-size: 0.78rem;
+  font-size: 0.8rem;
   color: var(--muted);
+  line-height: 1.35;
+}
+
+.mod-uni-portal__cta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.15rem;
+  padding: 0 1rem;
+  border-left: 1px solid var(--uni-line);
+  background: rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+.mod-uni-portal__cta-text {
+  font-family: var(--font-display);
+  font-size: 0.52rem;
+  letter-spacing: 0.18em;
+  color: var(--purple);
+}
+.mod-uni-portal--aula .mod-uni-portal__cta-text {
+  color: var(--blue);
 }
 .mod-uni-portal__arrow {
-  font-family: var(--font-display);
-  color: var(--teal);
-  font-size: 0.9rem;
+  font-size: 1.15rem;
+  color: var(--muted);
+  transition: transform 0.2s ease, color 0.2s ease;
 }
-.mod-uni-portals-config {
-  margin-bottom: 1rem;
-  padding: 0.65rem 0.85rem;
-  border-radius: 8px;
-  border: 1px solid rgba(122, 138, 160, 0.25);
-  background: rgba(0, 0, 0, 0.25);
+.mod-uni-portal:hover:not(.mod-uni-portal--disabled) .mod-uni-portal__arrow {
+  transform: translateX(4px);
+  color: var(--purple);
 }
-.mod-uni-portals-config summary {
+.mod-uni-portal--aula:hover:not(.mod-uni-portal--disabled) .mod-uni-portal__arrow {
+  color: var(--blue);
+}
+
+.mod-uni-settings {
+  margin-bottom: 1.5rem;
+  border-radius: 10px;
+  border: 1px solid var(--uni-line);
+  background: rgba(10, 8, 18, 0.65);
+  overflow: hidden;
+}
+.mod-uni-settings__summary {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.75rem 1rem;
   cursor: pointer;
+  list-style: none;
   font-family: var(--font-display);
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  color: var(--muted);
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.mod-uni-settings__summary::-webkit-details-marker {
+  display: none;
+}
+.mod-uni-settings__summary:hover {
+  background: rgba(167, 139, 250, 0.06);
+  color: var(--text);
+}
+.mod-uni-settings__icon {
+  font-size: 1rem;
+  opacity: 0.85;
+}
+.mod-uni-settings__label {
+  flex: 1;
+}
+.mod-uni-settings__chev {
+  font-size: 0.55rem;
+  transition: transform 0.25s ease;
+}
+.mod-uni-settings[open] .mod-uni-settings__chev {
+  transform: rotate(-180deg);
+}
+.mod-uni-settings__body {
+  padding: 0 1rem 1rem;
+  border-top: 1px solid var(--uni-line);
+}
+.mod-uni-settings__hint {
+  margin: 0.85rem 0 0;
+  font-size: 0.78rem;
+  color: var(--muted);
+  line-height: 1.45;
+}
+.mod-uni-settings__hint code {
+  font-size: 0.72rem;
+  color: var(--purple);
+}
+.mod-uni-settings__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 0.75rem;
+  margin-top: 0.85rem;
+}
+.mod-uni-save-btn {
+  margin-top: 0.85rem;
+  border-color: rgba(167, 139, 250, 0.45) !important;
+  color: var(--purple) !important;
+}
+.mod-uni-save-btn:hover {
+  background: rgba(167, 139, 250, 0.12) !important;
+}
+
+.mod-uni-panel {
+  border-radius: 12px;
+  border: 1px solid var(--uni-line);
+  background: linear-gradient(165deg, rgba(14, 12, 22, 0.92), rgba(6, 8, 14, 0.88));
+  padding: 1.15rem 1.25rem 1.35rem;
+  box-shadow: var(--uni-glow);
+}
+.mod-uni-panel__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--uni-line);
+}
+.mod-uni-panel__title {
+  margin: 0 0 0.35rem;
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  letter-spacing: 0.16em;
+  color: var(--text);
+}
+.mod-uni-panel__subtitle {
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--muted);
+  max-width: 48ch;
+  line-height: 1.4;
+}
+
+.mod-uni-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+}
+.mod-uni-stat {
+  min-width: 120px;
+  padding: 0.55rem 0.85rem;
+  border-radius: 8px;
+  border: 1px solid var(--uni-line);
+  background: rgba(0, 0, 0, 0.35);
+}
+.mod-uni-stat__val {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  letter-spacing: 0.06em;
+  color: var(--purple);
+}
+.mod-uni-stat__lbl {
   font-size: 0.58rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.mod-uni-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-bottom: 1.1rem;
+}
+.mod-uni-chip {
+  font-family: var(--font-display);
+  font-size: 0.55rem;
+  letter-spacing: 0.12em;
+  padding: 0.4rem 0.85rem;
+  border-radius: 999px;
+  border: 1px solid var(--uni-line);
+  background: rgba(0, 0, 0, 0.35);
+  color: var(--muted);
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+.mod-uni-chip:hover {
+  border-color: rgba(167, 139, 250, 0.4);
+  color: var(--text);
+}
+.mod-uni-chip--active {
+  border-color: rgba(167, 139, 250, 0.55);
+  background: rgba(167, 139, 250, 0.14);
+  color: var(--text);
+}
+
+.mod-uni-form {
+  margin-bottom: 1.25rem;
+  padding: 1rem 1.1rem;
+  border-radius: 10px;
+  border: 1px solid rgba(167, 139, 250, 0.15);
+  background: rgba(0, 0, 0, 0.28);
+}
+.mod-uni-form__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.65rem;
+  margin-bottom: 0.85rem;
+}
+.mod-uni-form__badge {
+  font-family: var(--font-display);
+  font-size: 0.52rem;
+  letter-spacing: 0.16em;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  border: 1px solid rgba(167, 139, 250, 0.4);
+  color: var(--purple);
+}
+.mod-uni-form__hint {
+  font-size: 0.74rem;
+  color: var(--muted);
+  flex: 1;
+  min-width: 200px;
+}
+.mod-uni-form__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 0.75rem;
+}
+.mod-field--narrow {
+  max-width: 120px;
+}
+.mod-uni-muted {
+  font-weight: 400;
+  opacity: 0.85;
+}
+.mod-uni-submit {
+  margin-top: 1rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-color: rgba(167, 139, 250, 0.5) !important;
+  color: var(--purple) !important;
+}
+.mod-uni-submit:hover {
+  background: rgba(167, 139, 250, 0.14) !important;
+}
+.mod-uni-submit__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.35rem;
+  height: 1.35rem;
+  border-radius: 4px;
+  background: rgba(167, 139, 250, 0.2);
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.mod-uni-table-wrap {
+  position: relative;
+  border-color: var(--uni-line) !important;
+}
+.mod-uni-empty {
+  padding: 2.5rem 1.5rem;
+  text-align: center;
+  border-radius: 8px;
+  border: 1px dashed rgba(167, 139, 250, 0.25);
+  background: rgba(0, 0, 0, 0.2);
+}
+.mod-uni-empty__title {
+  margin: 0 0 0.5rem;
+  font-family: var(--font-display);
+  font-size: 0.72rem;
   letter-spacing: 0.14em;
   color: var(--muted);
 }
-.mod-uni-portals-config .mod-field {
-  margin-top: 0.75rem;
+.mod-uni-empty__text {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--muted);
+  max-width: 36ch;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.45;
+}
+.mod-uni-table-scroll {
+  overflow: auto;
+  max-height: min(58vh, 520px);
+}
+.mod-uni-table th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: rgba(10, 8, 18, 0.97);
+  backdrop-filter: blur(6px);
+}
+.mod-uni-th-actions {
+  text-align: right;
+  min-width: 7rem;
+}
+.mod-uni-td-due {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.mod-uni-td-actions {
+  text-align: right;
+}
+@media (min-width: 720px) {
+  .mod-uni-td-actions {
+    white-space: nowrap;
+  }
+}
+.mod-uni-tr {
+  animation: modUniRowIn 0.45s ease backwards;
+}
+@keyframes modUniRowIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.mod-uni-btn {
+  font-family: var(--font-display);
+  font-size: 0.55rem;
+  letter-spacing: 0.06em;
+  padding: 0.35rem 0.55rem;
+  border-radius: 4px;
+  border: 1px solid rgba(167, 139, 250, 0.35);
+  background: rgba(167, 139, 250, 0.08);
+  color: var(--purple);
+  cursor: pointer;
+  transition: background 0.12s ease, transform 0.12s ease;
+}
+.mod-uni-btn:hover {
+  background: rgba(167, 139, 250, 0.18);
+}
+.mod-uni-btn:active {
+  transform: scale(0.97);
+}
+.mod-uni-btn--ghost {
+  border-color: rgba(74, 222, 128, 0.35);
+  color: var(--green);
+  background: rgba(74, 222, 128, 0.06);
+}
+.mod-uni-btn--ghost:hover {
+  background: rgba(74, 222, 128, 0.14);
+}
+.mod-uni-btn--danger {
+  border-color: rgba(255, 77, 94, 0.35);
+  color: var(--red);
+  background: rgba(255, 77, 94, 0.06);
+}
+.mod-uni-btn--danger:hover {
+  background: rgba(255, 77, 94, 0.14);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mod-uni-portal,
+  .mod-uni-portal__arrow,
+  .mod-uni-tr {
+    animation: none !important;
+    transition: none !important;
+  }
+  .mod-uni-portal:hover:not(.mod-uni-portal--disabled) {
+    transform: none;
+  }
+}
+
+.mod-uni .mod-table td {
+  border-bottom-color: rgba(167, 139, 250, 0.08);
+}
+.mod-uni .mod-table tr:hover td {
+  background: rgba(167, 139, 250, 0.06);
 }
 
 /* ——— Tablas datos ——— */

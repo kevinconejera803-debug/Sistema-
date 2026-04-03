@@ -50,7 +50,7 @@ MODULES = [
         "desc": "Aula y entregas",
         "icon": "🎓",
         "theme": "purple",
-        "lead": "Accesos a intranet y aula virtual; entregas y peso de evaluación en SQLite.",
+        "lead": "Accesos rápidos al campus, entregas con filtros y estadísticas en tiempo real.",
     },
     {
         "slug": "trading-lab",
