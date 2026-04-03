@@ -18,13 +18,24 @@ ROOT = Path(__file__).resolve().parent.parent
 APP = ROOT / "app.py"
 TEMPLATES = ROOT / "templates"
 
+# Cadenas literales: render_template("foo.html"
 RENDER_RE = re.compile(r"""render_template\s*\(\s*['"]([^'"]+\.html)['"]""", re.DOTALL)
 INCLUDE_RE = re.compile(r"""{%\s*include\s+['"]([^'"]+)['"]\s*%}""")
 EXTENDS_RE = re.compile(r"""{%\s*extends\s+['"]([^'"]+)['"]\s*%}""")
 
 
+def _posix_rel(path: Path, root: Path) -> str:
+    return path.relative_to(root).as_posix()
+
+
 def templates_from_app(py_text: str) -> set[str]:
-    return set(RENDER_RE.findall(py_text))
+    found = set(RENDER_RE.findall(py_text))
+    # Rutas dinámicas tipo render_template(f"modulos/{slug}.html", ...)
+    if re.search(r"render_template\s*\(\s*f[\"']modulos/\{slug\}\.html[\"']", py_text):
+        mod_dir = TEMPLATES / "modulos"
+        if mod_dir.is_dir():
+            found |= {_posix_rel(p, TEMPLATES) for p in mod_dir.glob("*.html")}
+    return found
 
 
 def _norm(name: str) -> str:
@@ -76,7 +87,7 @@ def main() -> None:
         sys.exit(1)
 
     reachable = closure(roots)
-    all_html = {p.name for p in TEMPLATES.glob("*.html")}
+    all_html = {_posix_rel(p, TEMPLATES) for p in TEMPLATES.rglob("*.html")}
     orphan = sorted(all_html - reachable)
 
     print("Plantillas raíz (desde app.py):", len(roots))

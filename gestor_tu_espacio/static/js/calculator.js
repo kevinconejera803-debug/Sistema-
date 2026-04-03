@@ -24,6 +24,11 @@
     return;
   }
 
+  var PREVIEW_DEBOUNCE_MS = 120;
+  var HISTORY_MAX = 24;
+  var INTEGRAL_MIN_STEPS = 200;
+  var INTEGRAL_MAX_STEPS = 8000;
+
   var ans = 0;
   var useDegrees = false;
   var history = [];
@@ -45,7 +50,7 @@
     var va = math.number(a);
     var vb = math.number(b);
     if (va === vb) return 0;
-    var n = Math.min(8000, Math.max(200, Math.ceil(Math.abs(vb - va) * 200)));
+    var n = Math.min(INTEGRAL_MAX_STEPS, Math.max(INTEGRAL_MIN_STEPS, Math.ceil(Math.abs(vb - va) * 200)));
     var h = (vb - va) / n;
     var sum = 0;
     var scope = {};
@@ -152,6 +157,23 @@
 
   registerCustom();
 
+  /** Ámbito para evaluate: respeta ans y, si está activo, sin/cos/tan en grados. */
+  function buildEvaluateScope() {
+    var scope = { ans: ans, pi: math.pi, e: math.e, Infinity: Infinity };
+    if (useDegrees) {
+      scope.sin = function (x) {
+        return math.sin(math.multiply(math.divide(x, 180), math.pi));
+      };
+      scope.cos = function (x) {
+        return math.cos(math.multiply(math.divide(x, 180), math.pi));
+      };
+      scope.tan = function (x) {
+        return math.tan(math.multiply(math.divide(x, 180), math.pi));
+      };
+    }
+    return scope;
+  }
+
   function formatResult(val) {
     if (val === undefined || val === null) return "";
     if (typeof val === "string") return val;
@@ -229,7 +251,7 @@
 
   function scheduleExprPreview() {
     clearTimeout(previewTimer);
-    previewTimer = setTimeout(updateExprPreview, 120);
+    previewTimer = setTimeout(updateExprPreview, PREVIEW_DEBOUNCE_MS);
   }
 
   function defaultStepsHtml() {
@@ -284,12 +306,10 @@
       return;
     }
     try {
-      var scope = { ans: ans, pi: math.pi, e: math.e, Infinity: Infinity };
-      var val = math.evaluate(s, scope);
+      var val = math.evaluate(s, buildEvaluateScope());
       var out = formatResult(val);
       updateResultKatex(out, null);
-      if (typeof val === "number" && isFinite(val)) ans = val;
-      else if (typeof val === "number") ans = val;
+      if (typeof val === "number") ans = val;
       pushHistory(raw || s, out);
       updateExprPreview();
       updateStepsPanel(s, null);
@@ -322,7 +342,7 @@
 
   function pushHistory(line, res) {
     history.unshift({ expr: line, result: res });
-    while (history.length > 24) history.pop();
+    while (history.length > HISTORY_MAX) history.pop();
     if (isHistOpen()) renderHistory();
   }
 
@@ -546,6 +566,7 @@
     degToggle.addEventListener("click", function () {
       useDegrees = !useDegrees;
       degLabel.textContent = useDegrees ? "Grados (sin/cos/tan con °)" : "Radianes";
+      if (String(exprEl.value).trim()) evaluateNow();
     });
   }
 
