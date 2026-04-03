@@ -1,5 +1,6 @@
 # Instala el hook post-commit (auto-push tras cada git commit).
-$repoRoot = Split-Path $PSScriptRoot -Parent
+# Copia el hook a .git/hooks/ de la raíz del repositorio.
+$repoRoot = Split-Path (Split-Path $PSScriptRoot -Parent) -Parent
 Set-Location $repoRoot
 $hook = Join-Path $PSScriptRoot "git-hooks\post-commit"
 $dest = Join-Path $repoRoot ".git\hooks\post-commit"

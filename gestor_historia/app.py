@@ -1,40 +1,28 @@
 """
-Historia — entrada Flask (mínima). Sustituye o amplía según tu proyecto.
+Historia — Flask: segunda app del repo (junto a gestor_tu_espacio).
 """
 import os
 
-from flask import Flask, render_template_string
+from flask import Flask, render_template
 
 app = Flask(__name__)
 
 
-PAGE = """
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Historia</title>
-  <style>
-    body { font-family: system-ui, sans-serif; max-width: 40rem; margin: 2rem auto; padding: 0 1rem; }
-    code { background: #f0f0f0; padding: 0.15rem 0.4rem; border-radius: 4px; }
-  </style>
-</head>
-<body>
-  <h1>Historia</h1>
-  <p>La app está corriendo. Puerto: <strong>{{ port }}</strong></p>
-  <p>Si ves esto, Python y el venv funcionan. Puedes desarrollar aquí con normalidad.</p>
-</body>
-</html>
-"""
+def _tu_espacio_url():
+    base = os.environ.get("TU_ESPACIO_URL", "http://127.0.0.1:5000").strip().rstrip("/")
+    return base + "/tu-espacio"
 
 
 @app.route("/")
 def index():
-    port = os.environ.get("FLASK_PORT", "5001")
-    return render_template_string(PAGE, port=port)
+    return render_template(
+        "historia.html",
+        port=os.environ.get("FLASK_PORT", "5001"),
+        tu_espacio_href=_tu_espacio_url(),
+    )
 
 
 if __name__ == "__main__":
     port = int(os.environ.get("FLASK_PORT", "5001"))
-    app.run(host=os.environ.get("FLASK_HOST", "127.0.0.1"), port=port, debug=True)
+    host = os.environ.get("FLASK_HOST", "127.0.0.1")
+    app.run(host=host, port=port, debug=True)

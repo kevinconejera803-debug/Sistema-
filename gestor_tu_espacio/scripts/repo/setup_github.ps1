@@ -1,10 +1,11 @@
 # Crea el repo en GitHub y hace push (requiere GitHub CLI: gh).
 # 1) Ejecuta una vez: gh auth login
-# 2) Luego: .\setup_github.ps1
+# 2) Luego: cd gestor_tu_espacio\scripts\repo  →  .\setup_github.ps1
 # Opcional: $env:GITHUB_REPO_NAME = "mi-repo"
 
 $ErrorActionPreference = "Stop"
-Set-Location $PSScriptRoot
+$RepoRoot = Split-Path (Split-Path (Split-Path $PSScriptRoot -Parent) -Parent) -Parent
+Set-Location $RepoRoot
 
 if (-not (Get-Command gh -ErrorAction SilentlyContinue)) {
     Write-Error "Instala GitHub CLI: https://cli.github.com/"

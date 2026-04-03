@@ -1,8 +1,8 @@
 # Historia (`gestor_historia`)
 
-Simulador (Nexo, misiones, NEXUS CORE, tienda, etc.). Puerto típico **5001**, base **`historia.db`**.
+Segunda aplicación Flask del repositorio (junto a **gestor_tu_espacio**). Puerto típico **5001**, base **`historia.db`** cuando la uses en `database.py`.
 
-**Venv, instalación y Git:** [README del repositorio](../README.md#install) · [Entornos virtuales](../README.md#venv)
+**Instalación y Git (raíz del repo):** [README del repositorio](../README.md#install)
 
 ## Arranque rápido
 
@@ -16,29 +16,23 @@ python app.py
 
 Navegador: **http://127.0.0.1:5001/**
 
-### Variables opcionales (`.env` o sesión)
+### Enlaces con la otra app
 
-```ini
-FLASK_PORT=5001
-FLASK_HOST=0.0.0.0
+Por defecto el panel “Tu espacio” se abre en `http://127.0.0.1:5000/tu-espacio`. Puedes cambiar la URL base:
+
+```powershell
+$env:TU_ESPACIO_URL = "http://127.0.0.1:5000"
 ```
 
-## Estructura relevante
+### Estructura
 
 | Ruta | Uso |
 |------|-----|
-| `app.py` | Flask |
-| `database.py` | SQLite |
-| `templates/` · `static/` | Front |
-| `nucleo_game.py`, `nexus_core.py`, `game_shop.py`, … | Lógica del juego |
-
-## Problemas frecuentes
-
-| Síntoma | Qué hacer |
-|---------|-----------|
-| Puerto ocupado | Cambiar `FLASK_PORT` o cerrar la otra app |
-| Módulo no encontrado | Activar **este** venv y `pip install -r requirements.txt` |
-| `python` incorrecto | `.\.venv\Scripts\python.exe app.py` |
+| `app.py` | Flask, rutas |
+| `database.py` | SQLite (cuando lo conectes) |
+| `templates/historia.html` | Página principal |
+| `static/css/historia.css` | Estilos |
+| `scripts/` | Utilidades (p. ej. limpiar plantillas) |
 
 ## Limpieza de plantillas
 

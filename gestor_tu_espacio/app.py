@@ -23,80 +23,28 @@ _MONTHS_ES = (
     "DIC",
 )
 
-# Tarjetas de acceso (rutas internas: enlaza cuando existan las vistas)
-ACCESS_CARDS = [
-    {
-        "title": "CALENDARIO",
-        "desc": "Día - semana - mes",
-        "icon": "🕐",
-        "theme": "teal",
-        "href": "#",
-    },
-    {
-        "title": "UNIVERSIDAD",
-        "desc": "Aula y entregas",
-        "icon": "🎓",
-        "theme": "purple",
-        "href": "#",
-    },
-    {
-        "title": "TRADING LAB",
-        "desc": "Mercados",
-        "icon": "📈",
-        "theme": "yellow",
-        "href": "#",
-    },
-    {
-        "title": "CIBERSEGURIDAD",
-        "desc": "Shadow Network",
-        "icon": "🛡",
-        "theme": "teal",
-        "href": "#",
-    },
-    {
-        "title": "HERRAMIENTAS",
-        "desc": "PDF - exportar - QR",
-        "icon": "🧰",
-        "theme": "red",
-        "href": "#",
-    },
-    {
-        "title": "CONTACTOS",
-        "desc": "Tarjetas y agenda",
-        "icon": "✉",
-        "theme": "purple",
-        "href": "#",
-    },
-    {
-        "title": "NOTICIAS",
-        "desc": "Fuentes y feeds",
-        "icon": "📰",
-        "theme": "blue",
-        "href": "#",
-    },
-    {
-        "title": "BUSCAR",
-        "desc": "Búsqueda global",
-        "icon": "🔍",
-        "theme": "green",
-        "href": "#",
-    },
-    {
-        "title": "CALCULADORA",
-        "desc": "Paso a paso",
-        "icon": "🔢",
-        "theme": "orange",
-        "href": "#",
-    },
-]
+def _historia_url():
+    base = os.environ.get("HISTORIA_APP_URL", "http://127.0.0.1:5001").strip().rstrip("/")
+    return base + "/"
 
 
 def _tu_espacio_context():
     now = datetime.now()
     month_badge = f"{_MONTHS_ES[now.month - 1]} - {now.year}"
+    h = _historia_url()
+    access_cards = [
+        {
+            "title": "HISTORIA",
+            "desc": "Segunda app del repositorio (Flask, puerto 5001)",
+            "icon": "📜",
+            "theme": "purple",
+            "href": h,
+        },
+    ]
     return {
-        "access_cards": ACCESS_CARDS,
+        "access_cards": access_cards,
         "month_badge": month_badge,
+        "historia_href": h,
     }
 
 

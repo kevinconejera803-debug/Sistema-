@@ -1,4 +1,4 @@
 #!/bin/sh
 # Tras cada commit local, intenta subir main a origin (requiere credenciales guardadas).
-# Instalar: .\scripts\install-git-hooks.ps1
+# Instalar: .\gestor_tu_espacio\scripts\install-git-hooks.ps1 (desde la raíz del repo)
 exec git push origin main 2>/dev/null || exit 0

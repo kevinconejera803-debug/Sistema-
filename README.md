@@ -7,7 +7,7 @@ Dos aplicaciones Flask **independientes**: cada una con su **`.venv`**, **`requi
 | [`gestor_tu_espacio/`](gestor_tu_espacio/) | **5000** | http://127.0.0.1:5000 |
 | [`gestor_historia/`](gestor_historia/) | **5001** | http://127.0.0.1:5001 |
 
-En la raíz solo conviven este archivo, **`.gitignore`** (Git) y las dos carpetas de las apps.
+En la raíz solo están este archivo, **`.gitignore`** y las carpetas **`gestor_tu_espacio/`** y **`gestor_historia/`**. Scripts de Git y utilidades del repo viven dentro de **`gestor_tu_espacio/scripts/`** (no hay otra app ni carpetas sueltas en la raíz).
 
 ---
 
@@ -146,23 +146,24 @@ Variables útiles (Tu espacio): `FLASK_PORT`, `FLASK_HOST`. Detalle: [gestor_tu_
 Ejercicios practicos/
 ├── .gitignore
 ├── README.md                 # Este archivo
-├── gestor_tu_espacio/
+├── gestor_tu_espacio/       # App «Tu espacio» (puerto 5000)
 │   ├── app.py
 │   ├── database.py
 │   ├── requirements.txt
 │   ├── templates/
 │   ├── static/
-│   ├── trading_lab/          # (según tu código)
 │   └── scripts/
 │       ├── limpiar_templates_muertos.py
-│       └── eliminar_gestor_tareas_restante.ps1
-└── gestor_historia/
+│       ├── eliminar_gestor_tareas_restante.ps1
+│       ├── install-git-hooks.ps1
+│       ├── git-hooks/
+│       └── repo/             # push_con_token, sync_github, setup_github
+└── gestor_historia/          # App «Historia» (puerto 5001)
     ├── app.py
     ├── database.py
     ├── requirements.txt
     ├── templates/
     ├── static/
-    ├── data/
     └── scripts/
         └── limpiar_templates_muertos.py
 ```
@@ -281,10 +282,12 @@ Lo ignorado por defecto: `.venv/`, `*.db`, `uploads/`, `.env`, etc. (ver `.gitig
 
 ### Subir a GitHub
 
+Los scripts `.ps1` están en **`gestor_tu_espacio/scripts/repo/`** y usan la raíz del repositorio como directorio de trabajo (donde está el `.git`).
+
 **Subir sin ventanas de login (recomendado, una vez):** crea un [Personal Access Token](https://github.com/settings/tokens) con permiso **repo**, luego:
 
 ```powershell
-cd "ruta\a\Ejercicios practicos"
+cd "ruta\a\Ejercicios practicos\gestor_tu_espacio\scripts\repo"
 $env:GITHUB_TOKEN = "ghp_pega_aqui_el_token"
 .\push_con_token.ps1
 ```
@@ -294,7 +297,7 @@ El remoto configurado por defecto es `kevinconejera803-debug/Sistema-` (ajusta e
 **Actualizar un repo (URL genérica):**
 
 ```powershell
-cd "ruta\a\Ejercicios practicos"
+cd "ruta\a\Ejercicios practicos\gestor_tu_espacio\scripts\repo"
 .\sync_github.ps1 https://github.com/TU_USUARIO/TU_REPO.git
 ```
 
@@ -303,12 +306,19 @@ Si `origin` ya existe: `.\sync_github.ps1` (solo `git push`).
 **Opción automática** (repo nuevo con GitHub CLI `gh`):
 
 ```powershell
-cd "ruta\a\Ejercicios practicos"
+cd "ruta\a\Ejercicios practicos\gestor_tu_espacio\scripts\repo"
 gh auth login
 .\setup_github.ps1
 ```
 
 Crea el repo público `ejercicios-practicos`, añade `origin` y hace `push`. Para otro nombre: `$env:GITHUB_REPO_NAME = "mi-nombre"; .\setup_github.ps1`
+
+**Hook opcional** (intentar `git push` tras cada `git commit`), desde la raíz del repo:
+
+```powershell
+cd "ruta\a\Ejercicios practicos"
+.\gestor_tu_espacio\scripts\install-git-hooks.ps1
+```
 
 **Opción manual:** crea un repositorio **vacío** en GitHub y enlázalo:
 

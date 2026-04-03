@@ -6,14 +6,15 @@
 # Si origin ya apunta a tu repo:
 #   .\sync_github.ps1
 #
-# Requiere: Git configurado; para HTTPS, usuario + token (PAT) al pedir contrasena.
+# Ubicación: gestor_tu_espacio/scripts/repo/ (cd ahí o usa ruta completa al .ps1)
 
 param(
     [string]$RemoteUrl = ""
 )
 
 $ErrorActionPreference = "Stop"
-Set-Location $PSScriptRoot
+$RepoRoot = Split-Path (Split-Path (Split-Path $PSScriptRoot -Parent) -Parent) -Parent
+Set-Location $RepoRoot
 
 function Get-HasOrigin {
     try {

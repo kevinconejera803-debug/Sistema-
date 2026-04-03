@@ -1,11 +1,13 @@
 # Push con PAT (una linea de token, no se guarda en el repo tras el push).
-# Token: GitHub -> Settings -> Developer settings -> Fine-grained o classic PAT (scope repo).
+# Ejecutar desde cualquier sitio; el script usa la raíz del repo Git (padre de gestor_tu_espacio).
 #
+#   cd gestor_tu_espacio\scripts\repo
 #   $env:GITHUB_TOKEN = "ghp_xxxx"
 #   .\push_con_token.ps1
 
 $ErrorActionPreference = "Stop"
-Set-Location $PSScriptRoot
+$RepoRoot = Split-Path (Split-Path (Split-Path $PSScriptRoot -Parent) -Parent) -Parent
+Set-Location $RepoRoot
 
 $t = $env:GITHUB_TOKEN
 if ([string]::IsNullOrWhiteSpace($t)) {
@@ -23,7 +25,6 @@ $repoAuth  = "https://${t}@github.com/kevinconejera803-debug/Sistema-.git"
 git remote remove origin 2>$null
 git remote add origin $repoPlain
 
-# Empuja con credencial en la URL (solo en memoria de este proceso)
 $env:GIT_TERMINAL_PROMPT = "0"
 Write-Host "Subiendo rama main..."
 git push $repoAuth HEAD:main
