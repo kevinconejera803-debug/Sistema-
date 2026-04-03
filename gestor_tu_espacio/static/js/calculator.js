@@ -15,6 +15,9 @@
   var histToggle = document.getElementById("sci-hist-toggle");
   var histClear = document.getElementById("sci-hist-clear");
   var abcBtn = document.getElementById("sci-abc");
+  var katexExprEl = document.getElementById("sci-katex-expr");
+  var katexResultEl = document.getElementById("sci-katex-result");
+  var stepsBodyEl = document.getElementById("sci-steps-body");
 
   if (!exprEl || typeof math === "undefined") {
     if (resultEl) resultEl.textContent = "math.js no cargó. Revisa la red.";
@@ -164,25 +167,137 @@
     }
   }
 
+  function escapeHtml(str) {
+    var d = document.createElement("div");
+    d.textContent = str == null ? "" : String(str);
+    return d.innerHTML;
+  }
+
+  function katexOk() {
+    return typeof katex !== "undefined" && katex && typeof katex.renderToString === "function";
+  }
+
+  function renderKatexInto(el, tex, useDisplay) {
+    if (!el) return;
+    if (!katexOk()) {
+      el.textContent = tex || "";
+      return;
+    }
+    try {
+      el.innerHTML = katex.renderToString(tex || "", {
+        throwOnError: false,
+        displayMode: useDisplay !== false,
+        strict: false,
+      });
+    } catch (e0) {
+      el.textContent = tex || "";
+    }
+  }
+
+  function exprToTex(s) {
+    if (!s) return null;
+    try {
+      return math.parse(s).toTex({ parenthesis: "auto" });
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function resultToTex(out) {
+    var str = String(out);
+    if (str === "Error") return "\\text{Error}";
+    try {
+      return math.parse(str).toTex({ parenthesis: "auto" });
+    } catch (e1) {
+      var safe = str.replace(/\\/g, "\\\\").replace(/"/g, "'").replace(/\n/g, " ");
+      return "\\text{" + safe + "}";
+    }
+  }
+
+  var previewTimer;
+  function updateExprPreview() {
+    if (!katexExprEl) return;
+    var s = normalizeExpr(exprEl.value);
+    if (!s) {
+      renderKatexInto(katexExprEl, "\\text{…}", true);
+      return;
+    }
+    var tex = exprToTex(s);
+    if (tex) renderKatexInto(katexExprEl, tex, true);
+    else renderKatexInto(katexExprEl, "\\text{Revisa la sintaxis}", true);
+  }
+
+  function scheduleExprPreview() {
+    clearTimeout(previewTimer);
+    previewTimer = setTimeout(updateExprPreview, 120);
+  }
+
+  function defaultStepsHtml() {
+    return '<p class="sci-calc__steps-intro">Cuando pulses <strong>Calcular</strong>, aquí verás qué tipo de operación se aplicó (derivada, integral numérica, límite, etc.).</p>';
+  }
+
+  function buildStepsHtml(normalized, err) {
+    if (err) {
+      return '<p class="sci-calc__steps-err">' + escapeHtml(err.message || String(err)) + "</p>";
+    }
+    var items = [
+      "La entrada se normaliza (por ejemplo símbolos √ y ∛ se convierten para el motor math.js).",
+    ];
+    if (/der\s*\(/i.test(normalized)) items.push("Se obtuvo una derivada simbólica; el resultado se simplifica cuando es posible.");
+    if (/integral\s*\(/i.test(normalized)) items.push("Integral definida: valor aproximado por suma de trapecios (cuadratura).");
+    if (/lim\s*\(/i.test(normalized)) items.push("Límite: se evalúa en el punto o por aproximación en el entorno.");
+    if (/sumfrom\s*\(/i.test(normalized)) items.push("Suma de la expresión sobre enteros desde el índice inicial al final.");
+    if (items.length === 1) items.push("Evaluación con math.js (numérica o simbólica según la expresión).");
+    var html = "<ol>";
+    for (var i = 0; i < items.length; i++) html += "<li>" + escapeHtml(items[i]) + "</li>";
+    html += "</ol>";
+    return html;
+  }
+
+  function updateStepsPanel(normalized, err) {
+    if (!stepsBodyEl) return;
+    stepsBodyEl.innerHTML = err ? buildStepsHtml(normalized, err) : buildStepsHtml(normalized, null);
+  }
+
+  function updateResultKatex(out, errObj) {
+    if (!katexResultEl || !resultEl) return;
+    if (errObj) {
+      resultEl.textContent = "Error";
+      resultEl.title = errObj.message || String(errObj);
+      katexResultEl.innerHTML =
+        '<span class="sci-calc__katex-err">' + escapeHtml(errObj.message || "Error") + "</span>";
+      return;
+    }
+    resultEl.textContent = out;
+    resultEl.title = "";
+    renderKatexInto(katexResultEl, resultToTex(out), true);
+  }
+
   function evaluateNow() {
     var raw = String(exprEl.value).trim();
     var s = normalizeExpr(exprEl.value);
     if (!s) {
       resultEl.textContent = "0";
+      renderKatexInto(katexExprEl, "\\text{…}", true);
+      renderKatexInto(katexResultEl, "0", true);
+      if (stepsBodyEl) stepsBodyEl.innerHTML = defaultStepsHtml();
       return;
     }
     try {
       var scope = { ans: ans, pi: math.pi, e: math.e, Infinity: Infinity };
       var val = math.evaluate(s, scope);
       var out = formatResult(val);
-      resultEl.textContent = out;
+      updateResultKatex(out, null);
       if (typeof val === "number" && isFinite(val)) ans = val;
       else if (typeof val === "number") ans = val;
       pushHistory(raw || s, out);
+      updateExprPreview();
+      updateStepsPanel(s, null);
     } catch (err) {
-      resultEl.textContent = "Error";
-      resultEl.title = err.message || String(err);
+      updateResultKatex("Error", err);
       pushHistory(raw || s, "Error: " + (err.message || err));
+      updateExprPreview();
+      updateStepsPanel(s, err);
     }
   }
 
@@ -344,11 +459,17 @@
     exprEl.value = "";
     resultEl.textContent = "0";
     resultEl.title = "";
+    renderKatexInto(katexExprEl, "\\text{…}", true);
+    renderKatexInto(katexResultEl, "0", true);
+    if (stepsBodyEl) stepsBodyEl.innerHTML = defaultStepsHtml();
   }
 
   function clearEntry() {
     exprEl.value = "";
     exprEl.focus();
+    scheduleExprPreview();
+    renderKatexInto(katexResultEl, "0", true);
+    resultEl.textContent = "0";
   }
 
   document.querySelectorAll(".sci-key[data-insert]").forEach(function (btn) {
@@ -480,6 +601,8 @@
     });
   });
 
+  exprEl.addEventListener("input", scheduleExprPreview);
+
   exprEl.addEventListener("keydown", function (e) {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
@@ -487,12 +610,10 @@
       return;
     }
     if (e.key === "Escape") {
-      e.preventDefault();
       if (isHistOpen()) {
+        e.preventDefault();
         closeHistOverlay();
-        return;
       }
-      clearAll();
       return;
     }
     if (e.key === "^" && !e.altKey) {
@@ -510,8 +631,6 @@
     var t = e.target && e.target.tagName;
     if (t === "INPUT" || t === "TEXTAREA" || t === "SELECT") return;
     if (e.key === "Escape") {
-      e.preventDefault();
-      clearAll();
       return;
     }
     if (e.key === "Enter" || e.key === "=") {
@@ -521,4 +640,5 @@
   });
 
   evaluateNow();
+  scheduleExprPreview();
 })();

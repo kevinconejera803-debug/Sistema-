@@ -90,7 +90,7 @@ Si no las defines, usa el botón **Enlaces** (esquina del bloque de acceso rápi
 - **Ciberseguridad** — Checklist ampliada, donut de % y bloques por tema; progreso en **localStorage**.
 - **Contactos** — SQLite con **filtro en vivo**, edición y toasts.
 - **Noticias** — RSS (**feedparser**) centrados en **economía, finanzas, internacional, geopolítica y política** (BBC Business/World/Politics, NYT Economy/World/Politics, Guardian Business/World/Politics, El País Economía/Internacional, MarketWatch, CNBC). Cada ítem incluye **`published_iso`** y etiqueta legible en **hora Chile**. Caché ~90&nbsp;s; **`GET /api/news`** con `fetched_at` y `ttl_seconds`; filtros **Economía / Internacional / Política**; auto cada 4&nbsp;min.
-- **Calculadora** — Científica con **math.js** (CDN): vista ancha en dos columnas (≥900px), teclado y resultado ampliados; potencias **`^( )` editables** (botón **^·n**, tecla **^**, fila **Potencias**), selección del exponente para reemplazarlo; `nthRoot`, `cbrt`, `der`, `integral("expr","x",a,b)`, `lim`, `sumfrom`; **C** / **CE** / **ans**.
+- **Calculadora** — **math.js** + **KaTeX** (CDN): vista tipo *Photomath* sin cámara (expresión y solución renderizadas arriba; edición en texto); vista previa al escribir; pestañas **Números y operadores** / **Científico**; **Pasos y método** (guía breve); historial en **modal**; **Calcular** / **Borrar** visibles; opciones extra (abc, **^·n**, cursor) en desplegable; `√`/`∛`, `nthRoot`, `der`, `integral(...)`, `lim`, `sumfrom`; **C** / **CE** / **ans**. Scripts `calculator.js` y `modules.css` con `?v=` en plantillas para invalidar caché.
 
 ---
 

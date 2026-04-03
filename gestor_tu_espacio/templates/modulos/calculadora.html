@@ -1,6 +1,10 @@
 {% extends "base.html" %}
 {% block title %}SYSTEM INTERFACE — Calculadora científica{% endblock %}
 
+{% block extra_head %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
+{% endblock %}
+
 {% block main_area %}
 <div class="mod-wrap mod-page mod-page--calc mod-page--sci-calc" id="calc-root">
   {% include "modulos/_header.html" %}
@@ -8,7 +12,7 @@
   <header class="sci-calc__intro">
     <p class="mod-page__kicker mod-page__kicker--orange">Calculadora científica</p>
     <p class="sci-calc__lead">
-      <strong>Pantalla arriba · teclado abajo</strong>. El <strong>historial</strong> es un panel modal: no aparece al calcular; solo al pulsar <em>Historial</em> (o cierra con Esc o el fondo oscuro). Motor <strong>math.js</strong>.
+      Estilo <strong>Photomath sin cámara</strong>: escribes la expresión abajo y ves la <strong>notación matemática</strong> renderizada arriba (KaTeX). <strong>Calcular</strong> o Enter. Revisa <em>Pasos y método</em> para una guía breve.
     </p>
   </header>
 
@@ -16,59 +20,76 @@
     <div class="sci-calc__chassis">
       <div class="sci-calc__model-strip">
         <span class="sci-calc__model-name">SCI-PRO</span>
-        <span class="sci-calc__model-tag">natural display · math.js</span>
+        <span class="sci-calc__model-tag">vista natural · KaTeX · math.js</span>
       </div>
     <div class="sci-calc__layout sci-calc__layout--stacked">
       <div class="sci-calc__col sci-calc__col--io">
         <div class="sci-calc__lcd">
-        <div class="sci-calc__toolbar" role="toolbar" aria-label="Barra de herramientas">
-          <button type="button" class="sci-calc__tool" id="sci-abc" title="Modo variables (x, y, π…)" aria-pressed="false">abc</button>
-          <button type="button" class="sci-calc__tool sci-calc__tool--power" id="sci-exp-btn" title="Insertar ^( ) vacío, o seleccionar exponente junto al cursor">^·n</button>
-          <span class="sci-calc__tool-group" role="group" aria-label="Cursor">
-            <button type="button" class="sci-calc__tool" id="sci-cur-left" title="Mover cursor (←)">◀</button>
-            <button type="button" class="sci-calc__tool" id="sci-cur-right" title="Mover cursor (→)">▶</button>
-          </span>
-          <button type="button" class="sci-calc__tool sci-calc__tool--accent" id="sci-enter" title="Calcular (Enter)">↵</button>
-          <button type="button" class="sci-calc__tool" id="sci-backspace" title="Retroceso (Backspace)">⌫</button>
+        <div class="sci-calc__math-card" aria-live="polite">
+          <div class="sci-calc__math-preview">
+            <span class="sci-calc__math-caption">Tu expresión</span>
+            <div id="sci-katex-expr" class="sci-calc__katex" role="math" aria-label="Vista previa de la expresión"></div>
+          </div>
+          <div class="sci-calc__math-resultbox">
+            <span class="sci-calc__math-caption">Solución</span>
+            <div id="sci-katex-result" class="sci-calc__katex sci-calc__katex--sol" role="math" aria-label="Resultado en notación matemática"></div>
+            <output class="sci-calc__sr-only" id="sci-result" for="sci-expr">0</output>
+          </div>
         </div>
 
-        <label class="sci-calc__expr-label" for="sci-expr"><span class="sci-calc__expr-label-tag">INPUT</span></label>
-        <textarea id="sci-expr" class="sci-calc__expr sci-calc__expr--lcd" rows="5" spellcheck="false" autocomplete="off" autocapitalize="off" placeholder="√(16) · ∛(27) · der(x^2, x) · integral(&quot;x^2&quot;, &quot;x&quot;, 0, 1)"></textarea>
+        <label class="sci-calc__expr-label" for="sci-expr"><span class="sci-calc__expr-label-tag">Escribe aquí (texto)</span></label>
+        <textarea id="sci-expr" class="sci-calc__expr sci-calc__expr--lcd" rows="3" spellcheck="false" autocomplete="off" autocapitalize="off" inputmode="text" placeholder="Ej: 2+3*4  ·  sin(pi/2)  ·  √(16)  ·  der(x^2,x)"></textarea>
 
-        <div class="sci-calc__result-row sci-calc__result-row--lcd">
-          <span class="sci-calc__result-label">RESULT</span>
-          <output class="sci-calc__result" id="sci-result" for="sci-expr" aria-live="polite">0</output>
+        <details class="sci-calc__steps" id="sci-steps">
+          <summary class="sci-calc__steps-sum">Pasos y método</summary>
+          <div id="sci-steps-body" class="sci-calc__steps-body"></div>
+        </details>
+
+        <div class="sci-calc__quick-row" role="group" aria-label="Acciones principales">
+          <button type="button" class="sci-calc__quick-btn sci-calc__quick-btn--sec" id="sci-backspace" title="Borrar un carácter a la izquierda">Borrar</button>
+          <button type="button" class="sci-calc__quick-btn sci-calc__quick-btn--pri" id="sci-enter" title="Calcular (también Enter)">Calcular</button>
         </div>
+
         <p class="sci-calc__mode-line">
           <span class="sci-calc__deg" id="sci-deg-label">Radianes</span>
-          <button type="button" class="sci-calc__pill" id="sci-deg-toggle" title="Alternar grados / radianes en sin, cos, tan">Rad / Deg</button>
-          <span class="sci-calc__ans-hint">ans</span>
+          <button type="button" class="sci-calc__pill" id="sci-deg-toggle" title="Grados o radianes en sin, cos, tan">Rad / Deg</button>
+          <span class="sci-calc__ans-hint" title="Último resultado numérico">ans</span>
         </p>
-        <button type="button" class="sci-calc__hist-btn" id="sci-hist-toggle" title="Ver historial de cálculos" aria-expanded="false" aria-controls="sci-hist-overlay" aria-haspopup="dialog">
+        <button type="button" class="sci-calc__hist-btn" id="sci-hist-toggle" title="Abrir historial de cálculos" aria-expanded="false" aria-controls="sci-hist-overlay" aria-haspopup="dialog">
           <span class="sci-calc__hist-btn-icon" aria-hidden="true">◫</span>
           Historial
         </button>
+
+        <details class="sci-calc__extras">
+          <summary class="sci-calc__extras-sum">Más opciones: variables, potencias, cursor</summary>
+          <div class="sci-calc__toolbar" role="toolbar" aria-label="Herramientas opcionales">
+            <button type="button" class="sci-calc__tool" id="sci-abc" title="Resalta modo variables" aria-pressed="false">abc</button>
+            <button type="button" class="sci-calc__tool sci-calc__tool--power" id="sci-exp-btn" title="Potencia ^( ) o editar exponente">^·n</button>
+            <span class="sci-calc__tool-group" role="group" aria-label="Mover cursor">
+              <button type="button" class="sci-calc__tool" id="sci-cur-left" title="Cursor izquierda">◀</button>
+              <button type="button" class="sci-calc__tool" id="sci-cur-right" title="Cursor derecha">▶</button>
+            </span>
+          </div>
+        </details>
         </div>
       </div>
 
       <div class="sci-calc__keypad-bridge" role="presentation">
         <span class="sci-calc__keypad-bridge-line" aria-hidden="true"></span>
-        <span class="sci-calc__keypad-bridge-label">Teclado científico</span>
+        <span class="sci-calc__keypad-bridge-label">Teclado</span>
         <span class="sci-calc__keypad-bridge-line" aria-hidden="true"></span>
       </div>
 
       <div class="sci-calc__col sci-calc__col--keys">
         <div class="sci-calc__keypad">
-        <div class="sci-calc__tabs" role="tablist" aria-label="Categoría">
-          <button type="button" class="sci-calc__tab sci-calc__tab--active" role="tab" aria-selected="true" id="sci-tab-basic" data-panel="sci-panel-basic">Básica</button>
-          <button type="button" class="sci-calc__tab" role="tab" aria-selected="false" id="sci-tab-func" data-panel="sci-panel-func">f(x) · log</button>
-          <button type="button" class="sci-calc__tab" role="tab" aria-selected="false" id="sci-tab-trig" data-panel="sci-panel-trig">Trig</button>
-          <button type="button" class="sci-calc__tab" role="tab" aria-selected="false" id="sci-tab-calc" data-panel="sci-panel-calc">Cálculo</button>
+        <div class="sci-calc__tabs" role="tablist" aria-label="Tipo de teclado">
+          <button type="button" class="sci-calc__tab sci-calc__tab--active" role="tab" aria-selected="true" id="sci-tab-basic" data-panel="sci-panel-basic">Números y operadores</button>
+          <button type="button" class="sci-calc__tab" role="tab" aria-selected="false" id="sci-tab-sci" data-panel="sci-panel-sci">Científico</button>
         </div>
 
     <div class="sci-calc__panels">
       <div class="sci-calc__panel sci-calc__panel--active" id="sci-panel-basic" role="tabpanel" aria-labelledby="sci-tab-basic">
-        <p class="sci-calc__subgrid-label">Potencias — <code>^·n</code> inserta <code>^( )</code>; al pulsar de nuevo intenta <strong>seleccionar</strong> el exponente junto al cursor</p>
+        <p class="sci-calc__subgrid-label">Potencias: usa <code>^·n</code> arriba o el menú <em>Más opciones</em> en la pantalla.</p>
         <div class="sci-grid sci-grid--power">
           <button type="button" class="sci-key sci-key--power" data-action="power-insert" title="Inserta ^( ) y deja el cursor dentro">x^(·)</button>
           <button type="button" class="sci-key sci-key--power" data-insert="^2" title="Cuadrado">x²</button>
@@ -108,7 +129,8 @@
         </div>
       </div>
 
-      <div class="sci-calc__panel" id="sci-panel-func" role="tabpanel" aria-labelledby="sci-tab-func" hidden>
+      <div class="sci-calc__panel" id="sci-panel-sci" role="tabpanel" aria-labelledby="sci-tab-sci" hidden>
+        <p class="sci-calc__sci-section-title">Funciones y logaritmos</p>
         <div class="sci-grid sci-grid--func">
           <button type="button" class="sci-key" data-insert="e^(">eˣ</button>
           <button type="button" class="sci-key" data-insert="log10(">log</button>
@@ -131,9 +153,8 @@
           <button type="button" class="sci-key" data-insert="ceil(">⌈x⌉</button>
           <button type="button" class="sci-key" data-insert="sign(">sgn</button>
         </div>
-      </div>
 
-      <div class="sci-calc__panel" id="sci-panel-trig" role="tabpanel" aria-labelledby="sci-tab-trig" hidden>
+        <p class="sci-calc__sci-section-title">Trigonometría</p>
         <div class="sci-grid sci-grid--trig">
           <button type="button" class="sci-key" data-insert="sin(">sin</button>
           <button type="button" class="sci-key" data-insert="cos(">cos</button>
@@ -156,10 +177,9 @@
           <button type="button" class="sci-key" data-insert="Infinity">∞</button>
           <button type="button" class="sci-key" data-insert="e">e</button>
         </div>
-      </div>
 
-      <div class="sci-calc__panel" id="sci-panel-calc" role="tabpanel" aria-labelledby="sci-tab-calc" hidden>
-        <p class="sci-calc__panel-hint">Sintaxis: <code>der(expr, x)</code>, <code>integral(&quot;expr&quot;, &quot;x&quot;, a, b)</code> (integral numérica), <code>lim(expr, x, a)</code>, <code>sumfrom(expr, n, a, b)</code>. Los botones insertan plantillas con el cursor listo.</p>
+        <p class="sci-calc__sci-section-title">Cálculo (simbólico / numérico)</p>
+        <p class="sci-calc__panel-hint">Ejemplos: <code>der(x^2, x)</code> · <code>integral(&quot;x^2&quot;, &quot;x&quot;, 0, 1)</code> · <code>lim(x+1, x, 0)</code>. Los botones insertan plantillas.</p>
         <div class="sci-grid sci-grid--calc">
           <button type="button" class="sci-key sci-key--wide" data-action="template-der" title="Plantilla der(expr, x) — cursor en la expresión">d/dx · der</button>
           <button type="button" class="sci-key" data-action="template-int" title="Plantilla integral con límites">∫ₐᵇ</button>
@@ -199,12 +219,13 @@
   </div>
 
   <p class="sci-calc__foot-hint">
-    <kbd>Enter</kbd> calcula · <kbd>Esc</kbd> cierra el historial si está abierto; si no, borra · <strong>^·n</strong> potencia · <code>√( )</code> <code>∛( )</code> · ej. <code>der(x^2,x)</code>
+    Vista tipo Photomath (sin cámara): notación arriba con KaTeX. <kbd>Enter</kbd> calcula · <kbd>Esc</kbd> cierra el historial · <strong>C</strong> borra todo · coma o punto decimal
   </p>
 </div>
 {% endblock %}
 
 {% block extra_scripts %}
 <script src="https://cdn.jsdelivr.net/npm/mathjs@12.4.2/lib/browser/math.min.js"></script>
-<script src="{{ url_for('static', filename='js/calculator.js') }}?v=10"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
+<script defer src="{{ url_for('static', filename='js/calculator.js') }}?v=13"></script>
 {% endblock %}
