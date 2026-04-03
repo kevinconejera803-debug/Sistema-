@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,400;0,500;0,600;1,400&family=Noto+Sans+JP:wght@400;500&family=Orbitron:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/tu_espacio.css') }}?v=8">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/modules.css') }}?v=2">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/modules.css') }}?v=3">
 </head>
 <body>
   <div class="matrix-rgb-layer" aria-hidden="true"></div>
@@ -35,7 +35,7 @@
       </div>
     </aside>
 
-    <main class="main-area">
+    <main class="main-area" id="main-content" tabindex="-1">
       {% block main_area %}{% endblock %}
     </main>
 

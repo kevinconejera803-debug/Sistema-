@@ -7,7 +7,8 @@
 
   <div class="mod-toolbar">
     <span class="mod-toolbar__label">FUENTES RSS</span>
-    <span style="color:var(--muted);font-size:0.78rem;">Xataka · El País · Genbeta — actualización al cargar la página</span>
+    <span class="mod-toolbar__hint">Xataka · El País</span>
+    <a href="{{ url_for('modulo', slug='noticias') }}?refresh=1" class="mod-btn mod-btn--ghost" style="margin-left:auto;">ACTUALIZAR FEEDS</a>
   </div>
 
   {% if news_items and news_items|length > 0 %}

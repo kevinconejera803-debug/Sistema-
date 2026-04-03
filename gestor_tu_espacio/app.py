@@ -66,7 +66,7 @@ MODULES = [
         "desc": "Shadow Network",
         "icon": "🛡",
         "theme": "teal",
-        "lead": "Checklist de hardening y postura con persistencia local cifrada en el navegador.",
+        "lead": "Checklist de hardening y postura; el progreso se guarda solo en tu navegador (localStorage).",
     },
     {
         "slug": "herramientas",
@@ -241,10 +241,24 @@ def modulo(slug):
         abort(404)
     extra = {}
     if slug == "noticias":
+        if request.args.get("refresh"):
+            _news_cache["t"] = 0.0
         extra["news_items"] = _fetch_news_items()
-    if slug == "trading-lab":
-        extra["trading_rows"] = _fetch_trading_rows()
     return render_template(f"modulos/{slug}.html", mod=mod, active_nav=slug, **extra)
+
+
+@app.route("/api/trading")
+def api_trading():
+    if request.args.get("refresh"):
+        _trading_cache["t"] = 0.0
+    return jsonify({"rows": _fetch_trading_rows()})
+
+
+@app.route("/api/news")
+def api_news():
+    if request.args.get("refresh"):
+        _news_cache["t"] = 0.0
+    return jsonify({"items": _fetch_news_items()})
 
 
 # ——— API calendario ———

@@ -2,28 +2,38 @@
 {% block title %}SYSTEM INTERFACE — Calendario{% endblock %}
 
 {% block main_area %}
-<div class="mod-wrap">
+<div class="mod-wrap" id="cal-root">
   {% include "modulos/_header.html" %}
 
-  <div class="mod-toolbar">
+  <div class="mod-toolbar" role="toolbar" aria-label="Calendario">
     <span class="mod-toolbar__label">VISTA</span>
-    <button type="button" class="mod-btn mod-btn--active" id="cal-view-month">MES</button>
-    <span class="mod-toolbar__label" style="margin-left:1rem;">NAVEGACIÓN</span>
+    <button type="button" class="mod-btn mod-btn--active" id="cal-view-month" aria-pressed="true">MES</button>
+    <button type="button" class="mod-btn mod-btn--ghost" id="cal-view-week" aria-pressed="false">SEMANA</button>
+    <span class="mod-toolbar__label mod-toolbar__label--gap">NAVEGACIÓN</span>
     <button type="button" class="mod-btn mod-btn--ghost" id="cal-prev">← ANTERIOR</button>
     <button type="button" class="mod-btn mod-btn--ghost" id="cal-today">HOY</button>
     <button type="button" class="mod-btn mod-btn--ghost" id="cal-next">SIGUIENTE →</button>
   </div>
 
+  <div id="cal-toast" class="mod-toast" role="status" aria-live="polite" hidden></div>
+
   <div class="mod-cal">
-    <div>
+    <div class="mod-cal__main">
       <div style="display:flex;align-items:center;margin-bottom:0.65rem;gap:0.75rem;flex-wrap:wrap;">
         <span id="cal-month-label" class="mod-cal__month-label">—</span>
       </div>
-      <div class="mod-cal__grid-wrap">
-        <div class="mod-cal__weekdays" id="cal-weekdays">
-          <span>LUN</span><span>MAR</span><span>MIÉ</span><span>JUE</span><span>VIE</span><span>SÁB</span><span>DOM</span>
+
+      <div id="cal-month-block">
+        <div class="mod-cal__grid-wrap">
+          <div class="mod-cal__weekdays" aria-hidden="true">
+            <span>LUN</span><span>MAR</span><span>MIÉ</span><span>JUE</span><span>VIE</span><span>SÁB</span><span>DOM</span>
+          </div>
+          <div class="mod-cal__cells" id="cal-cells"></div>
         </div>
-        <div class="mod-cal__cells" id="cal-cells"></div>
+      </div>
+
+      <div id="cal-week-block" class="mod-cal-week" hidden>
+        <div class="mod-cal-week__strip" id="cal-week-strip"></div>
       </div>
     </div>
 
@@ -31,11 +41,11 @@
       <h3>DÍA SELECCIONADO</h3>
       <ul class="mod-cal__event-list" id="cal-event-list"></ul>
 
-      <h3 style="margin-top:1.25rem;">NUEVO EVENTO</h3>
+      <h3 class="mod-cal__form-title">NUEVO EVENTO</h3>
       <form id="cal-event-form">
         <div class="mod-field">
           <label for="cal-title">Título</label>
-          <input type="text" id="cal-title" name="title" required placeholder="Reunión, bloque de estudio…">
+          <input type="text" id="cal-title" name="title" required placeholder="Reunión, bloque de estudio…" autocomplete="off">
         </div>
         <div class="mod-field">
           <label for="cal-start">Inicio (local)</label>
@@ -54,7 +64,7 @@
           <label for="cal-notes">Notas</label>
           <textarea id="cal-notes" name="notes" placeholder="Opcional"></textarea>
         </div>
-        <button type="submit" class="mod-btn" style="width:100%;">AÑADIR EVENTO</button>
+        <button type="submit" class="mod-btn mod-btn--block">AÑADIR EVENTO</button>
       </form>
     </aside>
   </div>
@@ -62,5 +72,5 @@
 {% endblock %}
 
 {% block extra_scripts %}
-<script src="{{ url_for('static', filename='js/calendar.js') }}?v=1"></script>
+<script src="{{ url_for('static', filename='js/calendar.js') }}?v=2"></script>
 {% endblock %}

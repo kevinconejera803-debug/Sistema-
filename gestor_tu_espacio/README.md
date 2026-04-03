@@ -77,7 +77,7 @@ Ejemplo: **http://127.0.0.1:5000/noticias**
 
 - **Calendario** — Vista mensual interactiva, eventos en SQLite (`tu_espacio.db`), alta y borrado por día.
 - **Universidad** — Entregas con curso, fecha límite, peso % y estado (pendiente / entregado).
-- **Trading Lab** — Cotizaciones con **yfinance** (caché ~60 s).
+- **Trading Lab** — Cotizaciones con **yfinance** (caché ~60 s); la tabla se carga por **`GET /api/trading`** (skeleton y botón Actualizar).
 - **Ciberseguridad** — Checklist por categorías; progreso en **localStorage**.
 - **Herramientas** — QR (servicio público de imagen), copiar y descargar texto.
 - **Contactos** — CRM ligero en SQLite.

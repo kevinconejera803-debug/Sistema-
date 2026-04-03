@@ -3,16 +3,38 @@
   var form = document.getElementById("assign-form");
   if (!tbody || !form) return;
 
+  function esc(s) {
+    if (s == null) return "";
+    var d = document.createElement("div");
+    d.textContent = s;
+    return d.innerHTML;
+  }
+
+  function fmtDue(iso) {
+    if (!iso) return "—";
+    var d = new Date(iso);
+    if (isNaN(d.getTime())) return esc(iso.slice(0, 16));
+    return d.toLocaleString("es", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  }
+
   function load() {
     fetch("/api/assignments")
       .then(function (r) {
         return r.json();
       })
       .then(function (rows) {
+        rows.sort(function (a, b) {
+          return (a.due_iso || "").localeCompare(b.due_iso || "");
+        });
         tbody.innerHTML = "";
         rows.forEach(function (a) {
           var tr = document.createElement("tr");
-          var due = (a.due_iso || "").replace("T", " ").slice(0, 16);
           var st = (a.status || "pendiente").toLowerCase();
           var pill =
             st === "entregado"
@@ -20,19 +42,19 @@
               : '<span class="mod-pill mod-pill--wait">PENDIENTE</span>';
           tr.innerHTML =
             "<td>" +
-            (a.course || "") +
+            esc(a.course) +
             "</td><td>" +
-            (a.title || "") +
+            esc(a.title) +
             "</td><td>" +
-            due +
+            fmtDue(a.due_iso) +
             "</td><td>" +
-            (a.weight != null ? a.weight + "%" : "—") +
+            (a.weight != null ? esc(String(a.weight)) + "%" : "—") +
             "</td><td>" +
             pill +
             '</td><td><button type="button" class="mod-btn mod-btn--ghost assign-del" data-id="' +
-            a.id +
+            esc(String(a.id)) +
             '">ELIMINAR</button> <button type="button" class="mod-btn assign-toggle" data-id="' +
-            a.id +
+            esc(String(a.id)) +
             '">CAMBIAR ESTADO</button></td>';
           tbody.appendChild(tr);
         });
@@ -48,8 +70,8 @@
               .then(function (r) {
                 return r.json();
               })
-              .then(function (rows) {
-                var row = rows.find(function (x) {
+              .then(function (rows2) {
+                var row = rows2.find(function (x) {
                   return String(x.id) === String(id);
                 });
                 if (!row) return;

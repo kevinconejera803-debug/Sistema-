@@ -8,7 +8,7 @@
   <div class="calc-shell">
     <div class="calc-display" id="calc-main">0</div>
     <div class="calc-sub" id="calc-sub"></div>
-    <div class="calc-keys">
+    <div class="calc-keys calc-keys--grid">
       <button type="button" data-key="C">C</button>
       <button type="button" data-key="÷">÷</button>
       <button type="button" data-key="×">×</button>
@@ -20,22 +20,21 @@
       <button type="button" data-key="4">4</button>
       <button type="button" data-key="5">5</button>
       <button type="button" data-key="6">6</button>
-      <button type="button" data-key="+">+</button>
+      <button type="button" data-key="×">×</button>
       <button type="button" data-key="1">1</button>
       <button type="button" data-key="2">2</button>
       <button type="button" data-key="3">3</button>
-      <button type="button" data-key="+">+</button>
-      <button type="button" data-key="0">0</button>
+      <button type="button" data-key="−">−</button>
+      <button type="button" data-key="0" class="calc-zero">0</button>
       <button type="button" data-key=".">.</button>
       <button type="button" data-key="=">=</button>
-      <button type="button" data-key="+">+</button>
     </div>
-    <div id="calc-hist" style="margin-top:1rem;font-size:0.72rem;color:var(--muted);max-height:140px;overflow-y:auto;"></div>
+    <div id="calc-hist" class="calc-hist"></div>
   </div>
-  <p style="text-align:center;color:var(--muted);font-size:0.78rem;margin-top:1rem;">Operaciones encadenadas; <strong>C</strong> borra todo.</p>
+  <p class="calc-hint">Operaciones encadenadas. <strong>C</strong> reinicia todo.</p>
 </div>
 {% endblock %}
 
 {% block extra_scripts %}
-<script src="{{ url_for('static', filename='js/calculator.js') }}?v=1"></script>
+<script src="{{ url_for('static', filename='js/calculator.js') }}?v=2"></script>
 {% endblock %}
