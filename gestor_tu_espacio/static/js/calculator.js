@@ -76,20 +76,69 @@
     update();
   }
 
+  function applyKey(k) {
+    if (k >= "0" && k <= "9") num(k);
+    else if (k === ".") {
+      if (fresh) {
+        current = "0.";
+        fresh = false;
+      } else if (current.indexOf(".") < 0) current += ".";
+      update();
+    } else if (k === "C") clr();
+    else if (k === "=") eq();
+    else if (["+", "−", "×", "÷"].indexOf(k) >= 0) setOp(k);
+  }
+
   document.querySelectorAll(".calc-keys [data-key]").forEach(function (btn) {
     btn.addEventListener("click", function () {
-      var k = btn.getAttribute("data-key");
-      if (k >= "0" && k <= "9") num(k);
-      else if (k === ".") {
-        if (fresh) {
-          current = "0.";
-          fresh = false;
-        } else if (current.indexOf(".") < 0) current += ".";
-        update();
-      } else if (k === "C") clr();
-      else if (k === "=") eq();
-      else if (["+", "−", "×", "÷"].indexOf(k) >= 0) setOp(k);
+      applyKey(btn.getAttribute("data-key"));
     });
+  });
+
+  document.addEventListener("keydown", function (e) {
+    var t = e.target && e.target.tagName;
+    if (t === "INPUT" || t === "TEXTAREA" || t === "SELECT") return;
+    var k = e.key;
+    if (k === "Escape") {
+      e.preventDefault();
+      clr();
+      return;
+    }
+    if (k === "Enter" || k === "=") {
+      e.preventDefault();
+      eq();
+      return;
+    }
+    if (k >= "0" && k <= "9") {
+      e.preventDefault();
+      num(k);
+      return;
+    }
+    if (k === "." || k === ",") {
+      e.preventDefault();
+      applyKey(".");
+      return;
+    }
+    if (k === "+") {
+      e.preventDefault();
+      setOp("+");
+      return;
+    }
+    if (k === "-") {
+      e.preventDefault();
+      setOp("−");
+      return;
+    }
+    if (k === "*" || k === "x" || k === "X") {
+      e.preventDefault();
+      setOp("×");
+      return;
+    }
+    if (k === "/") {
+      e.preventDefault();
+      setOp("÷");
+      return;
+    }
   });
 
   update();

@@ -1,5 +1,6 @@
 (function () {
   var root = document.getElementById("cyber-root");
+  var header = document.getElementById("cyber-header");
   if (!root) return;
 
   var KEY = "tu_espacio_cyber_v1";
@@ -35,10 +36,49 @@
         "Clasificar datos personales vs trabajo",
       ],
     },
+    {
+      title: "RESPUESTA Y CONCIENCIA",
+      items: [
+        "Plan de respuesta ante pérdida de dispositivo",
+        "Formación periódica en phishing y ingeniería social",
+        "Registrar incidencias y no pagar rescates sin asesoría",
+      ],
+    },
   ];
 
   function save() {
     localStorage.setItem(KEY, JSON.stringify(state));
+  }
+
+  function countProgress() {
+    var total = 0;
+    var done = 0;
+    groups.forEach(function (g) {
+      g.items.forEach(function (_, idx) {
+        total++;
+        var id = g.title + "::" + idx;
+        if (state[id]) done++;
+      });
+    });
+    return { total: total, done: done, pct: total ? Math.round((done / total) * 100) : 0 };
+  }
+
+  function renderHeader() {
+    if (!header) return;
+    var p = countProgress();
+    header.innerHTML =
+      '<div class="cyber-header__inner">' +
+      '<div class="cyber-donut" style="--p:' +
+      p.pct +
+      '" aria-hidden="true"><span class="cyber-donut__hole">' +
+      p.pct +
+      "%</span></div>" +
+      '<div class="cyber-header__text"><strong class="cyber-header__title">Postura de seguridad</strong>' +
+      "<span class=\"cyber-header__sub\">" +
+      p.done +
+      " de " +
+      p.total +
+      " controles revisados</span></div></div>";
   }
 
   function render() {
@@ -46,7 +86,9 @@
     groups.forEach(function (g) {
       var sec = document.createElement("div");
       sec.className = "cyber-cat";
-      sec.innerHTML = "<h4>" + g.title + "</h4>";
+      var h = document.createElement("h4");
+      h.textContent = g.title;
+      sec.appendChild(h);
       g.items.forEach(function (label, idx) {
         var id = g.title + "::" + idx;
         var row = document.createElement("label");
@@ -57,6 +99,7 @@
         cb.addEventListener("change", function () {
           state[id] = cb.checked;
           save();
+          renderHeader();
         });
         var span = document.createElement("span");
         span.textContent = label;
@@ -66,6 +109,7 @@
       });
       root.appendChild(sec);
     });
+    renderHeader();
   }
 
   render();

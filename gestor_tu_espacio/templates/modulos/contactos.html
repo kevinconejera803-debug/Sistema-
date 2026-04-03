@@ -2,16 +2,26 @@
 {% block title %}SYSTEM INTERFACE — Contactos{% endblock %}
 
 {% block main_area %}
-<div class="mod-wrap">
+<div class="mod-wrap mod-page mod-page--contacts" id="contacts-root">
   {% include "modulos/_header.html" %}
 
-  <div class="mod-toolbar">
-    <span class="mod-toolbar__label">NUEVO CONTACTO</span>
+  <p class="mod-page__kicker mod-page__kicker--purple">Agenda local en SQLite: busca por nombre sin recargar.</p>
+
+  <div id="contact-toast" class="mod-toast mod-contact-toast" role="status" aria-live="polite" hidden></div>
+
+  <div class="mod-toolbar contact-toolbar" role="toolbar" aria-label="Contactos">
+    <span class="mod-toolbar__label">AGENDA</span>
+    <input type="search" id="cf-filter" class="contact-filter" placeholder="Filtrar por nombre, email o empresa…" autocomplete="off" aria-label="Filtrar contactos">
+    <span id="contact-count" class="mod-toolbar__hint"></span>
   </div>
 
-  <form id="contact-form" class="mod-cal__side" style="margin-bottom:1.5rem;">
+  <form id="contact-form" class="mod-uni-form contact-form" style="--uni-line: rgba(167, 139, 250, 0.22); border-color: rgba(167, 139, 250, 0.2);">
     <input type="hidden" id="cf-id" value="">
-    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:0.75rem;">
+    <div class="mod-uni-form__head">
+      <span class="mod-uni-form__badge">Contacto</span>
+      <span class="mod-uni-form__hint">Nombre obligatorio. El resto es opcional.</span>
+    </div>
+    <div class="mod-uni-form__grid">
       <div class="mod-field">
         <label for="cf-name">Nombre *</label>
         <input type="text" id="cf-name" required placeholder="Nombre completo" autocomplete="name">
@@ -28,21 +38,22 @@
         <label for="cf-company">Empresa / rol</label>
         <input type="text" id="cf-company" placeholder="Opcional">
       </div>
-      <div class="mod-field" style="grid-column:1/-1;">
+      <div class="mod-field mod-field--full">
         <label for="cf-notes">Notas</label>
         <textarea id="cf-notes" placeholder="Contexto, próximo seguimiento…"></textarea>
       </div>
     </div>
-    <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:0.75rem;">
-      <button type="submit" class="mod-btn" id="cf-submit">GUARDAR CONTACTO</button>
-      <button type="button" class="mod-btn mod-btn--ghost" id="cf-cancel" hidden>CANCELAR EDICIÓN</button>
+    <div class="contact-form__actions">
+      <button type="submit" class="mod-btn" id="cf-submit">Guardar contacto</button>
+      <button type="button" class="mod-btn mod-btn--ghost" id="cf-cancel" hidden>Cancelar edición</button>
     </div>
   </form>
 
+  <p id="contact-empty" class="contact-empty" hidden>No hay contactos que coincidan.</p>
   <div class="contact-grid" id="contact-grid"></div>
 </div>
 {% endblock %}
 
 {% block extra_scripts %}
-<script src="{{ url_for('static', filename='js/contacts.js') }}?v=2"></script>
+<script src="{{ url_for('static', filename='js/contacts.js') }}?v=3"></script>
 {% endblock %}

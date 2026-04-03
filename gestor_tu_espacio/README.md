@@ -86,13 +86,13 @@ Si no las defines, usa el botón **Enlaces** (esquina del bloque de acceso rápi
 
 - **Calendario** — Horario en hora local (24 h): vistas mes, semana y día; eventos en SQLite (`tu_espacio.db`) con índices; alta y borrado por día.
 - **Universidad** — Accesos a **intranet** y **aula virtual** (URLs vía `TU_ESPACIO_INTRANET_URL` / `TU_ESPACIO_AULA_URL` o enlaces guardados en el navegador) y tabla de **entregas** (curso, fecha límite, peso %, estado).
-- **Trading Lab** — Cotizaciones con **yfinance** (caché ~60 s); la tabla se carga por **`GET /api/trading`** (skeleton y botón Actualizar).
-- **Ciberseguridad** — Checklist por categorías; progreso en **localStorage**.
-- **Herramientas** — QR (servicio público de imagen), copiar y descargar texto.
-- **Contactos** — CRM ligero en SQLite.
-- **Noticias** — RSS (**feedparser**: Xataka, El País); **`?refresh=1`** en la URL o botón “Actualizar feeds” invalida caché (~5 min).
-- **Buscar** — Cruza eventos, contactos y entregas vía `/api/search`.
-- **Calculadora** — Operaciones encadenadas con historial local en pantalla.
+- **Trading Lab** — **`GET /api/trading`** (yfinance, caché ~60 s): skeleton, tabla, toasts y botón Actualizar.
+- **Ciberseguridad** — Checklist ampliada, donut de % y bloques por tema; progreso en **localStorage**.
+- **Herramientas** — QR, copiar (Clipboard API) y descarga `.txt` con toasts.
+- **Contactos** — SQLite con **filtro en vivo**, edición y toasts.
+- **Noticias** — RSS (**feedparser**); botón **Actualizar ahora** llama a **`/api/news?refresh=1`** sin recargar la página.
+- **Buscar** — **`/api/search`**: resultados agrupados (eventos, contactos, entregas) y contador.
+- **Calculadora** — Teclado corregido, historial y atajos (números, operadores, Enter, Esc).
 
 ---
 

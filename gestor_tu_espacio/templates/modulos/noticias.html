@@ -2,17 +2,20 @@
 {% block title %}SYSTEM INTERFACE — Noticias{% endblock %}
 
 {% block main_area %}
-<div class="mod-wrap">
+<div class="mod-wrap mod-page mod-page--news" id="news-root">
   {% include "modulos/_header.html" %}
 
-  <div class="mod-toolbar">
-    <span class="mod-toolbar__label">FUENTES RSS</span>
+  <p class="mod-page__kicker mod-page__kicker--blue">Titulares RSS sin salir de Tu espacio: Xataka y El País. Recarga cuando quieras.</p>
+
+  <div class="mod-toolbar" role="toolbar" aria-label="Noticias">
+    <span class="mod-toolbar__label">FEEDS</span>
     <span class="mod-toolbar__hint">Xataka · El País</span>
-    <a href="{{ url_for('modulo', slug='noticias') }}?refresh=1" class="mod-btn mod-btn--ghost" style="margin-left:auto;">ACTUALIZAR FEEDS</a>
+    <button type="button" class="mod-btn mod-btn--ghost" id="news-refresh-btn" style="margin-left:auto;">ACTUALIZAR AHORA</button>
+    <span id="news-status" class="mod-toolbar__hint" style="margin-left:0.5rem;"></span>
   </div>
 
-  {% if news_items and news_items|length > 0 %}
-  <div class="news-grid">
+  <div id="news-grid" class="news-grid">
+    {% if news_items and news_items|length > 0 %}
     {% for it in news_items %}
     <article class="news-card">
       <span class="news-card__src">{{ it.source }}</span>
@@ -21,9 +24,14 @@
       {% if it.summary %}<p class="news-card__sum">{{ it.summary }}</p>{% endif %}
     </article>
     {% endfor %}
+    {% endif %}
   </div>
-  {% else %}
-  <p class="news-empty">No se pudieron cargar los feeds ahora mismo. Comprueba la conexión o vuelve en unos minutos.</p>
-  {% endif %}
+  <p id="news-empty" class="news-empty" {% if news_items and news_items|length > 0 %}hidden{% endif %}>
+    {% if not news_items or news_items|length == 0 %}No se pudieron cargar los feeds ahora mismo. Pulsa «Actualizar ahora» o comprueba la conexión.{% endif %}
+  </p>
 </div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/news.js') }}?v=1"></script>
 {% endblock %}

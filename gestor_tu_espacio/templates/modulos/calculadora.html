@@ -2,13 +2,15 @@
 {% block title %}SYSTEM INTERFACE — Calculadora{% endblock %}
 
 {% block main_area %}
-<div class="mod-wrap">
+<div class="mod-wrap mod-page mod-page--calc" id="calc-root">
   {% include "modulos/_header.html" %}
+
+  <p class="mod-page__kicker mod-page__kicker--orange">Teclado físico: números, operadores y Enter (=), Escape (C).</p>
 
   <div class="calc-shell">
     <div class="calc-display" id="calc-main">0</div>
     <div class="calc-sub" id="calc-sub"></div>
-    <div class="calc-keys calc-keys--grid">
+    <div class="calc-keys calc-keys--grid" role="group" aria-label="Teclado">
       <button type="button" data-key="C">C</button>
       <button type="button" data-key="÷">÷</button>
       <button type="button" data-key="×">×</button>
@@ -20,21 +22,21 @@
       <button type="button" data-key="4">4</button>
       <button type="button" data-key="5">5</button>
       <button type="button" data-key="6">6</button>
-      <button type="button" data-key="×">×</button>
+      <button type="button" data-key="−">−</button>
       <button type="button" data-key="1">1</button>
       <button type="button" data-key="2">2</button>
       <button type="button" data-key="3">3</button>
-      <button type="button" data-key="−">−</button>
+      <button type="button" data-key="+">+</button>
       <button type="button" data-key="0" class="calc-zero">0</button>
       <button type="button" data-key=".">.</button>
       <button type="button" data-key="=">=</button>
     </div>
-    <div id="calc-hist" class="calc-hist"></div>
+    <div id="calc-hist" class="calc-hist" aria-live="polite"></div>
   </div>
-  <p class="calc-hint">Operaciones encadenadas. <strong>C</strong> reinicia todo.</p>
+  <p class="calc-hint">Operaciones encadenadas. <strong>C</strong> o <kbd>Esc</kbd> reinician.</p>
 </div>
 {% endblock %}
 
 {% block extra_scripts %}
-<script src="{{ url_for('static', filename='js/calculator.js') }}?v=2"></script>
+<script src="{{ url_for('static', filename='js/calculator.js') }}?v=3"></script>
 {% endblock %}

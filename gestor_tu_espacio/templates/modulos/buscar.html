@@ -2,19 +2,24 @@
 {% block title %}SYSTEM INTERFACE — Buscar{% endblock %}
 
 {% block main_area %}
-<div class="mod-wrap">
+<div class="mod-wrap mod-page mod-page--search" id="search-root">
   {% include "modulos/_header.html" %}
 
+  <p class="mod-page__kicker mod-page__kicker--green">Un solo buscador sobre eventos del calendario, contactos y entregas (SQLite).</p>
+
   <div class="search-hero">
-    <input type="search" id="search-q" placeholder="Buscar en eventos, contactos y entregas…" autocomplete="off" autofocus>
+    <label class="search-label" for="search-q">Consulta</label>
+    <input type="search" id="search-q" placeholder="Escribe al menos 2 caracteres…" autocomplete="off" autofocus>
   </div>
 
-  <div id="search-results">
-    <p style="color:var(--muted);">Escribe al menos 2 caracteres.</p>
+  <p id="search-meta" class="search-meta" aria-live="polite"></p>
+
+  <div id="search-results" class="search-results">
+    <p class="search-hint">Empieza a escribir para ver coincidencias.</p>
   </div>
 </div>
 {% endblock %}
 
 {% block extra_scripts %}
-<script src="{{ url_for('static', filename='js/search.js') }}?v=2"></script>
+<script src="{{ url_for('static', filename='js/search.js') }}?v=3"></script>
 {% endblock %}

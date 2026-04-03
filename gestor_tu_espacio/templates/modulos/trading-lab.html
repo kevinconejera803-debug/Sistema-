@@ -2,13 +2,17 @@
 {% block title %}SYSTEM INTERFACE — Trading Lab{% endblock %}
 
 {% block main_area %}
-<div class="mod-wrap" id="trading-root">
+<div class="mod-wrap mod-page mod-page--trade" id="trading-root">
   {% include "modulos/_header.html" %}
 
-  <div class="mod-toolbar">
+  <p class="mod-page__kicker mod-page__kicker--yellow">Cotizaciones de referencia (índices, FX, cripto). Datos educativos vía yfinance.</p>
+
+  <div id="trade-toast" class="mod-toast mod-trade-toast" role="status" aria-live="polite" hidden></div>
+
+  <div class="mod-toolbar" role="toolbar" aria-label="Mercados">
     <span class="mod-toolbar__label">MERCADOS</span>
     <button type="button" class="mod-btn mod-btn--ghost" id="trading-refresh" title="Forzar actualización">ACTUALIZAR</button>
-    <span id="trading-status" class="mod-toolbar__hint" style="margin-left:auto;font-size:0.72rem;color:var(--muted);"></span>
+    <span id="trading-status" class="mod-toolbar__hint mod-trade-status"></span>
   </div>
 
   <div id="trading-skeleton" class="trade-skeleton" aria-hidden="true">
@@ -17,14 +21,14 @@
   </div>
 
   <div id="trading-live" class="trading-live" hidden>
-    <div class="trade-strip" id="trading-strip"></div>
+    <div class="trade-strip" id="trading-strip" aria-label="Resumen de símbolos"></div>
     <div class="mod-table-wrap trade-table">
       <table class="mod-table">
         <thead>
           <tr>
-            <th>SÍMBOLO</th>
-            <th>PRECIO</th>
-            <th>VAR. 1D</th>
+            <th>Símbolo</th>
+            <th>Precio</th>
+            <th>Var. 1D</th>
           </tr>
         </thead>
         <tbody id="trading-tbody"></tbody>
@@ -32,12 +36,12 @@
     </div>
   </div>
 
-  <p id="trading-error" class="news-empty" hidden></p>
+  <p id="trading-error" class="news-empty mod-trade-error" hidden></p>
 
-  <p style="color:var(--muted);font-size:0.78rem;margin-top:1rem;">Datos vía yfinance; uso educativo. Primera carga puede tardar unos segundos.</p>
+  <p class="mod-trade-foot">Primera carga puede tardar unos segundos. Si falla, revisa red o firewall.</p>
 </div>
 {% endblock %}
 
 {% block extra_scripts %}
-<script src="{{ url_for('static', filename='js/trading.js') }}?v=2"></script>
+<script src="{{ url_for('static', filename='js/trading.js') }}?v=3"></script>
 {% endblock %}

@@ -6,7 +6,18 @@
   var tbody = document.getElementById("trading-tbody");
   var status = document.getElementById("trading-status");
   var btn = document.getElementById("trading-refresh");
+  var toastEl = document.getElementById("trade-toast");
   if (!strip || !tbody) return;
+
+  function toast(msg) {
+    if (!toastEl) return;
+    toastEl.textContent = msg;
+    toastEl.hidden = false;
+    clearTimeout(toast._t);
+    toast._t = setTimeout(function () {
+      toastEl.hidden = true;
+    }, 3400);
+  }
 
   function render(rows) {
     strip.innerHTML = "";
@@ -63,6 +74,10 @@
           status.textContent =
             "Actualizado " + t.toLocaleTimeString("es", { hour: "2-digit", minute: "2-digit" });
         }
+        var ok = rows.some(function (r) {
+          return !r.error;
+        });
+        if (refresh && ok) toast("Datos de mercado actualizados.");
       })
       .catch(function () {
         if (sk) sk.hidden = true;
@@ -73,6 +88,7 @@
             "No se pudieron cargar los datos. Revisa la conexión y pulsa Actualizar.";
         }
         if (status) status.textContent = "";
+        toast("Error de red al obtener cotizaciones.");
       });
   }
 

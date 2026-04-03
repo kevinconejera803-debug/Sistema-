@@ -42,7 +42,7 @@ MODULES = [
         "desc": "Día - semana - mes",
         "icon": "🕐",
         "theme": "teal",
-        "lead": "Horario profesional: mes, semana y día en hora local (24 h); SQLite con índices.",
+        "lead": "Horario 24 h (local): mes, semana y día con eventos en SQLite.",
     },
     {
         "slug": "universidad",
@@ -58,7 +58,7 @@ MODULES = [
         "desc": "Mercados",
         "icon": "📈",
         "theme": "yellow",
-        "lead": "Cotizaciones en vivo (yfinance) con variación y símbolos clave.",
+        "lead": "Índices, FX y cripto con variación diaria (yfinance, caché ~60 s).",
     },
     {
         "slug": "ciberseguridad",
@@ -66,7 +66,7 @@ MODULES = [
         "desc": "Shadow Network",
         "icon": "🛡",
         "theme": "teal",
-        "lead": "Checklist de hardening y postura; el progreso se guarda solo en tu navegador (localStorage).",
+        "lead": "Checklist por categorías con progreso visual; datos solo en tu navegador.",
     },
     {
         "slug": "herramientas",
@@ -74,7 +74,7 @@ MODULES = [
         "desc": "PDF - exportar - QR",
         "icon": "🧰",
         "theme": "red",
-        "lead": "Generador QR, exportación de texto y utilidades rápidas.",
+        "lead": "QR desde texto, copiar y descargar .txt con retroalimentación clara.",
     },
     {
         "slug": "contactos",
@@ -82,7 +82,7 @@ MODULES = [
         "desc": "Tarjetas y agenda",
         "icon": "✉",
         "theme": "purple",
-        "lead": "CRM ligero: alta, edición y búsqueda en base de datos local.",
+        "lead": "CRM en SQLite: filtro en vivo, edición y toasts de confirmación.",
     },
     {
         "slug": "noticias",
@@ -90,7 +90,7 @@ MODULES = [
         "desc": "Fuentes y feeds",
         "icon": "📰",
         "theme": "blue",
-        "lead": "Titulares RSS en tiempo real desde fuentes tecnología y generalista.",
+        "lead": "RSS (Xataka, El País): recarga sin salir de la página.",
     },
     {
         "slug": "buscar",
@@ -98,7 +98,7 @@ MODULES = [
         "desc": "Búsqueda global",
         "icon": "🔍",
         "theme": "green",
-        "lead": "Índice sobre eventos, contactos y entregas almacenados en Tu espacio.",
+        "lead": "Una búsqueda sobre eventos, contactos y entregas con resultados agrupados.",
     },
     {
         "slug": "calculadora",
@@ -106,7 +106,7 @@ MODULES = [
         "desc": "Paso a paso",
         "icon": "🔢",
         "theme": "orange",
-        "lead": "Calculadora científica con historial de operaciones y memoria.",
+        "lead": "Operaciones encadenadas, historial y atajos de teclado.",
     },
 ]
 

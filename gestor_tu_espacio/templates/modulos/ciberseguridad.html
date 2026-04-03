@@ -2,18 +2,16 @@
 {% block title %}SYSTEM INTERFACE — Ciberseguridad{% endblock %}
 
 {% block main_area %}
-<div class="mod-wrap">
+<div class="mod-wrap mod-page mod-page--cyber" id="cyber-page">
   {% include "modulos/_header.html" %}
 
-  <div class="mod-toolbar">
-    <span class="mod-toolbar__label">POSTURA</span>
-    <span style="color:var(--muted);font-size:0.78rem;">Progreso guardado en este navegador (localStorage)</span>
-  </div>
+  <p class="mod-page__kicker mod-page__kicker--teal">Checklist de postura: el progreso vive solo en este navegador (localStorage).</p>
 
-  <div class="mod-cal__side" id="cyber-root" style="max-width:720px;"></div>
+  <div id="cyber-header" class="cyber-header" aria-live="polite"></div>
+  <div class="mod-cal__side cyber-panel" id="cyber-root"></div>
 </div>
 {% endblock %}
 
 {% block extra_scripts %}
-<script src="{{ url_for('static', filename='js/cyber.js') }}?v=1"></script>
+<script src="{{ url_for('static', filename='js/cyber.js') }}?v=2"></script>
 {% endblock %}
