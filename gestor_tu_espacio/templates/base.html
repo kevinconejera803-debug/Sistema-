@@ -6,9 +6,9 @@
   <title>{% block title %}SYSTEM INTERFACE{% endblock %}</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,400;0,500;0,600;1,400&family=Noto+Sans+JP:wght@400;500&family=Orbitron:wght@500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/tu_espacio.css') }}?v=8">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/modules.css') }}?v=3">
+  <link href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+JP:wght@400;500&family=Orbitron:wght@500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/tu_espacio.css') }}?v=9">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/modules.css') }}?v=8">
 </head>
 <body>
   <div class="matrix-rgb-layer" aria-hidden="true"></div>
@@ -16,7 +16,10 @@
 
   <div class="app-shell">
     <aside class="sidebar-left">
-      <div class="brand">SYSTEM INTERFACE</div>
+      <div class="brand">
+        <span class="brand__en">SYSTEM INTERFACE</span>
+        <span class="brand__jp" lang="ja">システム</span>
+      </div>
       <div class="operator-box">
         <div class="operator-label">PERFIL PROFESIONAL</div>
         <div class="operator-title">Ingeniero comercial</div>

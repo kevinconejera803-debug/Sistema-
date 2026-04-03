@@ -3,9 +3,10 @@
 
 {% block main_area %}
       <header class="main-header">
-        <div>
+        <div class="main-header__text">
+          <p class="main-header__jp" lang="ja">ようこそ · インターフェース</p>
           <h1 class="main-title">TU ESPACIO</h1>
-          <p class="main-sub">Un solo mapa de accesos y un resumen rápido del día.</p>
+          <p class="main-sub">Panel unificado: agenda, estudio, contactos, mercados y utilidades — estética neo-RGB, orden profesional.</p>
         </div>
         <div class="badges">
           <span class="badge badge--live">LIVE</span>
@@ -23,19 +24,20 @@
         {% endfor %}
       </section>
 
-      <section class="status-strip">
-        <div>
-          <h4>PRÓXIMAS HOY</h4>
-          <p>Sin bloques próximos.</p>
+      <section class="status-strip" aria-label="Resumen">
+        <div class="status-strip__cell">
+          <h4 class="status-strip__label">本日 · PRÓXIMAS</h4>
+          <p class="status-strip__body">Sin bloques próximos.</p>
           <a class="link-arrow" href="{{ url_for('modulo', slug='calendario') }}">Calendario completo →</a>
         </div>
-        <div>
-          <h4>ARCHIVOS &amp; RED</h4>
-          <p><a href="#">Curriculum</a> · <a href="#">Dispositivos</a></p>
+        <div class="status-strip__cell">
+          <h4 class="status-strip__label">経済 · NOTICIAS</h4>
+          <p class="status-strip__body">Economía, mercados e internacional.</p>
+          <a class="link-arrow" href="{{ url_for('modulo', slug='noticias') }}">Noticias →</a>
         </div>
-        <div>
-          <h4>MERCADOS</h4>
-          <p>Panorama en el lab.</p>
+        <div class="status-strip__cell">
+          <h4 class="status-strip__label">市場 · MERCADOS</h4>
+          <p class="status-strip__body">Índices y variación diaria.</p>
           <a class="btn-inline" href="{{ url_for('modulo', slug='trading-lab') }}">Trading Lab →</a>
         </div>
       </section>

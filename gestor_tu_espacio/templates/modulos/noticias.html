@@ -5,33 +5,69 @@
 <div class="mod-wrap mod-page mod-page--news" id="news-root">
   {% include "modulos/_header.html" %}
 
-  <p class="mod-page__kicker mod-page__kicker--blue">Titulares RSS sin salir de Tu espacio: Xataka y El País. Recarga cuando quieras.</p>
+  <header class="news-hero">
+    <p class="news-hero__tag">Economía · mercados · geopolítica</p>
+    <h2 class="news-hero__title">Finanzas, internacional y política</h2>
+    <p class="news-hero__lead">
+      Fuentes de referencia (BBC, NYT, Guardian, El País, MarketWatch, CNBC…). Cada titular muestra
+      <strong>hora de publicación</strong> en <strong>hora Chile</strong> cuando el feed trae fecha.
+      Caché en servidor ~90&nbsp;s; puedes <strong>Actualizar ahora</strong> o dejar el modo automático.
+    </p>
+  </header>
 
-  <div class="mod-toolbar" role="toolbar" aria-label="Noticias">
-    <span class="mod-toolbar__label">FEEDS</span>
-    <span class="mod-toolbar__hint">Xataka · El País</span>
-    <button type="button" class="mod-btn mod-btn--ghost" id="news-refresh-btn" style="margin-left:auto;">ACTUALIZAR AHORA</button>
-    <span id="news-status" class="mod-toolbar__hint" style="margin-left:0.5rem;"></span>
+  <div class="news-controls">
+    <div class="mod-toolbar news-toolbar" role="toolbar" aria-label="Noticias">
+      <span class="mod-toolbar__label">ACTUALIZAR</span>
+      <button type="button" class="mod-btn mod-btn--ghost" id="news-refresh-btn">AHORA</button>
+      <span id="news-auto" class="news-pill news-pill--live" title="Recarga en segundo plano cada 4 minutos">Auto · 4 min</span>
+      <span id="news-status" class="mod-toolbar__hint news-status-line"></span>
+    </div>
+
+    <div class="news-filters" role="group" aria-label="Filtrar por tema">
+      <button type="button" class="news-chip news-chip--active" data-region="all">Todo</button>
+      <button type="button" class="news-chip" data-region="economia">Economía &amp; finanzas</button>
+      <button type="button" class="news-chip" data-region="internacional">Internacional</button>
+      <button type="button" class="news-chip" data-region="politica">Política</button>
+    </div>
   </div>
 
-  <div id="news-grid" class="news-grid">
+  <div id="news-grid" class="news-grid news-grid--featured" data-filter="all">
     {% if news_items and news_items|length > 0 %}
     {% for it in news_items %}
-    <article class="news-card">
-      <span class="news-card__src">{{ it.source }}</span>
+    <article class="news-card{% if loop.first %} news-card--featured{% endif %} news-card--{{ it.region|default('internacional') }}" data-region="{{ it.region|default('internacional') }}">
+      <div class="news-card__top">
+        <span class="news-card__badge">{{ it.region_label|default('Internacional') }}</span>
+        <span class="news-card__src">{{ it.source }}</span>
+      </div>
       <h3 class="news-card__title"><a href="{{ it.link }}" target="_blank" rel="noopener noreferrer">{{ it.title }}</a></h3>
-      {% if it.published %}<div class="news-card__meta">{{ it.published }}</div>{% endif %}
+      {% if it.published_label or it.published_iso %}
+      <div class="news-card__time" aria-label="Fecha y hora de publicación">
+        <span class="news-card__time-icon" aria-hidden="true">🕐</span>
+        <time class="news-card__time-text" {% if it.published_iso %}datetime="{{ it.published_iso }}"{% endif %}>{{ it.published_label or '—' }}</time>
+      </div>
+      {% endif %}
       {% if it.summary %}<p class="news-card__sum">{{ it.summary }}</p>{% endif %}
     </article>
     {% endfor %}
     {% endif %}
   </div>
   <p id="news-empty" class="news-empty" {% if news_items and news_items|length > 0 %}hidden{% endif %}>
-    {% if not news_items or news_items|length == 0 %}No se pudieron cargar los feeds ahora mismo. Pulsa «Actualizar ahora» o comprueba la conexión.{% endif %}
+    {% if not news_items or news_items|length == 0 %}No se pudieron cargar los feeds ahora mismo. Pulsa «Ahora» o comprueba la conexión.{% endif %}
   </p>
+
+  <script type="application/json" id="news-initial">{{ news_items|tojson }}</script>
+
+  <aside class="news-suggestions" aria-label="Notas">
+    <h3 class="news-suggestions__title">Notas</h3>
+    <ul class="news-suggestions__list">
+      <li>La hora se calcula en <strong>America/Santiago</strong> a partir de la fecha del feed (UTC).</li>
+      <li>Algunos medios solo envían día sin hora: en ese caso puede mostrarse el texto original del feed.</li>
+      <li>Puedes ampliar fuentes con URLs RSS en variable de entorno en el futuro.</li>
+    </ul>
+  </aside>
 </div>
 {% endblock %}
 
 {% block extra_scripts %}
-<script src="{{ url_for('static', filename='js/news.js') }}?v=1"></script>
+<script src="{{ url_for('static', filename='js/news.js') }}?v=3"></script>
 {% endblock %}

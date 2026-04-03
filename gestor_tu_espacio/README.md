@@ -63,13 +63,13 @@ Cada apartado tiene su ruta; también están en el menú lateral y en las tarjet
 |---------|-------------------|
 | Calendario | `/calendario` |
 | Universidad | `/universidad` |
-| Trading Lab | `/trading-lab` |
-| Ciberseguridad | `/ciberseguridad` |
-| Herramientas | `/herramientas` |
 | Contactos | `/contactos` |
+| Trading Lab | `/trading-lab` |
 | Noticias | `/noticias` |
-| Buscar | `/buscar` |
+| Ciberseguridad | `/ciberseguridad` |
 | Calculadora | `/calculadora` |
+
+En **`/tu-espacio`** las tarjetas de acceso van en **una sola cuadrícula** (todos los módulos visibles a la vez).
 
 Ejemplo: **http://127.0.0.1:5000/noticias**
 
@@ -88,11 +88,9 @@ Si no las defines, usa el botón **Enlaces** (esquina del bloque de acceso rápi
 - **Universidad** — Accesos a **intranet** y **aula virtual** (URLs vía `TU_ESPACIO_INTRANET_URL` / `TU_ESPACIO_AULA_URL` o enlaces guardados en el navegador) y tabla de **entregas** (curso, fecha límite, peso %, estado).
 - **Trading Lab** — **`GET /api/trading`** (yfinance, caché ~60 s): skeleton, tabla, toasts y botón Actualizar.
 - **Ciberseguridad** — Checklist ampliada, donut de % y bloques por tema; progreso en **localStorage**.
-- **Herramientas** — QR, copiar (Clipboard API) y descarga `.txt` con toasts.
 - **Contactos** — SQLite con **filtro en vivo**, edición y toasts.
-- **Noticias** — RSS (**feedparser**); botón **Actualizar ahora** llama a **`/api/news?refresh=1`** sin recargar la página.
-- **Buscar** — **`/api/search`**: resultados agrupados (eventos, contactos, entregas) y contador.
-- **Calculadora** — Teclado corregido, historial y atajos (números, operadores, Enter, Esc).
+- **Noticias** — RSS (**feedparser**) centrados en **economía, finanzas, internacional, geopolítica y política** (BBC Business/World/Politics, NYT Economy/World/Politics, Guardian Business/World/Politics, El País Economía/Internacional, MarketWatch, CNBC). Cada ítem incluye **`published_iso`** y etiqueta legible en **hora Chile**. Caché ~90&nbsp;s; **`GET /api/news`** con `fetched_at` y `ttl_seconds`; filtros **Economía / Internacional / Política**; auto cada 4&nbsp;min.
+- **Calculadora** — Científica con **math.js** (CDN): vista ancha en dos columnas (≥900px), teclado y resultado ampliados; potencias **`^( )` editables** (botón **^·n**, tecla **^**, fila **Potencias**), selección del exponente para reemplazarlo; `nthRoot`, `cbrt`, `der`, `integral("expr","x",a,b)`, `lim`, `sumfrom`; **C** / **CE** / **ans**.
 
 ---
 

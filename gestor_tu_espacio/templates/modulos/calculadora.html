@@ -1,42 +1,210 @@
 {% extends "base.html" %}
-{% block title %}SYSTEM INTERFACE — Calculadora{% endblock %}
+{% block title %}SYSTEM INTERFACE — Calculadora científica{% endblock %}
 
 {% block main_area %}
-<div class="mod-wrap mod-page mod-page--calc" id="calc-root">
+<div class="mod-wrap mod-page mod-page--calc mod-page--sci-calc" id="calc-root">
   {% include "modulos/_header.html" %}
 
-  <p class="mod-page__kicker mod-page__kicker--orange">Teclado físico: números, operadores y Enter (=), Escape (C).</p>
+  <header class="sci-calc__intro">
+    <p class="mod-page__kicker mod-page__kicker--orange">Calculadora científica</p>
+    <p class="sci-calc__lead">
+      <strong>Pantalla arriba · teclado abajo</strong>. El <strong>historial</strong> es un panel modal: no aparece al calcular; solo al pulsar <em>Historial</em> (o cierra con Esc o el fondo oscuro). Motor <strong>math.js</strong>.
+    </p>
+  </header>
 
-  <div class="calc-shell">
-    <div class="calc-display" id="calc-main">0</div>
-    <div class="calc-sub" id="calc-sub"></div>
-    <div class="calc-keys calc-keys--grid" role="group" aria-label="Teclado">
-      <button type="button" data-key="C">C</button>
-      <button type="button" data-key="÷">÷</button>
-      <button type="button" data-key="×">×</button>
-      <button type="button" data-key="−">−</button>
-      <button type="button" data-key="7">7</button>
-      <button type="button" data-key="8">8</button>
-      <button type="button" data-key="9">9</button>
-      <button type="button" data-key="+">+</button>
-      <button type="button" data-key="4">4</button>
-      <button type="button" data-key="5">5</button>
-      <button type="button" data-key="6">6</button>
-      <button type="button" data-key="−">−</button>
-      <button type="button" data-key="1">1</button>
-      <button type="button" data-key="2">2</button>
-      <button type="button" data-key="3">3</button>
-      <button type="button" data-key="+">+</button>
-      <button type="button" data-key="0" class="calc-zero">0</button>
-      <button type="button" data-key=".">.</button>
-      <button type="button" data-key="=">=</button>
+  <div class="sci-calc" aria-label="Calculadora científica">
+    <div class="sci-calc__chassis">
+      <div class="sci-calc__model-strip">
+        <span class="sci-calc__model-name">SCI-PRO</span>
+        <span class="sci-calc__model-tag">natural display · math.js</span>
+      </div>
+    <div class="sci-calc__layout sci-calc__layout--stacked">
+      <div class="sci-calc__col sci-calc__col--io">
+        <div class="sci-calc__lcd">
+        <div class="sci-calc__toolbar" role="toolbar" aria-label="Barra de herramientas">
+          <button type="button" class="sci-calc__tool" id="sci-abc" title="Modo variables (x, y, π…)" aria-pressed="false">abc</button>
+          <button type="button" class="sci-calc__tool sci-calc__tool--power" id="sci-exp-btn" title="Insertar ^( ) vacío, o seleccionar exponente junto al cursor">^·n</button>
+          <span class="sci-calc__tool-group" role="group" aria-label="Cursor">
+            <button type="button" class="sci-calc__tool" id="sci-cur-left" title="Mover cursor (←)">◀</button>
+            <button type="button" class="sci-calc__tool" id="sci-cur-right" title="Mover cursor (→)">▶</button>
+          </span>
+          <button type="button" class="sci-calc__tool sci-calc__tool--accent" id="sci-enter" title="Calcular (Enter)">↵</button>
+          <button type="button" class="sci-calc__tool" id="sci-backspace" title="Retroceso (Backspace)">⌫</button>
+        </div>
+
+        <label class="sci-calc__expr-label" for="sci-expr"><span class="sci-calc__expr-label-tag">INPUT</span></label>
+        <textarea id="sci-expr" class="sci-calc__expr sci-calc__expr--lcd" rows="5" spellcheck="false" autocomplete="off" autocapitalize="off" placeholder="√(16) · ∛(27) · der(x^2, x) · integral(&quot;x^2&quot;, &quot;x&quot;, 0, 1)"></textarea>
+
+        <div class="sci-calc__result-row sci-calc__result-row--lcd">
+          <span class="sci-calc__result-label">RESULT</span>
+          <output class="sci-calc__result" id="sci-result" for="sci-expr" aria-live="polite">0</output>
+        </div>
+        <p class="sci-calc__mode-line">
+          <span class="sci-calc__deg" id="sci-deg-label">Radianes</span>
+          <button type="button" class="sci-calc__pill" id="sci-deg-toggle" title="Alternar grados / radianes en sin, cos, tan">Rad / Deg</button>
+          <span class="sci-calc__ans-hint">ans</span>
+        </p>
+        <button type="button" class="sci-calc__hist-btn" id="sci-hist-toggle" title="Ver historial de cálculos" aria-expanded="false" aria-controls="sci-hist-overlay" aria-haspopup="dialog">
+          <span class="sci-calc__hist-btn-icon" aria-hidden="true">◫</span>
+          Historial
+        </button>
+        </div>
+      </div>
+
+      <div class="sci-calc__keypad-bridge" role="presentation">
+        <span class="sci-calc__keypad-bridge-line" aria-hidden="true"></span>
+        <span class="sci-calc__keypad-bridge-label">Teclado científico</span>
+        <span class="sci-calc__keypad-bridge-line" aria-hidden="true"></span>
+      </div>
+
+      <div class="sci-calc__col sci-calc__col--keys">
+        <div class="sci-calc__keypad">
+        <div class="sci-calc__tabs" role="tablist" aria-label="Categoría">
+          <button type="button" class="sci-calc__tab sci-calc__tab--active" role="tab" aria-selected="true" id="sci-tab-basic" data-panel="sci-panel-basic">Básica</button>
+          <button type="button" class="sci-calc__tab" role="tab" aria-selected="false" id="sci-tab-func" data-panel="sci-panel-func">f(x) · log</button>
+          <button type="button" class="sci-calc__tab" role="tab" aria-selected="false" id="sci-tab-trig" data-panel="sci-panel-trig">Trig</button>
+          <button type="button" class="sci-calc__tab" role="tab" aria-selected="false" id="sci-tab-calc" data-panel="sci-panel-calc">Cálculo</button>
+        </div>
+
+    <div class="sci-calc__panels">
+      <div class="sci-calc__panel sci-calc__panel--active" id="sci-panel-basic" role="tabpanel" aria-labelledby="sci-tab-basic">
+        <p class="sci-calc__subgrid-label">Potencias — <code>^·n</code> inserta <code>^( )</code>; al pulsar de nuevo intenta <strong>seleccionar</strong> el exponente junto al cursor</p>
+        <div class="sci-grid sci-grid--power">
+          <button type="button" class="sci-key sci-key--power" data-action="power-insert" title="Inserta ^( ) y deja el cursor dentro">x^(·)</button>
+          <button type="button" class="sci-key sci-key--power" data-insert="^2" title="Cuadrado">x²</button>
+          <button type="button" class="sci-key sci-key--power" data-insert="^3" title="Cubo">x³</button>
+          <button type="button" class="sci-key sci-key--power" data-insert="^(-1)" title="Inverso multiplicativo">x⁻¹</button>
+          <button type="button" class="sci-key sci-key--power" data-insert="^(1/2)" title="Misma raíz que sqrt">x^(½)</button>
+          <button type="button" class="sci-key sci-key--power" data-insert="nthRoot(" title="Raíz n-ésima: nthRoot(x,n)">ⁿ√</button>
+        </div>
+        <div class="sci-grid sci-grid--basic">
+          <button type="button" class="sci-key sci-key--tpl" data-insert="(" title="Paréntesis">(·)</button>
+          <button type="button" class="sci-key sci-key--tpl" data-insert=")/(" title="Fracción a/b">a/b</button>
+          <button type="button" class="sci-key sci-key--num" data-insert="7">7</button>
+          <button type="button" class="sci-key sci-key--num" data-insert="8">8</button>
+          <button type="button" class="sci-key sci-key--num" data-insert="9">9</button>
+          <button type="button" class="sci-key sci-key--op" data-insert="/">÷</button>
+
+          <button type="button" class="sci-key sci-key--tpl" data-insert="∛(" title="Raíz cúbica ∛(…)">∛</button>
+          <button type="button" class="sci-key sci-key--tpl" data-insert="√(" title="Raíz cuadrada √(…)">√</button>
+          <button type="button" class="sci-key sci-key--num" data-insert="4">4</button>
+          <button type="button" class="sci-key sci-key--num" data-insert="5">5</button>
+          <button type="button" class="sci-key sci-key--num" data-insert="6">6</button>
+          <button type="button" class="sci-key sci-key--op" data-insert="*">×</button>
+
+          <button type="button" class="sci-key sci-key--sym" data-insert=">" title="Mayor">&gt;</button>
+          <button type="button" class="sci-key sci-key--sym" data-insert="x" title="Variable x">x</button>
+          <button type="button" class="sci-key sci-key--num" data-insert="1">1</button>
+          <button type="button" class="sci-key sci-key--num" data-insert="2">2</button>
+          <button type="button" class="sci-key sci-key--num" data-insert="3">3</button>
+          <button type="button" class="sci-key sci-key--op" data-insert="-">−</button>
+
+          <button type="button" class="sci-key sci-key--sym" data-insert="pi" title="π">π</button>
+          <button type="button" class="sci-key sci-key--sym" data-insert="%" title="Porcentaje (÷100)">%</button>
+          <button type="button" class="sci-key sci-key--num" data-insert="0">0</button>
+          <button type="button" class="sci-key sci-key--num" data-insert=",">,</button>
+          <button type="button" class="sci-key sci-key--eq" data-action="eval" title="Calcular">=</button>
+          <button type="button" class="sci-key sci-key--op" data-insert="+">+</button>
+        </div>
+      </div>
+
+      <div class="sci-calc__panel" id="sci-panel-func" role="tabpanel" aria-labelledby="sci-tab-func" hidden>
+        <div class="sci-grid sci-grid--func">
+          <button type="button" class="sci-key" data-insert="e^(">eˣ</button>
+          <button type="button" class="sci-key" data-insert="log10(">log</button>
+          <button type="button" class="sci-key" data-insert="log(">ln</button>
+          <button type="button" class="sci-key" data-insert="√(" title="Raíz √(…)">√</button>
+          <button type="button" class="sci-key" data-insert="^">xʸ</button>
+          <button type="button" class="sci-key" data-insert="abs(">|x|</button>
+
+          <button type="button" class="sci-key" data-insert="exp(">exp</button>
+          <button type="button" class="sci-key" data-insert="gcd(">mcd</button>
+          <button type="button" class="sci-key" data-insert="lcm(">mcm</button>
+          <button type="button" class="sci-key" data-insert="factorial(">n!</button>
+          <button type="button" class="sci-key" data-insert="mod(">mod</button>
+          <button type="button" class="sci-key" data-insert="1/">1/x</button>
+
+          <button type="button" class="sci-key" data-insert="min(">min</button>
+          <button type="button" class="sci-key" data-insert="max(">max</button>
+          <button type="button" class="sci-key" data-insert="round(">redondear</button>
+          <button type="button" class="sci-key" data-insert="floor(">⌊x⌋</button>
+          <button type="button" class="sci-key" data-insert="ceil(">⌈x⌉</button>
+          <button type="button" class="sci-key" data-insert="sign(">sgn</button>
+        </div>
+      </div>
+
+      <div class="sci-calc__panel" id="sci-panel-trig" role="tabpanel" aria-labelledby="sci-tab-trig" hidden>
+        <div class="sci-grid sci-grid--trig">
+          <button type="button" class="sci-key" data-insert="sin(">sin</button>
+          <button type="button" class="sci-key" data-insert="cos(">cos</button>
+          <button type="button" class="sci-key" data-insert="tan(">tan</button>
+          <button type="button" class="sci-key" data-insert="cot(">cot</button>
+          <button type="button" class="sci-key" data-insert="sec(">sec</button>
+          <button type="button" class="sci-key" data-insert="csc(">csc</button>
+
+          <button type="button" class="sci-key" data-insert="asin(">sin⁻¹</button>
+          <button type="button" class="sci-key" data-insert="acos(">cos⁻¹</button>
+          <button type="button" class="sci-key" data-insert="atan(">tan⁻¹</button>
+          <button type="button" class="sci-key" data-insert="sind(">sin°</button>
+          <button type="button" class="sci-key" data-insert="cosd(">cos°</button>
+          <button type="button" class="sci-key" data-insert="tand(">tan°</button>
+
+          <button type="button" class="sci-key" data-insert="sinh(">sinh</button>
+          <button type="button" class="sci-key" data-insert="cosh(">cosh</button>
+          <button type="button" class="sci-key" data-insert="tanh(">tanh</button>
+          <button type="button" class="sci-key" data-insert="pi">π</button>
+          <button type="button" class="sci-key" data-insert="Infinity">∞</button>
+          <button type="button" class="sci-key" data-insert="e">e</button>
+        </div>
+      </div>
+
+      <div class="sci-calc__panel" id="sci-panel-calc" role="tabpanel" aria-labelledby="sci-tab-calc" hidden>
+        <p class="sci-calc__panel-hint">Sintaxis: <code>der(expr, x)</code>, <code>integral(&quot;expr&quot;, &quot;x&quot;, a, b)</code> (integral numérica), <code>lim(expr, x, a)</code>, <code>sumfrom(expr, n, a, b)</code>. Los botones insertan plantillas con el cursor listo.</p>
+        <div class="sci-grid sci-grid--calc">
+          <button type="button" class="sci-key sci-key--wide" data-action="template-der" title="Plantilla der(expr, x) — cursor en la expresión">d/dx · der</button>
+          <button type="button" class="sci-key" data-action="template-int" title="Plantilla integral con límites">∫ₐᵇ</button>
+          <button type="button" class="sci-key" data-action="template-lim" title="Plantilla límite">lim</button>
+          <button type="button" class="sci-key" data-insert="sumfrom(">Σ</button>
+
+          <button type="button" class="sci-key" data-insert="diff(">Δ</button>
+          <button type="button" class="sci-key" data-insert="x">x</button>
+          <button type="button" class="sci-key" data-insert="y">y</button>
+          <button type="button" class="sci-key" data-insert="z">z</button>
+          <button type="button" class="sci-key" data-insert="n">n</button>
+          <button type="button" class="sci-key" data-insert="dx">dx</button>
+        </div>
+      </div>
     </div>
-    <div id="calc-hist" class="calc-hist" aria-live="polite"></div>
+
+        <div class="sci-calc__bottom">
+          <button type="button" class="sci-calc__wide-btn" data-action="clear">C</button>
+          <button type="button" class="sci-calc__wide-btn" data-action="clear-entry">CE</button>
+          <button type="button" class="sci-calc__wide-btn" data-action="ans">ANS</button>
+        </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="sci-hist-overlay" class="sci-calc__hist-overlay" hidden aria-hidden="true">
+      <button type="button" class="sci-calc__hist-backdrop" id="sci-hist-backdrop" tabindex="-1" aria-label="Cerrar historial"></button>
+      <aside id="sci-hist-panel" class="sci-calc__hist-panel" role="dialog" aria-modal="true" aria-labelledby="sci-hist-title">
+        <div class="sci-calc__hist-head">
+          <span id="sci-hist-title">Historial</span>
+          <button type="button" class="sci-calc__hist-clear" id="sci-hist-clear">Vaciar</button>
+        </div>
+        <div id="sci-hist-list" class="sci-calc__hist-list"></div>
+      </aside>
+    </div>
+    </div>
   </div>
-  <p class="calc-hint">Operaciones encadenadas. <strong>C</strong> o <kbd>Esc</kbd> reinician.</p>
+
+  <p class="sci-calc__foot-hint">
+    <kbd>Enter</kbd> calcula · <kbd>Esc</kbd> cierra el historial si está abierto; si no, borra · <strong>^·n</strong> potencia · <code>√( )</code> <code>∛( )</code> · ej. <code>der(x^2,x)</code>
+  </p>
 </div>
 {% endblock %}
 
 {% block extra_scripts %}
-<script src="{{ url_for('static', filename='js/calculator.js') }}?v=3"></script>
+<script src="https://cdn.jsdelivr.net/npm/mathjs@12.4.2/lib/browser/math.min.js"></script>
+<script src="{{ url_for('static', filename='js/calculator.js') }}?v=10"></script>
 {% endblock %}

@@ -6,7 +6,8 @@ from __future__ import annotations
 import os
 import re
 import time
-from datetime import datetime
+from datetime import datetime, timezone
+from zoneinfo import ZoneInfo
 
 from flask import Flask, abort, jsonify, redirect, render_template, request, url_for
 
@@ -32,8 +33,28 @@ _MONTHS_ES = (
 init_db()
 
 _trading_cache: dict = {"t": 0.0, "rows": []}
-_NEWS_TTL = 300.0
+_NEWS_TTL = 90.0
 _news_cache: dict = {"t": 0.0, "items": []}
+_NEWS_TZ = ZoneInfo("America/Santiago")
+_MESES_ES = (
+    "ene",
+    "feb",
+    "mar",
+    "abr",
+    "may",
+    "jun",
+    "jul",
+    "ago",
+    "sep",
+    "oct",
+    "nov",
+    "dic",
+)
+_NEWS_REGION_LABELS = {
+    "economia": "Economía & finanzas",
+    "internacional": "Internacional & geopolítica",
+    "politica": "Política",
+}
 
 MODULES = [
     {
@@ -53,12 +74,28 @@ MODULES = [
         "lead": "Plan de estudios y vida académica: campus, créditos y entregas en un solo espacio.",
     },
     {
+        "slug": "contactos",
+        "title": "CONTACTOS",
+        "desc": "Tarjetas y agenda",
+        "icon": "✉",
+        "theme": "purple",
+        "lead": "CRM en SQLite: filtro en vivo, edición y toasts de confirmación.",
+    },
+    {
         "slug": "trading-lab",
         "title": "TRADING LAB",
         "desc": "Mercados",
         "icon": "📈",
         "theme": "yellow",
         "lead": "Índices, FX y cripto con variación diaria (yfinance, caché ~60 s).",
+    },
+    {
+        "slug": "noticias",
+        "title": "NOTICIAS",
+        "desc": "Economía & política",
+        "icon": "📰",
+        "theme": "blue",
+        "lead": "Economía, mercados, política e internacional (BBC, NYT, Guardian, El País, CNBC…); hora de publicación en Chile.",
     },
     {
         "slug": "ciberseguridad",
@@ -69,44 +106,12 @@ MODULES = [
         "lead": "Checklist por categorías con progreso visual; datos solo en tu navegador.",
     },
     {
-        "slug": "herramientas",
-        "title": "HERRAMIENTAS",
-        "desc": "PDF - exportar - QR",
-        "icon": "🧰",
-        "theme": "red",
-        "lead": "QR desde texto, copiar y descargar .txt con retroalimentación clara.",
-    },
-    {
-        "slug": "contactos",
-        "title": "CONTACTOS",
-        "desc": "Tarjetas y agenda",
-        "icon": "✉",
-        "theme": "purple",
-        "lead": "CRM en SQLite: filtro en vivo, edición y toasts de confirmación.",
-    },
-    {
-        "slug": "noticias",
-        "title": "NOTICIAS",
-        "desc": "Fuentes y feeds",
-        "icon": "📰",
-        "theme": "blue",
-        "lead": "RSS (Xataka, El País): recarga sin salir de la página.",
-    },
-    {
-        "slug": "buscar",
-        "title": "BUSCAR",
-        "desc": "Búsqueda global",
-        "icon": "🔍",
-        "theme": "green",
-        "lead": "Una búsqueda sobre eventos, contactos y entregas con resultados agrupados.",
-    },
-    {
         "slug": "calculadora",
         "title": "CALCULADORA",
-        "desc": "Paso a paso",
+        "desc": "Científica · math.js",
         "icon": "🔢",
         "theme": "orange",
-        "lead": "Operaciones encadenadas, historial y atajos de teclado.",
+        "lead": "Display + teclado científico, math.js: simbólico y numérico. Historial solo bajo demanda (modal).",
     },
 ]
 
@@ -139,41 +144,102 @@ def _access_cards():
     ]
 
 
+def _entry_published_utc(entry: dict) -> datetime | None:
+    t = entry.get("published_parsed") or entry.get("updated_parsed")
+    if not t:
+        return None
+    return datetime(
+        t.tm_year,
+        t.tm_mon,
+        t.tm_mday,
+        t.tm_hour,
+        t.tm_min,
+        t.tm_sec,
+        tzinfo=timezone.utc,
+    )
+
+
+def _published_label_chile(dt: datetime) -> str:
+    local = dt.astimezone(_NEWS_TZ)
+    return (
+        f"{local.day} {_MESES_ES[local.month - 1]} {local.year}, "
+        f"{local.hour:02d}:{local.minute:02d} · hora Chile"
+    )
+
+
 def _fetch_news_items():
+    """RSS orientados a economía, finanzas, internacional, geopolítica y política; orden por fecha; sin duplicar enlaces."""
     now = time.time()
     if _news_cache["items"] and (now - _news_cache["t"]) < _NEWS_TTL:
         return _news_cache["items"]
-    items = []
+    items: list[dict] = []
     try:
         import feedparser
 
-        feeds = [
-            ("https://www.xataka.com/xml/rss/all.xml", "Xataka"),
-            ("https://feeds.elpais.com/mrss-s/pages/ep/portada.xml", "El País"),
+        feeds: list[tuple[str, str, str]] = [
+            ("http://feeds.bbci.co.uk/news/business/rss.xml", "BBC · Business", "economia"),
+            ("http://feeds.bbci.co.uk/news/world/rss.xml", "BBC · World", "internacional"),
+            ("http://feeds.bbci.co.uk/news/politics/rss.xml", "BBC · Politics", "politica"),
+            ("https://rss.nytimes.com/services/xml/rss/nyt/Economy.xml", "The New York Times · Economy", "economia"),
+            ("https://rss.nytimes.com/services/xml/rss/nyt/World.xml", "The New York Times · World", "internacional"),
+            ("https://rss.nytimes.com/services/xml/rss/nyt/Politics.xml", "The New York Times · Politics", "politica"),
+            ("https://www.theguardian.com/business/rss", "The Guardian · Business", "economia"),
+            ("https://www.theguardian.com/world/rss", "The Guardian · World", "internacional"),
+            ("https://www.theguardian.com/politics/rss", "The Guardian · Politics", "politica"),
+            ("https://feeds.elpais.com/mrss-s/pages/ep/site/elpais.com/section/economia", "El País · Economía", "economia"),
+            ("https://feeds.elpais.com/mrss-s/pages/ep/site/elpais.com/section/internacional", "El País · Internacional", "internacional"),
+            ("https://www.marketwatch.com/rss/topstories", "MarketWatch", "economia"),
+            ("https://www.cnbc.com/id/100003114/device/rss/rss.html", "CNBC · Top news", "economia"),
         ]
-        for url, source in feeds:
-            parsed = feedparser.parse(url)
-            for e in getattr(parsed, "entries", [])[:10]:
-                title = e.get("title", "").strip()
-                link = e.get("link", "#")
-                summary = e.get("summary", "") or e.get("description", "") or ""
-                if summary:
-                    summary = re.sub(r"<[^>]+>", " ", summary)
-                    summary = re.sub(r"\s+", " ", summary).strip()
-                    if len(summary) > 300:
-                        summary = summary[:300] + "…"
-                items.append(
-                    {
-                        "title": title,
-                        "link": link,
-                        "source": source,
-                        "summary": summary,
-                        "published": e.get("published", e.get("updated", "")),
-                    }
-                )
+        collected: list[dict] = []
+        for url, source, region in feeds:
+            try:
+                parsed = feedparser.parse(url)
+                for e in getattr(parsed, "entries", [])[:8]:
+                    title = (e.get("title") or "").strip()
+                    link = (e.get("link") or "").strip() or "#"
+                    if not title:
+                        continue
+                    summary = e.get("summary", "") or e.get("description", "") or ""
+                    if summary:
+                        summary = re.sub(r"<[^>]+>", " ", summary)
+                        summary = re.sub(r"\s+", " ", summary).strip()
+                        if len(summary) > 280:
+                            summary = summary[:280] + "…"
+                    dt = _entry_published_utc(e)
+                    sort_ts = dt.timestamp() if dt else 0.0
+                    published_iso = dt.isoformat() if dt else ""
+                    published_label = _published_label_chile(dt) if dt else ""
+                    raw_pub = (e.get("published") or e.get("updated") or "").strip()
+                    collected.append(
+                        {
+                            "title": title,
+                            "link": link,
+                            "source": source,
+                            "region": region,
+                            "region_label": _NEWS_REGION_LABELS.get(region, region),
+                            "summary": summary,
+                            "published": raw_pub,
+                            "published_iso": published_iso,
+                            "published_label": published_label or raw_pub,
+                            "sort_ts": sort_ts,
+                        }
+                    )
+            except Exception:
+                continue
+        collected.sort(key=lambda x: x.get("sort_ts") or 0.0, reverse=True)
+        seen: set[str] = set()
+        for row in collected:
+            link = row.get("link") or ""
+            if not link or link == "#" or link in seen:
+                continue
+            seen.add(link)
+            row.pop("sort_ts", None)
+            items.append(row)
+            if len(items) >= 56:
+                break
     except Exception:
         pass
-    items = items[:36]
     _news_cache["t"] = now
     _news_cache["items"] = items
     return items
@@ -263,7 +329,12 @@ def api_trading():
 def api_news():
     if request.args.get("refresh"):
         _news_cache["t"] = 0.0
-    return jsonify({"items": _fetch_news_items()})
+    payload = {
+        "items": _fetch_news_items(),
+        "fetched_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "ttl_seconds": int(_NEWS_TTL),
+    }
+    return jsonify(payload)
 
 
 # ——— API calendario ———
@@ -448,35 +519,6 @@ def api_assignments_delete(aid):
     with get_db() as conn:
         conn.execute("DELETE FROM assignments WHERE id = ?", (aid,))
     return jsonify({"ok": True})
-
-
-# ——— Búsqueda ———
-
-
-@app.route("/api/search", methods=["GET"])
-def api_search():
-    q = (request.args.get("q") or "").strip().lower()
-    if len(q) < 2:
-        return jsonify({"events": [], "contacts": [], "assignments": []})
-    like = f"%{q}%"
-    out = {"events": [], "contacts": [], "assignments": []}
-    with get_db() as conn:
-        for r in conn.execute(
-            "SELECT * FROM events WHERE lower(title) LIKE ? OR lower(notes) LIKE ? LIMIT 20",
-            (like, like),
-        ).fetchall():
-            out["events"].append(row_to_dict(r))
-        for r in conn.execute(
-            "SELECT * FROM contacts WHERE lower(name) LIKE ? OR lower(email) LIKE ? OR lower(company) LIKE ? LIMIT 20",
-            (like, like, like),
-        ).fetchall():
-            out["contacts"].append(row_to_dict(r))
-        for r in conn.execute(
-            "SELECT * FROM assignments WHERE lower(title) LIKE ? OR lower(course) LIKE ? LIMIT 20",
-            (like, like),
-        ).fetchall():
-            out["assignments"].append(row_to_dict(r))
-    return jsonify(out)
 
 
 if __name__ == "__main__":
