@@ -15,12 +15,12 @@ python app.py
 
 Navegador: **http://127.0.0.1:5000/tu-espacio** (la raíz `/` redirige allí).
 
-### Puerto y enlace a Historia
+No hay URLs ni dependencias hacia **gestor_historia** en el código: cada app se ejecuta por separado.
+
+### Puerto
 
 ```powershell
 $env:FLASK_PORT = "5000"
-# Si Historia corre en otro host/puerto:
-$env:HISTORIA_APP_URL = "http://127.0.0.1:5001"
 ```
 
 ## Estructura

@@ -223,17 +223,6 @@ span.nav-item {
   color: var(--teal);
 }
 
-.sidebar-footer__hint {
-  display: block;
-  letter-spacing: 0.1em;
-  opacity: 0.75;
-  line-height: 1.4;
-}
-
-a.nav-item--link {
-  text-decoration: none;
-}
-
 /* Centro */
 .main-area {
   padding: 1.5rem 2rem 1.25rem;
@@ -397,7 +386,7 @@ a.nav-item--link {
 /* Barra inferior main */
 .status-strip {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
   gap: 0.75rem;
   padding: 0.85rem 1rem;
   border-radius: 6px;

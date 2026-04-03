@@ -26,10 +26,6 @@ body {
 }
 
 .top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
   padding-bottom: 1.25rem;
   border-bottom: 1px solid var(--border);
   margin-bottom: 2rem;
@@ -40,17 +36,6 @@ body {
   font-size: 0.75rem;
   letter-spacing: 0.2em;
   color: var(--accent);
-}
-
-.top-nav__link {
-  font-size: 0.75rem;
-  letter-spacing: 0.08em;
-  color: var(--muted);
-  text-decoration: none;
-}
-
-.top-nav__link:hover {
-  color: var(--text);
 }
 
 .title {
@@ -75,15 +60,6 @@ body {
   margin: 0;
   font-size: 0.85rem;
   color: var(--muted);
-}
-
-.meta a {
-  color: var(--accent);
-  text-decoration: none;
-}
-
-.meta a:hover {
-  text-decoration: underline;
 }
 
 code {

@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,400;0,500;0,600;1,400&family=Noto+Sans+JP:wght@400;500&family=Orbitron:wght@500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/tu_espacio.css') }}?v=6">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/tu_espacio.css') }}?v=7">
 </head>
 <body>
   {# Fondo: capa CSS RGB + canvas con katakana (transparente entre letras) #}
@@ -24,10 +24,11 @@
       </div>
       <nav class="nav-main">
         <span class="nav-item nav-item--active">TU ESPACIO</span>
-        <a class="nav-item nav-item--link" href="{{ historia_href }}" target="_self" rel="noopener">HISTORIA</a>
       </nav>
       <div class="sidebar-footer">
-        <span class="sidebar-footer__hint">Repo: solo estas dos apps</span>
+        <a href="#">SETTINGS</a>
+        <span> / </span>
+        <a href="#">CORREO</a>
       </div>
     </aside>
 
@@ -57,10 +58,16 @@
         <div>
           <h4>PRÓXIMAS HOY</h4>
           <p>Sin bloques próximos.</p>
+          <a class="link-arrow" href="#">Calendario completo →</a>
         </div>
         <div>
-          <h4>OTRA APP</h4>
-          <p><a class="btn-inline" href="{{ historia_href }}">Abrir Historia →</a></p>
+          <h4>ARCHIVOS &amp; RED</h4>
+          <p><a href="#">Curriculum</a> · <a href="#">Dispositivos</a></p>
+        </div>
+        <div>
+          <h4>MERCADOS</h4>
+          <p>Panorama en el lab.</p>
+          <a class="btn-inline" href="#">Trading Lab →</a>
         </div>
       </section>
     </main>

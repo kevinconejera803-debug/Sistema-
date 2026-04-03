@@ -1,5 +1,6 @@
 """
 Tu espacio — Flask: SYSTEM INTERFACE / dashboard principal.
+Sin acoplamiento a otras apps del repositorio (cada app es independiente).
 """
 import os
 from datetime import datetime
@@ -23,28 +24,80 @@ _MONTHS_ES = (
     "DIC",
 )
 
-def _historia_url():
-    base = os.environ.get("HISTORIA_APP_URL", "http://127.0.0.1:5001").strip().rstrip("/")
-    return base + "/"
+# Módulos del panel (enlaza rutas internas cuando existan las vistas)
+ACCESS_CARDS = [
+    {
+        "title": "CALENDARIO",
+        "desc": "Día - semana - mes",
+        "icon": "🕐",
+        "theme": "teal",
+        "href": "#",
+    },
+    {
+        "title": "UNIVERSIDAD",
+        "desc": "Aula y entregas",
+        "icon": "🎓",
+        "theme": "purple",
+        "href": "#",
+    },
+    {
+        "title": "TRADING LAB",
+        "desc": "Mercados",
+        "icon": "📈",
+        "theme": "yellow",
+        "href": "#",
+    },
+    {
+        "title": "CIBERSEGURIDAD",
+        "desc": "Shadow Network",
+        "icon": "🛡",
+        "theme": "teal",
+        "href": "#",
+    },
+    {
+        "title": "HERRAMIENTAS",
+        "desc": "PDF - exportar - QR",
+        "icon": "🧰",
+        "theme": "red",
+        "href": "#",
+    },
+    {
+        "title": "CONTACTOS",
+        "desc": "Tarjetas y agenda",
+        "icon": "✉",
+        "theme": "purple",
+        "href": "#",
+    },
+    {
+        "title": "NOTICIAS",
+        "desc": "Fuentes y feeds",
+        "icon": "📰",
+        "theme": "blue",
+        "href": "#",
+    },
+    {
+        "title": "BUSCAR",
+        "desc": "Búsqueda global",
+        "icon": "🔍",
+        "theme": "green",
+        "href": "#",
+    },
+    {
+        "title": "CALCULADORA",
+        "desc": "Paso a paso",
+        "icon": "🔢",
+        "theme": "orange",
+        "href": "#",
+    },
+]
 
 
 def _tu_espacio_context():
     now = datetime.now()
     month_badge = f"{_MONTHS_ES[now.month - 1]} - {now.year}"
-    h = _historia_url()
-    access_cards = [
-        {
-            "title": "HISTORIA",
-            "desc": "Segunda app del repositorio (Flask, puerto 5001)",
-            "icon": "📜",
-            "theme": "purple",
-            "href": h,
-        },
-    ]
     return {
-        "access_cards": access_cards,
+        "access_cards": ACCESS_CARDS,
         "month_badge": month_badge,
-        "historia_href": h,
     }
 
 

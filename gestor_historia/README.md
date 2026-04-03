@@ -16,13 +16,7 @@ python app.py
 
 Navegador: **http://127.0.0.1:5001/**
 
-### Enlaces con la otra app
-
-Por defecto el panel “Tu espacio” se abre en `http://127.0.0.1:5000/tu-espacio`. Puedes cambiar la URL base:
-
-```powershell
-$env:TU_ESPACIO_URL = "http://127.0.0.1:5000"
-```
+No hay URLs ni dependencias hacia **gestor_tu_espacio** en el código: cada app es independiente.
 
 ### Estructura
 
