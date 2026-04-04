@@ -121,7 +121,7 @@ MODULES = [
         "desc": "Científica · math.js",
         "icon": "🔢",
         "theme": "orange",
-        "lead": "Calculadora (tema SYSTEM INTERFACE): panel oscuro, KaTeX + math.js, teclado 123 / ƒ(x), historial, Rad·Deg, C/CE/ans.",
+        "lead": "Interfaz clara y ordenada: KaTeX + math.js, teclado 123 / ƒ(x), historial, Rad·Deg, C/CE/ans.",
     },
 ]
 

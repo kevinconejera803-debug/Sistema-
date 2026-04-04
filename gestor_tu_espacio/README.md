@@ -110,7 +110,7 @@ Si no las defines, usa el botón **Enlaces** (esquina del bloque de acceso rápi
 - **Ciberseguridad** — Checklist ampliada, donut de % y bloques por tema; progreso en **localStorage**.
 - **Contactos** — SQLite con **filtro en vivo**, edición y toasts.
 - **Noticias** — RSS (**feedparser**) centrados en **economía, finanzas, internacional, geopolítica y política** (BBC Business/World/Politics, NYT Economy/World/Politics, Guardian Business/World/Politics, El País Economía/Internacional, MarketWatch, CNBC). Cada ítem incluye **`published_iso`** y etiqueta legible en **hora Chile**. Caché ~90&nbsp;s; **`GET /api/news`** con `fetched_at` y `ttl_seconds`; filtros **Economía / Internacional / Política**; auto cada 4&nbsp;min.
-- **Calculadora** — **math.js** + **KaTeX** (CDN): mismo lenguaje visual que el sitio (panel oscuro, acento naranja, bordes teal); expresión y resultado con KaTeX; pestañas **123** / **ƒ(x)**; **Pasos y método**; historial **modal**; **Rad/Deg**, **abc**, **^·n**, cursor; plantillas **d/dx**, **∫**, **lim**, **Σ**; **C** / **CE** / **ans**. Caché: `modules.css`, `calculator.js` con `?v=` en plantillas.
+- **Calculadora** — **math.js** + **KaTeX** (CDN): interfaz compacta y ordenada (grises + acento **teal**); expresión y resultado con KaTeX; pestañas **123** / **ƒ(x)** con subrayado activo; **Pasos y método**; historial **modal**; **Rad/Deg**, **abc**, **^·n**, cursor; plantillas **d/dx**, **∫**, **lim**, **Σ**; **C** / **CE** / **ans**. Caché: `modules.css`, `calculator.js` con `?v=` en plantillas.
 
 ---
 
