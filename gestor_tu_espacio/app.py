@@ -121,7 +121,7 @@ MODULES = [
         "desc": "Científica · math.js",
         "icon": "🔢",
         "theme": "orange",
-        "lead": "Calculadora minimal (KaTeX + math.js): teclado 123 / ƒ(x), pasos, historial, Rad·Deg, C/CE/ans.",
+        "lead": "Calculadora «studio»: tarjeta clara, KaTeX + math.js, teclado 123 / ƒ(x), historial, Rad·Deg, C/CE/ans.",
     },
 ]
 
