@@ -11,16 +11,26 @@ En la raíz solo están este archivo, **`.gitignore`** y las carpetas **`gestor_
 
 ---
 
+<a id="repo"></a>
+
+## Qué es un repositorio (repo) y para qué lo usamos
+
+Un **repositorio Git** es la **carpeta del proyecto** junto con el historial de cambios (commits) y la configuración que enlaza con **GitHub** (remoto `origin`). La carpeta oculta **`.git`** guarda ese historial; por eso puedes volver atrás, crear ramas (`main`, `work`) y subir o bajar código con `git push` / `git pull`.
+
+**Lo usamos ahora** para: tener **copia de seguridad** en la nube, trabajar desde **varias máquinas** o entornos, y dejar **rastro ordenado** de lo que cambias (mensajes de commit). Este monorepo es un solo repo con **dos apps** dentro (`gestor_tu_espacio`, `gestor_historia`); el `.git` está en la **raíz** (donde está este `README.md`).
+
+---
+
 ## Contenido
 
-1. [Instalación completa](#install) — desde cero  
-2. [Entornos virtuales](#venv) — crear, activar, Cursor, sin `activate`  
-3. [Arrancar las dos apps](#run)  
-4. [Estructura del repositorio](#tree)  
-5. [Mantenimiento](#maint) — plantillas, `sw.js`, monolito antiguo  
-6. [Git](#git) — commit, GitHub, SSH, proxy 403  
-7. [Si nada funciona (Windows)](#fix)  
-8. [Permisos del asistente / límites](#permisos)  
+1. [Qué es un repositorio](#repo)  
+2. [Instalación completa](#install) — desde cero  
+3. [Entornos virtuales](#venv) — **entrar al venv de cada app**, crear, Cursor  
+4. [Arrancar las dos apps](#run)  
+5. [Estructura del repositorio](#tree)  
+6. [Mantenimiento](#maint) — plantillas, `sw.js`, monolito antiguo  
+7. [Git](#git) — commit, GitHub, SSH, proxy 403  
+8. [Si nada funciona (Windows)](#fix)  
 
 Documentación por app: [gestor_tu_espacio/README.md](gestor_tu_espacio/README.md) · [gestor_historia/README.md](gestor_historia/README.md)
 
@@ -60,9 +70,31 @@ En macOS/Linux sustituye la activación por `source .venv/bin/activate` (ver [En
 
 ## Entornos virtuales
 
-Cada app usa la carpeta **`.venv`** dentro de su directorio. **No mezcles** dependencias entre apps.
+Cada app tiene su propia carpeta **`.venv`** (Python aislado + paquetes de su `requirements.txt`). **No mezcles**: Tu espacio e Historia usan **venv distintos**.
 
-Cuando el venv está activo, el prompt muestra **`(.venv)`**.
+Cuando el venv está activo, el prompt suele mostrar **`(.venv)`**. Para salir: `deactivate`.
+
+### Cómo entrar al venv (cada app, PowerShell)
+
+Ajusta **`$REPO`** a la ruta donde clonaste el proyecto.
+
+**Tu espacio** (`gestor_tu_espacio`, puerto 5000):
+
+```powershell
+$REPO = "C:\Users\kevin\.cursor\Kevin\Ejercicios practicos"
+cd "$REPO\gestor_tu_espacio"
+.\.venv\Scripts\Activate.ps1
+```
+
+**Historia** (`gestor_historia`, puerto 5001):
+
+```powershell
+$REPO = "C:\Users\kevin\.cursor\Kevin\Ejercicios practicos"
+cd "$REPO\gestor_historia"
+.\.venv\Scripts\Activate.ps1
+```
+
+Si aún **no creaste** el `.venv`, haz primero la [instalación completa](#install) en esa carpeta. Si `Activate.ps1` está bloqueado: `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser`.
 
 ### Crear `.venv` (una vez por app)
 
@@ -276,7 +308,7 @@ git config user.email "tu@email.com"
 
 Lo ignorado por defecto: `.venv/`, `*.db`, `uploads/`, `.env`, etc. (ver `.gitignore`).
 
-**Comprobar Python/Git en tu PC:** `.\gestor_tu_espacio\scripts\repo\verificar_entorno.ps1` (desde la raíz del repo). **Qué el asistente no puede hacer por sí solo** (tokens, instalar Node, `/workspace`): [gestor_tu_espacio/PERMISOS_Y_LIMITES_ASISTENTE.md](gestor_tu_espacio/PERMISOS_Y_LIMITES_ASISTENTE.md).
+**Comprobar Python/Git en tu PC:** `.\gestor_tu_espacio\scripts\repo\verificar_entorno.ps1` (desde la raíz del repo).
 
 ### Subir a GitHub
 
@@ -412,15 +444,6 @@ git push -u origin work
 
 Comprueba conexión: `ssh -T git@github.com`. Si `origin` sigue en HTTPS y falla el proxy:  
 `.\gestor_tu_espacio\scripts\repo\switch_origin_to_ssh.ps1`
-
----
-
-<a id="permisos"></a>
-
-## Permisos del asistente / límites
-
-Qué puede hacer el asistente en Cursor y qué debes resolver tú (tokens, nube, red):  
-[gestor_tu_espacio/PERMISOS_Y_LIMITES_ASISTENTE.md](gestor_tu_espacio/PERMISOS_Y_LIMITES_ASISTENTE.md)
 
 ---
 

@@ -2,15 +2,25 @@
 
 Panel principal del repositorio (SYSTEM INTERFACE). Puerto típico **5000**, base **`tu_espacio.db`**.
 
-**Instalación general, Git y permisos del asistente:** [README del repositorio](../README.md#install) · [Git](../README.md#git) · [Permisos / límites](PERMISOS_Y_LIMITES_ASISTENTE.md)
+**Qué es un repo, instalación y Git:** [README del repositorio](../README.md#repo) · [Instalación](../README.md#install) · [Entornos virtuales](../README.md#venv) · [Git](../README.md#git)
 
 ---
 
 ## Cómo entrar
 
-Sustituye la ruta si tu carpeta del repo está en otro sitio.
+Sustituye **`$REPO`** si tu carpeta del proyecto está en otro sitio.
 
-### Primera vez (crear entorno e instalar)
+### Entrar al entorno virtual (Tu espacio)
+
+Después de activar verás **`(.venv)`** en el prompt.
+
+```powershell
+$REPO = "C:\Users\kevin\.cursor\Kevin\Ejercicios practicos"
+cd "$REPO\gestor_tu_espacio"
+.\.venv\Scripts\Activate.ps1
+```
+
+### Primera vez (crear `.venv` e instalar)
 
 Copia y pega en **PowerShell** (una sola vez por máquina):
 
@@ -30,9 +40,15 @@ Si `Activate.ps1` está bloqueado:
 Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 ```
 
-### Cada vez que quieras usar Tu espacio
+### Arrancar la app (con el venv ya activo)
 
-Copia y pega en **PowerShell** (terminal 1):
+En la misma terminal donde activaste **`Activate.ps1`**:
+
+```powershell
+python app.py
+```
+
+O desde cero en un solo bloque:
 
 ```powershell
 $REPO = "C:\Users\kevin\.cursor\Kevin\Ejercicios practicos"

@@ -2,15 +2,25 @@
 
 Aplicación Flask independiente. Puerto típico **5001**, base **`historia.db`** cuando la uses en `database.py`.
 
-**Instalación general y Git:** [README del repositorio](../README.md#install) · [Git](../README.md#git)
+**Repo, instalación y Git:** [README del repositorio](../README.md#repo) · [Entornos virtuales](../README.md#venv) · [Git](../README.md#git)
 
 ---
 
 ## Cómo entrar
 
-Sustituye la ruta si tu carpeta del repo está en otro sitio.
+Sustituye **`$REPO`** si tu carpeta del proyecto está en otro sitio.
 
-### Primera vez (crear entorno e instalar)
+### Entrar al entorno virtual (Historia)
+
+Es el **`.venv` dentro de `gestor_historia`** (no el de Tu espacio). Tras activar verás **`(.venv)`**.
+
+```powershell
+$REPO = "C:\Users\kevin\.cursor\Kevin\Ejercicios practicos"
+cd "$REPO\gestor_historia"
+.\.venv\Scripts\Activate.ps1
+```
+
+### Primera vez (crear `.venv` e instalar)
 
 Copia y pega en **PowerShell** (una sola vez por máquina):
 
@@ -30,9 +40,16 @@ Si `Activate.ps1` está bloqueado:
 Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 ```
 
-### Cada vez que quieras usar Historia
+### Arrancar la app (con el venv ya activo)
 
-Copia y pega en **PowerShell** (usa **otra terminal** si ya tienes Tu espacio en marcha):
+Usa **otra terminal** si ya tienes Tu espacio en marcha (cada app = su propio venv).
+
+```powershell
+$env:FLASK_PORT = "5001"
+python app.py
+```
+
+O desde cero en un solo bloque:
 
 ```powershell
 $REPO = "C:\Users\kevin\.cursor\Kevin\Ejercicios practicos"
@@ -42,7 +59,7 @@ $env:FLASK_PORT = "5001"
 python app.py
 ```
 
-Si aún no creaste el `.venv`, ejecuta antes el bloque de **Primera vez**.
+Si aún no creaste el `.venv`, ejecuta antes **Primera vez**.
 
 ### Abrir en el navegador
 
