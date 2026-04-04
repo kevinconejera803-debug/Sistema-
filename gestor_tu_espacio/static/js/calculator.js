@@ -8,12 +8,6 @@
   var resultEl = document.getElementById("sci-result");
   var degLabel = document.getElementById("sci-deg-label");
   var degToggle = document.getElementById("sci-deg-toggle");
-  var histOverlay = document.getElementById("sci-hist-overlay");
-  var histBackdrop = document.getElementById("sci-hist-backdrop");
-  var histPanel = document.getElementById("sci-hist-panel");
-  var histList = document.getElementById("sci-hist-list");
-  var histToggle = document.getElementById("sci-hist-toggle");
-  var histClear = document.getElementById("sci-hist-clear");
   var abcBtn = document.getElementById("sci-abc");
   var katexExprEl = document.getElementById("sci-katex-expr");
   var katexResultEl = document.getElementById("sci-katex-result");
@@ -25,13 +19,11 @@
   }
 
   var PREVIEW_DEBOUNCE_MS = 120;
-  var HISTORY_MAX = 24;
   var INTEGRAL_MIN_STEPS = 200;
   var INTEGRAL_MAX_STEPS = 8000;
 
   var ans = 0;
   var useDegrees = false;
-  var history = [];
 
   function normalizeExpr(raw) {
     var s = String(raw).trim();
@@ -310,60 +302,13 @@
       var out = formatResult(val);
       updateResultKatex(out, null);
       if (typeof val === "number") ans = val;
-      pushHistory(raw || s, out);
       updateExprPreview();
       updateStepsPanel(s, null);
     } catch (err) {
       updateResultKatex("Error", err);
-      pushHistory(raw || s, "Error: " + (err.message || err));
       updateExprPreview();
       updateStepsPanel(s, err);
     }
-  }
-
-  function isHistOpen() {
-    return histOverlay && !histOverlay.hasAttribute("hidden");
-  }
-
-  function openHistOverlay() {
-    if (!histOverlay) return;
-    histOverlay.removeAttribute("hidden");
-    histOverlay.setAttribute("aria-hidden", "false");
-    if (histToggle) histToggle.setAttribute("aria-expanded", "true");
-    renderHistory();
-  }
-
-  function closeHistOverlay() {
-    if (!histOverlay) return;
-    histOverlay.setAttribute("hidden", "");
-    histOverlay.setAttribute("aria-hidden", "true");
-    if (histToggle) histToggle.setAttribute("aria-expanded", "false");
-  }
-
-  function pushHistory(line, res) {
-    history.unshift({ expr: line, result: res });
-    while (history.length > HISTORY_MAX) history.pop();
-    if (isHistOpen()) renderHistory();
-  }
-
-  function renderHistory() {
-    if (!histList) return;
-    histList.innerHTML = "";
-    history.forEach(function (h) {
-      var row = document.createElement("div");
-      row.className = "sci-calc__hist-row";
-      row.innerHTML =
-        '<span class="sci-calc__hist-expr"></span><span class="sci-calc__hist-eq">=</span><span class="sci-calc__hist-res"></span>';
-      row.querySelector(".sci-calc__hist-expr").textContent = h.expr;
-      row.querySelector(".sci-calc__hist-res").textContent = h.result;
-      row.addEventListener("click", function () {
-        exprEl.value = h.expr;
-        exprEl.focus();
-        evaluateNow();
-        closeHistOverlay();
-      });
-      histList.appendChild(row);
-    });
   }
 
   function insertAtCursor(text) {
@@ -570,33 +515,6 @@
     });
   }
 
-  if (histToggle && histOverlay) {
-    histToggle.addEventListener("click", function () {
-      if (isHistOpen()) closeHistOverlay();
-      else openHistOverlay();
-    });
-  }
-
-  if (histBackdrop) {
-    histBackdrop.addEventListener("click", function () {
-      closeHistOverlay();
-    });
-  }
-
-  if (histPanel) {
-    histPanel.addEventListener("click", function (e) {
-      e.stopPropagation();
-    });
-  }
-
-  if (histClear) {
-    histClear.addEventListener("click", function (e) {
-      e.stopPropagation();
-      history = [];
-      if (isHistOpen()) renderHistory();
-    });
-  }
-
   if (abcBtn) {
     abcBtn.addEventListener("click", function () {
       var on = abcBtn.getAttribute("aria-pressed") === "true";
@@ -630,13 +548,6 @@
       evaluateNow();
       return;
     }
-    if (e.key === "Escape") {
-      if (isHistOpen()) {
-        e.preventDefault();
-        closeHistOverlay();
-      }
-      return;
-    }
     if (e.key === "^" && !e.altKey) {
       e.preventDefault();
       insertPowerWithCursor();
@@ -644,11 +555,6 @@
   });
 
   document.addEventListener("keydown", function (e) {
-    if (e.key === "Escape" && isHistOpen()) {
-      e.preventDefault();
-      closeHistOverlay();
-      return;
-    }
     var t = e.target && e.target.tagName;
     if (t === "INPUT" || t === "TEXTAREA" || t === "SELECT") return;
     if (e.key === "Escape") {

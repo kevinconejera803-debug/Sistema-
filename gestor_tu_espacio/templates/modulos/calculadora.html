@@ -23,9 +23,6 @@
           <h2 class="calc-studio__title">Calculadora</h2>
           <p class="calc-studio__subtitle">math.js · KaTeX</p>
         </div>
-        <button type="button" class="calc-studio__hist" id="sci-hist-toggle" title="Historial" aria-expanded="false" aria-controls="sci-hist-overlay" aria-haspopup="dialog">
-          Historial
-        </button>
       </header>
 
       <div class="calc-ws__grid calc-studio__grid">
@@ -209,21 +206,10 @@
         </section>
       </div>
     </div>
-
-    <div id="sci-hist-overlay" class="sci-calc__hist-overlay calc-ws__hist-overlay" hidden aria-hidden="true">
-      <button type="button" class="sci-calc__hist-backdrop" id="sci-hist-backdrop" tabindex="-1" aria-label="Cerrar historial"></button>
-      <aside id="sci-hist-panel" class="sci-calc__hist-panel calc-ws__hist-panel" role="dialog" aria-modal="true" aria-labelledby="sci-hist-title">
-        <div class="sci-calc__hist-head">
-          <span id="sci-hist-title">Historial</span>
-          <button type="button" class="sci-calc__hist-clear" id="sci-hist-clear">Vaciar</button>
-        </div>
-        <div id="sci-hist-list" class="sci-calc__hist-list"></div>
-      </aside>
-    </div>
   </div>
 
   <p class="calc-ws__foot sci-calc__foot-hint calc-studio__foot">
-    <kbd>Enter</kbd> o <strong>=</strong> · <kbd>Esc</kbd> cierra historial · <strong>C</strong> todo · <strong>CE</strong> línea
+    <kbd>Enter</kbd> o <strong>=</strong> para calcular · <strong>C</strong> borra todo · <strong>CE</strong> borra la línea
   </p>
 </div>
 {% endblock %}
@@ -231,5 +217,5 @@
 {% block extra_scripts %}
 <script src="https://cdn.jsdelivr.net/npm/mathjs@12.4.2/lib/browser/math.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-<script defer src="{{ url_for('static', filename='js/calculator.js') }}?v=18"></script>
+<script defer src="{{ url_for('static', filename='js/calculator.js') }}?v=19"></script>
 {% endblock %}
