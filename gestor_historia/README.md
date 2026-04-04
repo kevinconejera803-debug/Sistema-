@@ -2,7 +2,7 @@
 
 Aplicación Flask independiente. Puerto típico **5001**, base **`historia.db`** cuando la uses en `database.py`.
 
-**Instalación general y Git:** [README del repositorio](../README.md#install)
+**Instalación general y Git:** [README del repositorio](../README.md#install) · [Git](../README.md#git)
 
 ---
 

@@ -18,8 +18,9 @@ En la raíz solo están este archivo, **`.gitignore`** y las carpetas **`gestor_
 3. [Arrancar las dos apps](#run)  
 4. [Estructura del repositorio](#tree)  
 5. [Mantenimiento](#maint) — plantillas, `sw.js`, monolito antiguo  
-6. [Git](#git)  
+6. [Git](#git) — commit, GitHub, SSH, proxy 403  
 7. [Si nada funciona (Windows)](#fix)  
+8. [Permisos del asistente / límites](#permisos)  
 
 Documentación por app: [gestor_tu_espacio/README.md](gestor_tu_espacio/README.md) · [gestor_historia/README.md](gestor_historia/README.md)
 
@@ -278,9 +279,13 @@ Lo ignorado por defecto: `.venv/`, `*.db`, `uploads/`, `.env`, etc. (ver `.gitig
 
 ### Subir a GitHub
 
-Los scripts `.ps1` están en **`gestor_tu_espacio/scripts/repo/`** y usan la raíz del repositorio como directorio de trabajo (donde está el `.git`).
+Los scripts están en **`gestor_tu_espacio/scripts/repo/`**; el **`.git`** está en la **raíz** del monorepo (carpeta `Ejercicios practicos`).
 
-**Subir sin ventanas de login (recomendado, una vez):** crea un [Personal Access Token](https://github.com/settings/tokens) con permiso **repo**, luego:
+**Remoto habitual del proyecto:** `kevinconejera803-debug/Sistema-` en GitHub. Ramas usadas: **`main`** y **`work`** (puedes empujar cualquiera según tu flujo).
+
+**Opción A — SSH (recomendada si evitas errores de proxy):** clave SSH añadida en GitHub y `origin` como `git@github.com:kevinconejera803-debug/Sistema-.git`. Luego `git push` normal. Si `origin` está en HTTPS: `.\gestor_tu_espacio\scripts\repo\switch_origin_to_ssh.ps1` (Windows) o el `.sh` en Linux/`/workspace` (ver [error CONNECT 403](#git-403)).
+
+**Opción B — HTTPS con token (sin ventanas de login):** crea un [Personal Access Token](https://github.com/settings/tokens) con permiso **repo**, luego:
 
 ```powershell
 cd "ruta\a\Ejercicios practicos\gestor_tu_espacio\scripts\repo"
@@ -325,6 +330,8 @@ git branch -M main
 git push -u origin main
 ```
 
+<a id="git-403"></a>
+
 ### Error `CONNECT tunnel failed, response 403` (Cursor `/workspace`, Linux, CI)
 
 Suele ser **red/proxy**: el entorno define `HTTP_PROXY` / `HTTPS_PROXY` o un proxy que **niega el túnel CONNECT** hacia `github.com:443`. No es un fallo del repo en sí.
@@ -362,3 +369,34 @@ Suele ser **red/proxy**: el entorno define `HTTP_PROXY` / `HTTPS_PROXY` o un pro
 6. **Red corporativa:** si nada de lo anterior funciona, hace falta que **IT** permita salida HTTPS a `github.com` o un proxy explícito compatible con Git.
 
 Vuelve a instalar el hook si lo usas: `.\gestor_tu_espacio\scripts\install-git-hooks.ps1` (el `post-commit` ya exporta `NO_PROXY` para GitHub).
+
+### Flujo recomendado en tu PC (SSH)
+
+Si ya tienes **clave SSH** en GitHub y el remoto apunta a `git@github.com:...`, desde la **raíz del repo**:
+
+```powershell
+$REPO = "C:\ruta\a\Ejercicios practicos"   # ajusta
+cd $REPO
+git status
+git add .
+git commit -m "Describe el cambio"
+git push -u origin main
+# o rama de trabajo:
+git push -u origin work
+```
+
+Comprueba conexión: `ssh -T git@github.com`. Si `origin` sigue en HTTPS y falla el proxy:  
+`.\gestor_tu_espacio\scripts\repo\switch_origin_to_ssh.ps1`
+
+---
+
+<a id="permisos"></a>
+
+## Permisos del asistente / límites
+
+Qué puede hacer el asistente en Cursor y qué debes resolver tú (tokens, nube, red):  
+[gestor_tu_espacio/PERMISOS_Y_LIMITES_ASISTENTE.md](gestor_tu_espacio/PERMISOS_Y_LIMITES_ASISTENTE.md)
+
+---
+
+*Documentación del monorepo revisada: abril de 2026.*

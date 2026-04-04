@@ -2,7 +2,7 @@
 
 Panel principal del repositorio (SYSTEM INTERFACE). Puerto típico **5000**, base **`tu_espacio.db`**.
 
-**Instalación general y Git:** [README del repositorio](../README.md#install)
+**Instalación general, Git y permisos del asistente:** [README del repositorio](../README.md#install) · [Git](../README.md#git) · [Permisos / límites](PERMISOS_Y_LIMITES_ASISTENTE.md)
 
 ---
 
@@ -90,7 +90,7 @@ Si no las defines, usa el botón **Enlaces** (esquina del bloque de acceso rápi
 - **Ciberseguridad** — Checklist ampliada, donut de % y bloques por tema; progreso en **localStorage**.
 - **Contactos** — SQLite con **filtro en vivo**, edición y toasts.
 - **Noticias** — RSS (**feedparser**) centrados en **economía, finanzas, internacional, geopolítica y política** (BBC Business/World/Politics, NYT Economy/World/Politics, Guardian Business/World/Politics, El País Economía/Internacional, MarketWatch, CNBC). Cada ítem incluye **`published_iso`** y etiqueta legible en **hora Chile**. Caché ~90&nbsp;s; **`GET /api/news`** con `fetched_at` y `ttl_seconds`; filtros **Economía / Internacional / Política**; auto cada 4&nbsp;min.
-- **Calculadora** — **math.js** + **KaTeX** (CDN): vista tipo *Photomath* sin cámara (expresión y solución renderizadas arriba; edición en texto); vista previa al escribir; pestañas **Números y operadores** / **Científico**; **Pasos y método** (guía breve); historial en **modal**; **Calcular** / **Borrar** visibles; opciones extra (abc, **^·n**, cursor) en desplegable; `√`/`∛`, `nthRoot`, `der`, `integral(...)`, `lim`, `sumfrom`; **C** / **CE** / **ans**. Scripts `calculator.js` y `modules.css` con `?v=` en plantillas para invalidar caché.
+- **Calculadora** — **math.js** + **KaTeX** (CDN): interfaz **minimal** (tema `calc-min`: pantalla + teclado en una tarjeta); expresión y resultado con KaTeX; edición en texto; pestañas **123** / **ƒ(x)**; **Pasos y método**; historial en **modal**; **Rad/Deg**, **abc**, **^·n**, cursor; plantillas **d/dx**, **∫**, **lim**, **Σ**; **C** / **CE** / **ans**. Caché: `modules.css?v=13`, `calculator.js?v=17` en plantillas.
 
 ---
 
@@ -133,3 +133,7 @@ Detalle: [README raíz — Mantenimiento](../README.md#maint).
 ## Otra app
 
 **Historia:** [../gestor_historia/README.md](../gestor_historia/README.md)
+
+---
+
+*Guía revisada: abril de 2026.*
