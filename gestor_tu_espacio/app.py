@@ -49,7 +49,7 @@ MODULES = [
         "title": "CALENDARIO",
         "desc": "Día - semana - mes",
         "icon": "🕐",
-        "theme": "teal",
+        "theme": "red",
         "lead": "Horario 24 h (local): mes, semana y día con eventos en SQLite.",
     },
     {
@@ -57,7 +57,7 @@ MODULES = [
         "title": "UNIVERSIDAD",
         "desc": "Aula y entregas",
         "icon": "🎓",
-        "theme": "purple",
+        "theme": "violet",
         "lead": "Plan de estudios y vida académica: campus, créditos y entregas en un solo espacio.",
     },
     {
@@ -65,7 +65,7 @@ MODULES = [
         "title": "CONTACTOS",
         "desc": "Tarjetas y agenda",
         "icon": "✉",
-        "theme": "purple",
+        "theme": "green",
         "lead": "CRM en SQLite: filtro en vivo, edición y toasts de confirmación.",
     },
     {
@@ -73,7 +73,7 @@ MODULES = [
         "title": "MERCADOS",
         "desc": "Futuros, FX, acciones · precios y contexto",
         "icon": "📊",
-        "theme": "yellow",
+        "theme": "gold",
         "lead": "Historias y noticias de precios: futuros, forex, índices y acciones; cotizaciones de referencia (yfinance).",
     },
     {

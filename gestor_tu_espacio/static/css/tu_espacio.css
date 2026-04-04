@@ -9,6 +9,8 @@
   --purple: #b8a0ff;
   --blue: #6cb6ff;
   --green: #5eea9a;
+  --gold: #f7c54c;
+  --violet: #bf8bff;
   --orange: #ffb04a;
   --neon-magenta: #ff2d95;
   --neon-cyan: #00ffea;
@@ -389,6 +391,17 @@ a.access-card:focus-visible {
 .access-card--purple {
   border-color: rgba(167, 139, 250, 0.45);
   color: var(--purple);
+  background: linear-gradient(165deg, rgba(167, 139, 250, 0.16), rgba(8, 10, 16, 0.95));
+}
+.access-card--violet {
+  border-color: rgba(191, 139, 255, 0.45);
+  color: var(--violet);
+  background: linear-gradient(165deg, rgba(191, 139, 255, 0.18), rgba(8, 10, 16, 0.95));
+}
+.access-card--gold {
+  border-color: rgba(247, 197, 76, 0.45);
+  color: var(--gold);
+  background: linear-gradient(165deg, rgba(247, 197, 76, 0.16), rgba(8, 10, 16, 0.95));
 }
 .access-card--yellow {
   border-color: rgba(232, 212, 74, 0.45);
@@ -397,14 +410,17 @@ a.access-card:focus-visible {
 .access-card--red {
   border-color: rgba(255, 77, 94, 0.45);
   color: var(--red);
+  background: linear-gradient(165deg, rgba(255, 77, 94, 0.16), rgba(8, 10, 16, 0.95));
 }
 .access-card--blue {
   border-color: rgba(96, 165, 250, 0.45);
   color: var(--blue);
+  background: linear-gradient(165deg, rgba(96, 165, 250, 0.14), rgba(8, 10, 16, 0.95));
 }
 .access-card--green {
   border-color: rgba(74, 222, 128, 0.45);
   color: var(--green);
+  background: linear-gradient(165deg, rgba(74, 222, 128, 0.14), rgba(8, 10, 16, 0.95));
 }
 
 /* Barra inferior main */
