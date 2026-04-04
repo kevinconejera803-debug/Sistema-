@@ -84,10 +84,9 @@ Cada apartado tiene su ruta; también están en el menú lateral y en las tarjet
 | Calendario | `/calendario` |
 | Universidad | `/universidad` |
 | Contactos | `/contactos` |
-| Trading Lab | `/trading-lab` |
+| Mercados | `/mercados` |
 | Noticias | `/noticias` |
 | Ciberseguridad | `/ciberseguridad` |
-| Calculadora | `/calculadora` |
 
 En **`/tu-espacio`** las tarjetas de acceso van en **una sola cuadrícula** (todos los módulos visibles a la vez).
 
@@ -106,11 +105,10 @@ Si no las defines, usa el botón **Enlaces** (esquina del bloque de acceso rápi
 
 - **Calendario** — Horario en hora local (24 h): vistas mes, semana y día; eventos en SQLite (`tu_espacio.db`) con índices; alta y borrado por día.
 - **Universidad** — Accesos a **intranet** y **aula virtual** (URLs vía `TU_ESPACIO_INTRANET_URL` / `TU_ESPACIO_AULA_URL` o enlaces guardados en el navegador) y tabla de **entregas** (curso, fecha límite, peso %, estado).
-- **Trading Lab** — **`GET /api/trading`** (yfinance, caché ~60 s): skeleton, tabla, toasts y botón Actualizar.
+- **Mercados** — **`GET /api/mercados`** (yfinance, caché ~60 s; alias **`/api/trading`**): futuros (ES, NQ), FX, índices/ETF, acciones y BTC; tabla de precios y variación diaria; toasts y Actualizar.
 - **Ciberseguridad** — Checklist ampliada, donut de % y bloques por tema; progreso en **localStorage**.
 - **Contactos** — SQLite con **filtro en vivo**, edición y toasts.
 - **Noticias** — RSS (**feedparser**) centrados en **economía, finanzas, internacional, geopolítica y política** (BBC Business/World/Politics, NYT Economy/World/Politics, Guardian Business/World/Politics, El País Economía/Internacional, MarketWatch, CNBC). Cada ítem incluye **`published_iso`** y etiqueta legible en **hora Chile**. Caché ~90&nbsp;s; **`GET /api/news`** con `fetched_at` y `ttl_seconds`; filtros **Economía / Internacional / Política**; auto cada 4&nbsp;min.
-- **Calculadora** — **math.js** + **KaTeX** (CDN): interfaz compacta (grises + acento **teal**); expresión y resultado con KaTeX; pestañas **123** / **ƒ(x)**; **Pasos y método**; **Rad/Deg**, **abc**, **^·n**, cursor; plantillas **d/dx**, **∫**, **lim**, **Σ**; **C** / **CE** / **ans**. Caché: `modules.css`, `calculator.js` con `?v=` en plantillas.
 
 ---
 

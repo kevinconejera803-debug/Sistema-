@@ -1,4 +1,34 @@
 (function () {
+  /** Si el HTML vino de caché antiguo, quita enlaces al módulo retirado. */
+  function stripRemovedCalcLinks() {
+    document.querySelectorAll('a[href*="calculadora"]').forEach(function (el) {
+      el.remove();
+    });
+  }
+
+  /** Solo debe quedar TU ESPACIO en la barra izquierda; el resto de módulos va por las tarjetas. */
+  function stripSidebarModuleLinks() {
+    var nav = document.querySelector(".sidebar-left nav.nav-main");
+    if (!nav) return;
+    nav.querySelectorAll("a").forEach(function (a) {
+      var t = (a.textContent || "").replace(/\s+/g, " ").trim();
+      if (t !== "TU ESPACIO") {
+        a.remove();
+      }
+    });
+  }
+
+  function runSidebarFixes() {
+    stripRemovedCalcLinks();
+    stripSidebarModuleLinks();
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", runSidebarFixes);
+  } else {
+    runSidebarFixes();
+  }
+
   function pad(n) {
     return n < 10 ? "0" + n : String(n);
   }

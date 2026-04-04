@@ -1,11 +1,11 @@
 (function () {
-  var sk = document.getElementById("trading-skeleton");
-  var live = document.getElementById("trading-live");
-  var err = document.getElementById("trading-error");
-  var strip = document.getElementById("trading-strip");
-  var tbody = document.getElementById("trading-tbody");
-  var status = document.getElementById("trading-status");
-  var btn = document.getElementById("trading-refresh");
+  var sk = document.getElementById("mercados-skeleton");
+  var live = document.getElementById("mercados-live");
+  var err = document.getElementById("mercados-error");
+  var strip = document.getElementById("mercados-strip");
+  var tbody = document.getElementById("mercados-tbody");
+  var status = document.getElementById("mercados-status");
+  var btn = document.getElementById("mercados-refresh");
   var toastEl = document.getElementById("trade-toast");
   if (!strip || !tbody) return;
 
@@ -59,7 +59,7 @@
     if (sk) sk.hidden = false;
     if (live) live.hidden = true;
     if (err) err.hidden = true;
-    var url = "/api/trading" + (refresh ? "?refresh=1" : "");
+    var url = "/api/mercados" + (refresh ? "?refresh=1" : "");
     fetch(url)
       .then(function (r) {
         return r.json();
@@ -77,7 +77,7 @@
         var ok = rows.some(function (r) {
           return !r.error;
         });
-        if (refresh && ok) toast("Datos de mercado actualizados.");
+        if (refresh && ok) toast("Cotizaciones actualizadas.");
       })
       .catch(function () {
         if (sk) sk.hidden = true;
