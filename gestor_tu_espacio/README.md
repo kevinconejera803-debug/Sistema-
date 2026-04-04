@@ -41,11 +41,15 @@ cd "$REPO\gestor_tu_espacio"
 python app.py
 ```
 
-Opcional — otro puerto antes de `python app.py`:
+Opcional — variables de entorno antes de `python app.py`:
 
 ```powershell
 $env:FLASK_PORT = "5000"
+# Recarga automática y trazas de depuración (desarrollo):
+$env:FLASK_DEBUG = "1"
 ```
+
+También puedes crear **`gestor_tu_espacio/.env`** a partir de [`.env.example`](.env.example) (no subas `.env` a Git).
 
 ### Abrir en el navegador
 

@@ -123,6 +123,7 @@ Dos terminales en la raíz del repo:
 ```powershell
 cd gestor_tu_espacio
 .\.venv\Scripts\Activate.ps1
+$env:FLASK_DEBUG = "1"   # opcional: recarga al guardar (desarrollo)
 python app.py
 ```
 

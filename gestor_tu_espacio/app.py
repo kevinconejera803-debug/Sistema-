@@ -7,13 +7,23 @@ import os
 import re
 import time
 from datetime import datetime, timezone
+from pathlib import Path
 from zoneinfo import ZoneInfo
 
+from dotenv import load_dotenv
 from flask import Flask, abort, jsonify, redirect, render_template, request, url_for
 
 from database import get_db, init_db, row_to_dict
 
+load_dotenv(Path(__file__).resolve().parent / ".env")
+
 app = Flask(__name__)
+
+
+def _flask_debug() -> bool:
+    """Modo debug solo si FLASK_DEBUG=1/true/yes (más seguro que True fijo)."""
+    v = os.environ.get("FLASK_DEBUG", "0").strip().lower()
+    return v in ("1", "true", "yes")
 
 _MONTHS_ES = (
     "ENE",
@@ -111,7 +121,7 @@ MODULES = [
         "desc": "Científica · math.js",
         "icon": "🔢",
         "theme": "orange",
-        "lead": "Diseño tipo calculadora: pantalla LCD + teclado, KaTeX, math.js, historial.",
+        "lead": "Calculadora minimal (KaTeX + math.js): teclado 123 / ƒ(x), pasos, historial, Rad·Deg, C/CE/ans.",
     },
 ]
 
@@ -524,4 +534,4 @@ def api_assignments_delete(aid):
 if __name__ == "__main__":
     port = int(os.environ.get("FLASK_PORT", "5000"))
     host = os.environ.get("FLASK_HOST", "0.0.0.0")
-    app.run(host=host, port=port, debug=True)
+    app.run(host=host, port=port, debug=_flask_debug())
