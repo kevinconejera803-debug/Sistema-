@@ -14,6 +14,7 @@
   --orange: #ffb04a;
   --neon-magenta: #ff2d95;
   --neon-cyan: #00ffea;
+  --white: #ffffff;
   --text: #e8edf5;
   --muted: #7a8aa0;
   --border-glow: 0 0 22px rgba(62, 232, 224, 0.38);
@@ -421,6 +422,11 @@ a.access-card:focus-visible {
   border-color: rgba(74, 222, 128, 0.45);
   color: var(--green);
   background: linear-gradient(165deg, rgba(74, 222, 128, 0.14), rgba(8, 10, 16, 0.95));
+}
+.access-card--white {
+  border-color: rgba(255, 255, 255, 0.45);
+  color: var(--white);
+  background: linear-gradient(165deg, rgba(255, 255, 255, 0.16), rgba(8, 10, 16, 0.95));
 }
 
 /* Barra inferior main */

@@ -57,7 +57,7 @@ MODULES = [
         "title": "UNIVERSIDAD",
         "desc": "Aula y entregas",
         "icon": "🎓",
-        "theme": "violet",
+        "theme": "gold",
         "lead": "Plan de estudios y vida académica: campus, créditos y entregas en un solo espacio.",
     },
     {
@@ -65,7 +65,7 @@ MODULES = [
         "title": "CONTACTOS",
         "desc": "Tarjetas y agenda",
         "icon": "✉",
-        "theme": "green",
+        "theme": "purple",
         "lead": "CRM en SQLite: filtro en vivo, edición y toasts de confirmación.",
     },
     {
@@ -73,7 +73,7 @@ MODULES = [
         "title": "MERCADOS",
         "desc": "Futuros, FX, acciones · precios y contexto",
         "icon": "📊",
-        "theme": "gold",
+        "theme": "blue",
         "lead": "Historias y noticias de precios: futuros, forex, índices y acciones; cotizaciones de referencia (yfinance).",
     },
     {
@@ -81,7 +81,7 @@ MODULES = [
         "title": "NOTICIAS",
         "desc": "Economía & política",
         "icon": "📰",
-        "theme": "blue",
+        "theme": "green",
         "lead": "Economía, mercados, política e internacional (BBC, NYT, Guardian, El País, CNBC…); hora de publicación en Chile.",
     },
     {
@@ -89,7 +89,7 @@ MODULES = [
         "title": "CIBERSEGURIDAD",
         "desc": "Shadow Network",
         "icon": "🛡",
-        "theme": "teal",
+        "theme": "white",
         "lead": "Checklist por categorías con progreso visual; datos solo en tu navegador.",
     },
 ]
