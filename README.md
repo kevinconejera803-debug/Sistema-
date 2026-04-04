@@ -330,6 +330,30 @@ git branch -M main
 git push -u origin main
 ```
 
+### Cursor `/workspace` — «origin no está configurado»
+
+Ese mensaje aparece cuando en **`/workspace/Sistema-`** (u otra ruta) **no hay remoto `origin`** (carpeta sin `.git`, copia sin remoto, o `git init` sin `remote add`).
+
+**1. Si no existe la carpeta `.git`** (no es un clon), clona el repo por SSH:
+
+```bash
+git clone git@github.com:kevinconejera803-debug/Sistema-.git /workspace/Sistema-
+cd /workspace/Sistema-
+git checkout work 2>/dev/null || git checkout -b work
+```
+
+**2. Si ya hay `.git` pero falta `origin`**, desde la **raíz del repo** (donde está `gestor_tu_espacio/`):
+
+```bash
+cd /workspace/Sistema-
+chmod +x gestor_tu_espacio/scripts/repo/switch_origin_to_ssh.sh
+./gestor_tu_espacio/scripts/repo/switch_origin_to_ssh.sh work
+ssh -T git@github.com
+git push -u origin work
+```
+
+El script **`switch_origin_to_ssh`** hace `git remote add origin …` si no existe, o `set-url` si ya existía (HTTPS u otra URL). Variable opcional: `GIT_ORIGIN_SSH` para otro fork.
+
 <a id="git-403"></a>
 
 ### Error `CONNECT tunnel failed, response 403` (Cursor `/workspace`, Linux, CI)

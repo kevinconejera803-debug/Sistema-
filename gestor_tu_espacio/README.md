@@ -110,7 +110,7 @@ No hay URLs ni dependencias hacia **gestor_historia** en el código: cada app se
 
 Desde la raíz del repositorio, **`gestor_tu_espacio/scripts/repo/`** (el `.git` está en la raíz del monorepo):
 
-- `switch_origin_to_ssh.ps1` / `switch_origin_to_ssh.sh` — pasar `origin` de HTTPS a SSH (evita error CONNECT 403)
+- `switch_origin_to_ssh.ps1` / `switch_origin_to_ssh.sh` — dejar `origin` en SSH: **añade** el remoto si no existe o corrige la URL (403 HTTPS, `/workspace` sin origin)
 - `setup_git_cloud.ps1` / `setup_git_cloud.sh` — quitar proxy roto solo para `github.com`
 - `push_github_direct.ps1` / `push_github_direct.sh` — `git` con HTTP/1.1 y sin variables de proxy
 - `push_con_token.ps1` / `push_con_token.sh` — push con token (HTTPS)
