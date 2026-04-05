@@ -1,8 +1,0 @@
-#!/bin/sh
-# Tras cada commit local, intenta subir main a origin (requiere credenciales guardadas).
-# Instalar: .\gestor_tu_espacio\scripts\install-git-hooks.ps1 (desde la raíz del repo)
-# NO_PROXY evita CONNECT 403 si el entorno fuerza proxy hacia GitHub.
-export NO_PROXY="${NO_PROXY:+$NO_PROXY,}github.com,.github.com"
-export no_proxy="${no_proxy:+$no_proxy,}github.com,.github.com"
-git config http.https://github.com.proxy "" 2>/dev/null || true
-exec git push origin main 2>/dev/null || exit 0

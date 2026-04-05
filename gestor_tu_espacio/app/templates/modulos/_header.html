@@ -1,0 +1,11 @@
+<header class="main-header main-header--module">
+  <div>
+    <p class="module-breadcrumb"><a href="{{ url_for('core.tu_espacio') }}">Tu espacio</a> <span class="module-breadcrumb__sep">/</span> {{ mod.title }}</p>
+    <h1 class="main-title main-title--module"><span class="module-title-icon" aria-hidden="true">{{ mod.icon }}</span> {{ mod.title }}</h1>
+    <p class="main-sub">{{ mod.lead }}</p>
+  </div>
+  <div class="badges">
+    <span class="badge badge--live">LIVE</span>
+    <span class="badge badge--date">{{ month_badge }}</span>
+  </div>
+</header>

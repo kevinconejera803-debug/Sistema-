@@ -1,0 +1,19 @@
+{
+  "models": [
+    {
+      "title": "Llama3",
+      "provider": "ollama",
+      "model": "llama3"
+    },
+    {
+      "title": "Coder",
+      "provider": "ollama",
+      "model": "deepseek-coder:6.7b-instruct-q4_0"
+    }
+  ],
+  "tabAutocompleteModel": {
+    "title": "Coder",
+    "provider": "ollama",
+    "model": "deepseek-coder:6.7b-instruct-q4_0"
+  }
+}
