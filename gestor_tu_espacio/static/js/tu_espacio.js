@@ -18,9 +18,60 @@
     });
   }
 
+  function stripLegacyInvestigationPanel() {
+    var sidebar = document.querySelector(".sidebar-right");
+    if (!sidebar) return;
+
+    sidebar.querySelectorAll(".mod-research, .mod-research-panel, .mod-research-summary, .mod-research-search, .research-widget, .research-box, form").forEach(function (el) {
+      el.remove();
+    });
+
+    sidebar.querySelectorAll("h3, h2, p, label").forEach(function (el) {
+      var text = (el.textContent || "").trim().toLowerCase();
+      if (text.includes("asistente de investigación") || text.includes("buscar en google") || text.includes("buscar fuentes académicas") || text.includes("investigación profesional") || text.includes("ingresa un término de investigación")) {
+        var parent = el.closest("section, article, div, form");
+        if (parent) {
+          parent.remove();
+        }
+      }
+    });
+  }
+
+  function isValidSidebarPanel(panel) {
+    if (!panel || !panel.classList.contains("panel")) {
+      return false;
+    }
+    if (panel.classList.contains("quotes")) {
+      return true;
+    }
+    var heading = panel.querySelector("h3") || panel.querySelector("h2");
+    if (!heading) {
+      return false;
+    }
+    var title = (heading.textContent || "").trim().toLowerCase();
+    return title === "agenda";
+  }
+
+  function trimSidebarChildren() {
+    var sidebar = document.querySelector(".sidebar-right");
+    if (!sidebar) return;
+
+    Array.from(sidebar.children).forEach(function (child) {
+      if (child.matches(".status-icons") || child.matches(".clock-box")) {
+        return;
+      }
+      if (child.matches(".panel") && isValidSidebarPanel(child)) {
+        return;
+      }
+      child.remove();
+    });
+  }
+
   function runSidebarFixes() {
     stripRemovedCalcLinks();
     stripSidebarModuleLinks();
+    stripLegacyInvestigationPanel();
+    trimSidebarChildren();
   }
 
   function pad(n) {
@@ -160,25 +211,6 @@
       card.element.className = "quote-block quote-theme--" + quote.theme;
       card.text.textContent = quote.text;
       card.credit.textContent = "— " + quote.author + " · " + quote.year;
-    });
-  }
-
-  function renderResearchResults(results) {
-    if (!researchResultsContainer) return;
-    researchResultsContainer.innerHTML = "";
-    if (!results || !results.length) {
-      researchResultsContainer.innerHTML = '<div class="result-card"><p class="result-summary">No se encontraron resultados relevantes. Ajusta tu consulta para obtener fuentes más precisas.</p></div>';
-      return;
-    }
-
-    results.forEach(function (item) {
-      var card = document.createElement("article");
-      card.className = "result-card";
-      card.innerHTML =
-        '<h4 class="result-title"><a href="' + item.url + '" target="_blank" rel="noopener">' + item.title + '</a></h4>' +
-        '<p class="result-meta">' + item.authors + ' · ' + item.year + ' · ' + item.source + '</p>' +
-        '<p class="result-summary">' + item.summary + '</p>';
-      researchResultsContainer.appendChild(card);
     });
   }
 

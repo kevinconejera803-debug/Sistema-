@@ -441,6 +441,23 @@ a.access-card:focus-visible {
   gap: 1.25rem;
 }
 
+.sidebar-right .mod-research,
+.sidebar-right .mod-research-panel,
+.sidebar-right .mod-research-summary,
+.sidebar-right .mod-research-search,
+.sidebar-right .research-widget,
+.sidebar-right .research-box,
+.sidebar-right form {
+  display: none !important;
+}
+
+.sidebar-right h2,
+.sidebar-right h3,
+.sidebar-right p,
+.sidebar-right label {
+  visibility: visible;
+}
+
 .status-icons {
   display: flex;
   align-items: center;

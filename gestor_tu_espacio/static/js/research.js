@@ -16,30 +16,43 @@
     data.results.forEach(function (item) {
       var card = document.createElement('article');
       card.className = 'mod-research-result';
+      var categoryBadge = item.category 
+        ? '<span class="mod-research-result__category">' + item.category + '</span>' 
+        : '';
       card.innerHTML =
+        categoryBadge +
         '<h3 class="mod-research-result__title"><a href="' + item.url + '" target="_blank" rel="noopener">' + item.title + '</a></h3>' +
         '<div class="mod-research-result__meta">' +
           '<div class="mod-research-result__meta-item"><span>✍</span> <span>' + item.authors + '</span></div>' +
           '<div class="mod-research-result__meta-item"><span>📅</span> <span>' + item.year + '</span></div>' +
           '<div class="mod-research-result__meta-item"><span>🏛</span> <span>' + item.source + '</span></div>' +
         '</div>' +
-        '<p class="mod-research-result__summary">' + item.summary + '</p>';
+        '<p class="mod-research-result__summary">' + item.summary + '</p>' +
+        '<a href="' + item.url + '" target="_blank" rel="noopener" class="mod-research-result__link">Leer más →</a>';
       resultsList.appendChild(card);
     });
   }
 
   function performSearch(query) {
+    if (!searchStatus || !resultsSection || !resultsList) {
+      return;
+    }
+
     if (!query || !query.trim()) {
       searchStatus.textContent = 'Ingresa un término de búsqueda válido.';
       resultsSection.style.display = 'none';
       return;
     }
 
-    searchStatus.textContent = 'Buscando fuentes confiables…';
+    searchStatus.textContent = 'Buscando fuentes profesionales…';
+    resultsList.innerHTML = '<p style="padding:1rem; color: rgba(255,255,255,0.72);">Cargando resultados...</p>';
     resultsSection.style.display = 'grid';
 
     fetch('/api/research?q=' + encodeURIComponent(query))
       .then(function (response) {
+        if (!response.ok) {
+          throw new Error('Respuesta de servidor no válida');
+        }
         return response.json();
       })
       .then(function (data) {
@@ -48,11 +61,18 @@
           resultsList.innerHTML = '';
           return;
         }
-        searchStatus.textContent = 'Se encontraron resultados académicos verificados.';
+
+        if (!data.results || !data.results.length) {
+          searchStatus.textContent = 'No se encontraron resultados para "' + query + '". Prueba con una variante más amplia.';
+          resultsList.innerHTML = '';
+          return;
+        }
+
+        searchStatus.textContent = data.results.length + ' resultados encontrados en fuentes académicas verificadas.';
         formatResults(data);
       })
       .catch(function () {
-        searchStatus.textContent = 'No fue posible conectar. Verifica tu conexión a internet.';
+        searchStatus.textContent = 'No fue posible conectar. Verifica tu conexión a internet o intenta de nuevo.';
         resultsList.innerHTML = '';
       });
   }
