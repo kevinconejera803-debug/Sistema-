@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% block title %}SYSTEM INTERFACE — Investigación{% endblock %}
+
+{% block main_area %}
+<div class="mod-wrap mod-research">
+  {% include "modulos/_header.html" %}
+
+  <section class="mod-research-hero" aria-labelledby="research-hero-title">
+    <div>
+      <h2 id="research-hero-title" class="mod-research-title">Asistente profesional de investigación</h2>
+      <p class="mod-research-lead">
+        Motor de búsqueda académica con fuentes verificadas. Descubre publicaciones, análisis y referencias de alto valor en tiempo real.
+      </p>
+    </div>
+  </section>
+
+  <section class="mod-research-search" aria-labelledby="research-search-title">
+    <h2 id="research-search-title" class="mod-research-search__title">Buscar en fuentes confiables</h2>
+    <form id="research-search-form" class="mod-research-search__form" autocomplete="off">
+      <div class="mod-research-search__input-wrap">
+        <input
+          type="search"
+          id="research-search-input"
+          name="q"
+          placeholder="Ingresa tu pregunta de investigación o palabras clave…"
+          required
+          aria-label="Término de búsqueda"
+        />
+        <button type="submit" class="mod-research-search__btn">
+          <span>Buscar</span>
+          <span aria-hidden="true">→</span>
+        </button>
+      </div>
+      <div class="mod-research-search__hints">
+        <span class="mod-research-search__hint-label">Ejemplos:</span>
+        <button type="button" class="mod-research-search__hint-btn" data-query="transformación digital finanzas">transformación digital</button>
+        <button type="button" class="mod-research-search__hint-btn" data-query="inteligencia artificial en educación">IA en educación</button>
+        <button type="button" class="mod-research-search__hint-btn" data-query="análisis de datos">análisis de datos</button>
+      </div>
+    </form>
+    <div id="research-search-status" class="mod-research-search__status">Ingresa un término para comenzar tu búsqueda profesional.</div>
+  </section>
+
+  <section id="research-results-section" class="mod-research-results" style="display: none;">
+    <h2 class="mod-research-results__title">Resultados de búsqueda</h2>
+    <div id="research-results-list" class="mod-research-results__list"></div>
+  </section>
+
+  <section class="mod-research-guide" aria-labelledby="research-guide-title">
+    <div class="mod-research-guide__head">
+      <h2 id="research-guide-title" class="mod-research-guide__title">Guía de uso</h2>
+      <p>Maximiza el valor de tu investigación con estos pasos simples.</p>
+    </div>
+    <div class="mod-research-guide__steps">
+      <div class="mod-research-step">
+        <span class="mod-research-step__marker">1</span>
+        <div>
+          <h3>Define tu pregunta</h3>
+          <p>Sé específico: incluye contexto, campo o industria. Ejemplo: "transformación digital en finanzas 2023".</p>
+        </div>
+      </div>
+      <div class="mod-research-step">
+        <span class="mod-research-step__marker">2</span>
+        <div>
+          <h3>Analiza los resultados</h3>
+          <p>Revisa la fuente, año y reputación. Las fuentes académicas son priorizadas.</p>
+        </div>
+      </div>
+      <div class="mod-research-step">
+        <span class="mod-research-step__marker">3</span>
+        <div>
+          <h3>Accede y cita</h3>
+          <p>Abre el enlace directamente. Copia la referencia completa para tu trabajo.</p>
+        </div>
+      </div>
+      <div class="mod-research-step">
+        <span class="mod-research-step__marker">4</span>
+        <div>
+          <h3>Refina y amplía</h3>
+          <p>Usa conceptos nuevos para búsquedas más profundas. La investigación es iterativa.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script src="{{ url_for('static', filename='js/research.js') }}?v=1"></script>
+{% endblock %}

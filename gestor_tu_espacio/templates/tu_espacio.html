@@ -22,23 +22,14 @@
           <p class="access-card__desc">{{ item.desc }}</p>
         </a>
         {% endfor %}
+
+        {% if access_cards|selectattr('title','equalto','INVESTIGACIÓN')|list|length == 0 %}
+        <a href="{{ url_for('modulo', slug='investigacion') }}" class="access-card access-card--teal">
+          <div class="access-card__icon" aria-hidden="true">🔎</div>
+          <h2 class="access-card__title">INVESTIGACIÓN</h2>
+          <p class="access-card__desc">Fuentes académicas y análisis</p>
+        </a>
+        {% endif %}
       </section>
 
-      <section class="status-strip" aria-label="Resumen">
-        <div class="status-strip__cell">
-          <h4 class="status-strip__label">本日 · PRÓXIMAS</h4>
-          <p class="status-strip__body">Sin bloques próximos.</p>
-          <a class="link-arrow" href="{{ url_for('modulo', slug='calendario') }}">Calendario completo →</a>
-        </div>
-        <div class="status-strip__cell">
-          <h4 class="status-strip__label">経済 · NOTICIAS</h4>
-          <p class="status-strip__body">Economía, mercados e internacional.</p>
-          <a class="link-arrow" href="{{ url_for('modulo', slug='noticias') }}">Noticias →</a>
-        </div>
-        <div class="status-strip__cell">
-          <h4 class="status-strip__label">市場 · MERCADOS</h4>
-          <p class="status-strip__body">Futuros, FX, acciones: precios y variación.</p>
-          <a class="btn-inline" href="{{ url_for('modulo', slug='mercados') }}">Mercados →</a>
-        </div>
-      </section>
 {% endblock %}

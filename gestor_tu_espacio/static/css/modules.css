@@ -1088,6 +1088,308 @@
   color: var(--yellow);
 }
 
+.mod-research {
+  display: grid;
+  gap: 1.2rem;
+}
+
+.mod-research-hero {
+  display: grid;
+  gap: 1rem;
+  padding: 1.3rem 1.35rem;
+  border-radius: 12px;
+  border: 1px solid rgba(46, 230, 214, 0.16);
+  background: linear-gradient(135deg, rgba(4, 10, 18, 0.96), rgba(8, 16, 28, 0.92));
+  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.25);
+}
+
+.mod-research-title {
+  margin: 0 0 0.55rem;
+  font-size: 1.3rem;
+  line-height: 1.1;
+  letter-spacing: 0.06em;
+}
+
+.mod-research-lead {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.82);
+  max-width: 42rem;
+}
+
+.mod-research-summary {
+  font-size: 0.82rem;
+  color: var(--muted);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.85rem 1rem;
+  border-radius: 8px;
+  border: 1px solid rgba(46, 230, 214, 0.18);
+  background: rgba(10, 18, 28, 0.84);
+}
+
+.mod-research-summary strong {
+  color: var(--teal);
+}
+
+.mod-research-panel {
+  display: grid;
+  gap: 1rem;
+  padding: 1.2rem 1.25rem;
+  border-radius: 12px;
+  border: 1px solid rgba(46, 230, 214, 0.16);
+  background: rgba(6, 12, 22, 0.92);
+}
+
+.mod-research-panel__head h2 {
+  margin: 0 0 0.35rem;
+  font-size: 1rem;
+}
+
+.mod-research-panel__head p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.mod-research-panel__body {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.mod-research-step {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.9rem;
+  align-items: start;
+  padding: 0.95rem 1rem;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(46, 230, 214, 0.12);
+}
+
+.mod-research-step__marker {
+  min-width: 2rem;
+  min-height: 2rem;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: #04101b;
+  background: rgba(46, 230, 214, 0.9);
+  font-weight: 700;
+}
+
+.mod-research-step h3 {
+  margin: 0 0 0.25rem;
+}
+
+.mod-research-step p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.mod-research-search {
+  display: grid;
+  gap: 1rem;
+  padding: 1.5rem 1.35rem;
+  border-radius: 12px;
+  border: 1px solid rgba(46, 230, 214, 0.18);
+  background: linear-gradient(135deg, rgba(4, 10, 18, 0.98), rgba(8, 14, 28, 0.94));
+  box-shadow: 0 10px 50px rgba(0, 0, 0, 0.30);
+}
+
+.mod-research-search__title {
+  margin: 0 0 0.5rem;
+  font-size: 1.1rem;
+}
+
+.mod-research-search__form {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.mod-research-search__input-wrap {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.6rem;
+}
+
+.mod-research-search__input-wrap input {
+  width: 100%;
+  padding: 0.95rem 1.1rem;
+  border-radius: 10px;
+  border: 1px solid rgba(46, 230, 214, 0.25);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text);
+  font-size: 0.95rem;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  outline: none;
+}
+
+.mod-research-search__input-wrap input:focus {
+  border-color: rgba(46, 230, 214, 0.65);
+  box-shadow: 0 0 0 3px rgba(46, 230, 214, 0.15);
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.mod-research-search__input-wrap input::placeholder {
+  color: rgba(255, 255, 255, 0.50);
+}
+
+.mod-research-search__btn {
+  padding: 0.95rem 1.25rem;
+  border-radius: 10px;
+  border: none;
+  background: linear-gradient(135deg, rgba(46, 230, 214, 0.25), rgba(62, 232, 224, 0.18));
+  color: var(--teal);
+  font-weight: 600;
+  font-size: 0.9rem;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.mod-research-search__btn:hover {
+  background: linear-gradient(135deg, rgba(46, 230, 214, 0.35), rgba(62, 232, 224, 0.28));
+  box-shadow: 0 6px 24px rgba(46, 230, 214, 0.20);
+}
+
+.mod-research-search__btn:active {
+  transform: scale(0.97);
+}
+
+.mod-research-search__hints {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.78rem;
+}
+
+.mod-research-search__hint-label {
+  color: var(--muted);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.mod-research-search__hint-btn {
+  padding: 0.45rem 0.75rem;
+  border-radius: 6px;
+  border: 1px solid rgba(46, 230, 214, 0.20);
+  background: rgba(46, 230, 214, 0.08);
+  color: rgba(46, 230, 214, 0.95);
+  font-size: 0.76rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.mod-research-search__hint-btn:hover {
+  background: rgba(46, 230, 214, 0.16);
+  border-color: rgba(46, 230, 214, 0.40);
+}
+
+.mod-research-search__status {
+  font-size: 0.82rem;
+  color: rgba(46, 230, 214, 0.72);
+  padding: 0.5rem 0;
+}
+
+.mod-research-results {
+  display: grid;
+  gap: 1rem;
+}
+
+.mod-research-results__title {
+  margin: 0 0 0.5rem;
+  font-size: 1rem;
+}
+
+.mod-research-results__list {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.mod-research-result {
+  padding: 1.1rem 1.2rem;
+  border-radius: 12px;
+  border: 1px solid rgba(46, 230, 214, 0.12);
+  background: rgba(6, 12, 22, 0.92);
+  transition: all 0.15s;
+}
+
+.mod-research-result:hover {
+  border-color: rgba(46, 230, 214, 0.28);
+  background: rgba(10, 18, 28, 0.96);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+}
+
+.mod-research-result__title {
+  margin: 0 0 0.4rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.mod-research-result__title a {
+  color: var(--teal);
+  text-decoration: none;
+  transition: all 0.15s;
+}
+
+.mod-research-result__title a:hover {
+  text-decoration: underline;
+  color: rgba(46, 230, 214, 0.8);
+}
+
+.mod-research-result__meta {
+  margin: 0 0 0.65rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  font-size: 0.76rem;
+  color: var(--muted);
+  letter-spacing: 0.04em;
+}
+
+.mod-research-result__meta-item {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.mod-research-result__summary {
+  margin: 0;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.mod-research-guide {
+  display: grid;
+  gap: 1.2rem;
+}
+
+.mod-research-guide__head {
+  padding: 1.1rem 1.2rem;
+  border-radius: 12px;
+  border: 1px solid rgba(46, 230, 214, 0.12);
+  background: rgba(6, 12, 22, 0.92);
+}
+
+.mod-research-guide__head h2 {
+  margin: 0 0 0.35rem;
+  font-size: 1rem;
+}
+
+.mod-research-guide__head p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.mod-research-guide__steps {
+  display: grid;
+  gap: 0.85rem;
+}
+
 /* â€”â€”â€” Noticias (Chile + mundo + UI) â€”â€”â€” */
 .news-hero {
   margin-bottom: 1.25rem;

@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+JP:wght@400;500&family=Orbitron:wght@500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/tu_espacio.css') }}?v=21">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/tu_espacio.css') }}?v=23">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/modules.css') }}?v=31">
   {% block extra_head %}{% endblock %}
 </head>
@@ -53,15 +53,33 @@
         <p>Sin bloques próximos.</p>
       </div>
       <div class="panel quotes">
-        <h3>INSPIRACIÓN</h3>
-        <blockquote>“Sobre toda cosa guardada, guarda tu corazón.” — Proverbios 4:23</blockquote>
-        <blockquote>“El tiempo es una cosa importante: crea la presente, la pasada y el futuro.” — Jimi Hendrix</blockquote>
-        <blockquote>“La educación es el arma más poderosa que puedes usar para cambiar el mundo.” — Nelson Mandela</blockquote>
+        <div class="quotes__header">
+          <h3>INSPIRACIÓN</h3>
+        </div>
+        <p class="quotes__caption">Psicología · inspiración · psicología oscura · ingenio · filosofía</p>
+        <div class="quotes__list">
+          <article id="quote-card-0" class="quote-block quote-theme--red">
+            <blockquote>“La mente que entiende su sombra no teme al vacío.”</blockquote>
+            <p class="quote-credit">— Carl Jung · 1933</p>
+          </article>
+          <article id="quote-card-1" class="quote-block quote-theme--blue">
+            <blockquote>“El ingenio no se demuestra en contestar rápido, sino en formular mejor la pregunta.”</blockquote>
+            <p class="quote-credit">— Blaise Pascal · 1670</p>
+          </article>
+          <article id="quote-card-2" class="quote-block quote-theme--purple">
+            <blockquote>“El pensamiento oscuro enseña que la verdad no siempre es amable, pero siempre es elegante.”</blockquote>
+            <p class="quote-credit">— Friedrich Nietzsche · 1886</p>
+          </article>
+          <article id="quote-card-3" class="quote-block quote-theme--gold">
+            <blockquote>“La inspiración llega cuando se crea espacio entre el ruido y la intención.”</blockquote>
+            <p class="quote-credit">— Rainer Maria Rilke · 1903</p>
+          </article>
+        </div>
       </div>
     </aside>
   </div>
 
-  <script src="{{ url_for('static', filename='js/tu_espacio.js') }}?v=10"></script>
+  <script src="{{ url_for('static', filename='js/tu_espacio.js') }}?v=16"></script>
   {% block extra_scripts %}{% endblock %}
 </body>
 </html>
