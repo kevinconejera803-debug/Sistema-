@@ -1,14 +1,13 @@
 {
   "models": [
     {
-      "title": "Code - DeepSeek Coder",
+      "title": "DeepSeek Coder",
       "provider": "ollama",
-      "model": "deepseek-coder:latest",
-      "tags": ["programar", "code", "coding", "development", "python", "javascript", "web", "backend", "frontend", "debug"]
+      "model": "deepseek-coder:latest"
     }
   ],
   "tabAutocompleteModel": {
-    "title": "Code - DeepSeek Coder",
+    "title": "DeepSeek Coder",
     "provider": "ollama",
     "model": "deepseek-coder:latest"
   }
