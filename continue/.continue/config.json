@@ -3,17 +3,20 @@
     {
       "title": "Llama3",
       "provider": "ollama",
-      "model": "llama3"
+      "model": "llama3:latest"
     },
     {
-      "title": "Coder",
+      "title": "DeepSeek Coder",
       "provider": "ollama",
       "model": "deepseek-coder:6.7b-instruct-q4_0"
     }
   ],
   "tabAutocompleteModel": {
-    "title": "Coder",
+    "title": "DeepSeek Coder",
     "provider": "ollama",
     "model": "deepseek-coder:6.7b-instruct-q4_0"
+  },
+  "completionOptions": {
+    "maxTokens": 4096
   }
 }
