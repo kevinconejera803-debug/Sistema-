@@ -35,7 +35,7 @@ def _parse_time(entry):
 
 
 def fetch_news():
-    """Obtiene noticias con cache."""
+    """Obtiene noticias con cache y fallback."""
     cached = cache.get("news")
     if cached:
         return cached
@@ -64,8 +64,13 @@ def fetch_news():
                 logger.warning(f"Feed error: {ex}")
     except Exception as e:
         logger.error(f"News error: {e}")
+        cached_fallback = cache.get("news_fallback")
+        if cached_fallback:
+            return cached_fallback
 
-    cache.set("news", items, NEWS_TTL)
+    if items:
+        cache.set("news", items, NEWS_TTL)
+        cache.set("news_fallback", items, NEWS_TTL * 24)
     return items
 
 

@@ -33,7 +33,7 @@ def _fetch_yfinance(timeout=API_TIMEOUT):
 
 
 def fetch_markets():
-    """Obtiene cotizaciones con cache."""
+    """Obtiene cotizaciones con cache y fallback."""
     cached = cache.get("markets")
     if cached:
         return cached
@@ -41,8 +41,15 @@ def fetch_markets():
         rows = retry_with_backoff(_fetch_yfinance, max_attempts=3, backoff_factor=2.0)
     except Exception as e:
         logger.error(f"Markets error: {e}")
+        cached_fallback = cache.get("markets_fallback")
+        if cached_fallback:
+            return cached_fallback
         rows = [{"symbol": "—", "price": 0, "chg_pct": 0, "price_fmt": "—", "chg_fmt": "—"}]
-    cache.set("markets", rows, MERCADOS_TTL)
+    if rows and all(s["symbol"] != "—" for s in rows):
+        cache.set("markets", rows, MERCADOS_TTL)
+        cache.set("markets_fallback", rows, MERCADOS_TTL * 24)
+    else:
+        cache.set("markets", rows, MERCADOS_TTL)
     return rows
 
 

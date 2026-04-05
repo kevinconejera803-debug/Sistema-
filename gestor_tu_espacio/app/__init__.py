@@ -71,6 +71,7 @@ from app.blueprints.news import news_bp
 from app.blueprints.markets import markets_bp
 from app.blueprints.core import core_bp
 from app.blueprints.research import research_bp
+from app.blueprints.health import health_bp
 
 app.register_blueprint(calendar_bp)
 app.register_blueprint(contacts_bp)
@@ -79,6 +80,7 @@ app.register_blueprint(news_bp)
 app.register_blueprint(markets_bp)
 app.register_blueprint(core_bp)
 app.register_blueprint(research_bp)
+app.register_blueprint(health_bp)
 
 # Invocamos ensure_app_ready() para inicializar base de datos y migraciones globalmente.
 ensure_app_ready()

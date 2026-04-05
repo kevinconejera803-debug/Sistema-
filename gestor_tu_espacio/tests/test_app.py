@@ -174,6 +174,26 @@ class TestEndpointsCalendar:
         response = client.delete("/api/calendar/events/999999")
         assert response.status_code == 404
         assert "error" in response.get_json()
+    
+    def test_calendar_delete_success(self, client):
+        """DELETE elimina evento existente."""
+        # Crear evento
+        created = client.post("/api/calendar/events", json={
+            "title": "Evento a eliminar",
+            "start_iso": "2026-04-10T15:00:00",
+        })
+        event_id = created.get_json()["id"]
+        
+        # Eliminar
+        response = client.delete(f"/api/calendar/events/{event_id}")
+        assert response.status_code == 200
+        assert response.get_json()["ok"] is True
+        
+        # Verificar que no existe en la lista
+        list_response = client.get("/api/calendar/events")
+        events = list_response.get_json()
+        event_ids = [e["id"] for e in events]
+        assert event_id not in event_ids
 
 
 class TestEndpointsContacts:
@@ -212,6 +232,20 @@ class TestEndpointsContacts:
         data = response.get_json()
         assert data["name"] == "Test Contact"
         assert data["company"] == "Nueva empresa"
+    
+    def test_contacts_delete_success(self, client):
+        """DELETE elimina contacto existente."""
+        created = client.post("/api/contacts", json={"name": "Eliminarme"})
+        contact_id = created.get_json()["id"]
+        
+        response = client.delete(f"/api/contacts/{contact_id}")
+        assert response.status_code == 200
+        assert response.get_json()["ok"] is True
+    
+    def test_contacts_delete_missing_returns_404(self, client):
+        """DELETE sobre contacto inexistente retorna 404."""
+        response = client.delete("/api/contacts/999999")
+        assert response.status_code == 404
 
 
 class TestEndpointsAssignments:
@@ -254,6 +288,22 @@ class TestEndpointsAssignments:
         data = response.get_json()
         assert data["title"] == "Proyecto final"
         assert data["status"] == "entregado"
+    
+    def test_assignments_delete_success(self, client):
+        """DELETE elimina tarea existente."""
+        created = client.post("/api/assignments", json={
+            "course": "Math", "title": "Tarea", "due_iso": "2026-05-01"
+        })
+        assignment_id = created.get_json()["id"]
+        
+        response = client.delete(f"/api/assignments/{assignment_id}")
+        assert response.status_code == 200
+        assert response.get_json()["ok"] is True
+    
+    def test_assignments_delete_missing_returns_404(self, client):
+        """DELETE sobre tarea inexistente retorna 404."""
+        response = client.delete("/api/assignments/999999")
+        assert response.status_code == 404
 
 
 class TestPagination:
@@ -329,6 +379,29 @@ class TestRoutes:
         data = response.get_json()
         assert "rows" in data
         assert isinstance(data["rows"], list)
+
+
+class TestHealth:
+    """Tests de health check."""
+    
+    def test_health_check(self, client):
+        """GET /api/health retorna status ok."""
+        response = client.get("/api/health")
+        assert response.status_code == 200
+        data = response.get_json()
+        assert data["status"] == "ok"
+        assert data["version"] == "1.0.0"
+        assert data["modules"] == 8
+    
+    def test_stats(self, client):
+        """GET /api/stats retorna estadísticas."""
+        response = client.get("/api/stats")
+        assert response.status_code == 200
+        data = response.get_json()
+        assert "events" in data
+        assert "contacts" in data
+        assert "assignments" in data
+        assert "total" in data
 
 
 if __name__ == "__main__":
