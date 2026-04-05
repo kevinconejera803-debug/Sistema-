@@ -1,122 +1,170 @@
-# Tu espacio (`gestor_tu_espacio`)
+# 🎯 Tu Espacio
 
-Panel principal del repositorio (SYSTEM INTERFACE). Puerto típico **5000**, base **`tu_espacio.db`**.
+**Sistema de gestión personal con módulos funcionales y APIs REST.**
+
+> Panel principal (SYSTEM INTERFACE) - Puerto 5000
+
+[![Flask](https://img.shields.io/badge/Flask-3.0-blue?style=flat&logo=flask)](https://flask.palletsprojects.com/)
+[![Python](https://img.shields.io/badge/Python-3.14-green?style=flat&logo=python)](https://www.python.org/)
+[![SQLAlchemy](https://img.shields.io/badge/SQLAlchemy-2.0-orange?style=flat)](https://www.sqlalchemy.org/)
+[![Tests](https://img.shields.io/badge/Tests-26%2F26-brightgreen)](tests/test_app.py)
 
 ---
 
-## Cómo entrar
-
-### Entrar al entorno virtual
+## 🚀 Quick Start
 
 ```powershell
-$REPO = "C:\Users\kevin\.cursor\Kevin\Ejercicios practicos"
-cd "$REPO\gestor_tu_espacio"
-.\.venv\Scripts\Activate.ps1
-```
+# Clonar y entrar
+cd "C:\Users\kevin\.cursor\Kevin\Ejercicios practicos\gestor_tu_espacio"
 
-### Primera vez (crear `.venv` e instalar)
-
-```powershell
-$REPO = "C:\Users\kevin\.cursor\Kevin\Ejercicios practicos"
-cd "$REPO\gestor_tu_espacio"
+# Crear entorno virtual
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
-python -m pip install --upgrade pip
+
+# Instalar dependencias
 pip install -r requirements.txt
-```
 
-### Arrancar la app
-
-```powershell
-cd "C:\Users\kevin\.cursor\Kevin\Ejercicios practicos\gestor_tu_espacio"
-.\.venv\Scripts\Activate.ps1
+# Ejecutar
 python run.py
 ```
 
-O con variables de entorno:
-
-```powershell
-$env:FLASK_PORT = "5000"
-$env:FLASK_DEBUG = "1"
-python run.py
-```
-
-### Abrir en el navegador
-
-**http://127.0.0.1:5000/tu-espacio**
-
-La raíz **http://127.0.0.1:5000/** redirige a `/tu-espacio`. Para parar: **Ctrl+C**.
+**Abrir:** http://127.0.0.1:5000/tu-espacio
 
 ---
 
-## Módulos
+## 📋 Módulos
 
-| Sección | URL |
-|---------|-----|
-| Panel principal | `/tu-espacio` |
-| Calendario | `/calendario` |
-| Universidad | `/universidad` |
-| Contactos | `/contactos` |
-| Mercados | `/mercados` |
-| Noticias | `/noticias` |
-| Investigación | `/investigacion` |
-| Ciberseguridad | `/ciberseguridad` |
+| Módulo | Ruta | Descripción |
+|--------|------|-------------|
+| 🎯 Panel Principal | `/tu-espacio` | Acceso a todos los módulos |
+| 📅 Calendario | `/calendario` | Eventos con SQLite |
+| 🎓 Universidad | `/universidad` | Entregas y portal académico |
+| 👥 Contactos | `/contactos` | CRM con filtro en vivo |
+| 📊 Mercados | `/mercados` | Cotizaciones (yfinance) |
+| 📰 Noticias | `/noticias` | RSS feeds económicos |
+| 🔎 Investigación | `/investigacion` | Búsqueda académica |
+| 🛡️ Ciberseguridad | `/cibersecurity` | Checklist de seguridad |
 
 ---
 
-## Estructura
+## 🏗️ Estructura
 
 ```
 gestor_tu_espacio/
 ├── app/
-│   ├── __init__.py       (Flask app + cache)
-│   ├── config.py         (logging, constantes)
-│   ├── database.py       (SQLAlchemy models)
-│   ├── utils.py          (validaciones)
-│   ├── blueprints/       (rutas API)
-│   │   ├── calendar.py
-│   │   ├── contacts.py
-│   │   ├── core.py
-│   │   ├── markets.py
-│   │   ├── news.py
-│   │   ├── research.py
-│   │   └── university.py
-│   ├── services/         (lógica externa)
-│   │   ├── news_service.py
-│   │   └── markets_service.py
-│   ├── templates/
-│   └── static/
-├── run.py                (entry point)
+│   ├── __init__.py           # Flask app + cache TTL
+│   ├── config.py             # Logging y constantes
+│   ├── database.py           # Modelos SQLAlchemy
+│   ├── utils.py              # Validaciones
+│   ├── blueprints/           # Rutas API modulares
+│   │   ├── calendar.py       # CRUD eventos
+│   │   ├── contacts.py       # CRUD contactos
+│   │   ├── university.py     # CRUD tareas
+│   │   ├── news.py           # API noticias
+│   │   ├── markets.py        # API mercados
+│   │   ├── research.py       # API investigación
+│   │   └── core.py           # Rutas principales
+│   ├── services/             # Lógica de negocio
+│   │   ├── news_service.py   # RSS feeds
+│   │   └── markets_service.py# yfinance
+│   ├── templates/            # Jinja2 templates
+│   └── static/               # CSS + JS
+├── run.py                    # Entry point
 ├── tests/
-│   └── test_app.py
+│   └── test_app.py           # 26 tests
 ├── requirements.txt
-└── tu_espacio.db
+└── tu_espacio.db             # SQLite
 ```
 
 ---
 
-## Tests
+## 🔌 API Endpoints
+
+### Calendario
+| Método | Endpoint | Descripción |
+|--------|----------|-------------|
+| GET | `/api/calendar/events` | Listar eventos |
+| POST | `/api/calendar/events` | Crear evento |
+| PUT | `/api/calendar/events/<id>` | Actualizar evento |
+| DELETE | `/api/calendar/events/<id>` | Eliminar evento |
+
+### Contactos
+| Método | Endpoint | Descripción |
+|--------|----------|-------------|
+| GET | `/api/contacts` | Listar contactos |
+| POST | `/api/contacts` | Crear contacto |
+| PUT | `/api/contacts/<id>` | Actualizar contacto |
+| DELETE | `/api/contacts/<id>` | Eliminar contacto |
+
+### Universidad
+| Método | Endpoint | Descripción |
+|--------|----------|-------------|
+| GET | `/api/assignments` | Listar tareas |
+| POST | `/api/assignments` | Crear tarea |
+| PUT | `/api/assignments/<id>` | Actualizar tarea |
+| DELETE | `/api/assignments/<id>` | Eliminar tarea |
+
+### Externos
+| Método | Endpoint | Descripción |
+|--------|----------|-------------|
+| GET | `/api/news` | Noticias RSS (cache 90s) |
+| GET | `/api/mercados` | Cotizaciones (cache 60s) |
+| GET | `/api/research?q=...` | Búsqueda académica |
+
+---
+
+## ⚙️ Configuración
+
+### Variables de Entorno
+
+| Variable | Default | Descripción |
+|----------|---------|-------------|
+| `FLASK_PORT` | `5000` | Puerto del servidor |
+| `FLASK_DEBUG` | `0` | Modo debug (1/true/yes) |
+| `FLASK_HOST` | `0.0.0.0` | Host binding |
+| `TU_ESPACIO_DB_PATH` | `tu_espacio.db` | Ruta de la BD |
+| `TU_ESPACIO_SEED_DEMO` | `1` | Cargar datos demo |
+| `TU_ESPACIO_INTRANET_URL` | - | URL intranet |
+| `TU_ESPACIO_AULA_URL` | - | URL aula virtual |
+
+### Ejemplo .env
+
+```bash
+FLASK_DEBUG=1
+FLASK_PORT=5000
+TU_ESPACIO_SEED_DEMO=1
+```
+
+---
+
+## 🧪 Tests
 
 ```powershell
 .\.venv\Scripts\Activate.ps1
 python -m pytest tests/test_app.py -v
 ```
 
----
-
-## API Endpoints
-
-| Método | Ruta | Descripción |
-|--------|------|-------------|
-| GET | `/api/calendar/events` | Lista eventos |
-| POST | `/api/calendar/events` | Crea evento |
-| GET | `/api/contacts` | Lista contactos |
-| POST | `/api/contacts` | Crea contacto |
-| GET | `/api/assignments` | Lista tareas |
-| POST | `/api/assignments` | Crea tarea |
-| GET | `/api/news` | Noticias RSS |
-| GET | `/api/mercados` | Cotizaciones markets |
+**Resultado:** 26 tests passing
 
 ---
 
-*Guía actualizada: abril 2026.*
+## 📦 Dependencias
+
+- **Flask** - Web framework
+- **SQLAlchemy** - ORM
+- **Flask-Migrate** - Migraciones
+- **Flask-SQLAlchemy** - Integración Flask
+- **python-dotenv** - Variables de entorno
+- **feedparser** - RSS parsing
+- **yfinance** - Datos financieros
+- **pytest** - Testing
+
+---
+
+## 📄 Licencia
+
+MIT License - Ver [LICENSE](LICENSE)
+
+---
+
+*Actualizado: Abril 2026*
