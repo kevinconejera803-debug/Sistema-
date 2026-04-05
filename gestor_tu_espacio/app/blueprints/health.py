@@ -2,12 +2,15 @@
 Blueprint health: Health check y métricas del sistema.
 """
 from flask import Blueprint, jsonify
+
+from app import limiter
 from app.database import db
 
 health_bp = Blueprint("health", __name__, url_prefix="/api")
 
 
 @health_bp.route("/health")
+@limiter.limit("30 per minute")
 def api_health():
     """Health check del sistema."""
     return jsonify({
@@ -19,6 +22,7 @@ def api_health():
 
 
 @health_bp.route("/stats")
+@limiter.limit("30 per minute")
 def api_stats():
     """Estadísticas de la base de datos."""
     try:

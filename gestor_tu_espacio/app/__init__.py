@@ -10,7 +10,7 @@ from pathlib import Path
 from typing import Any
 
 from dotenv import load_dotenv
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 
 from app.config import logger
 from app.database import db, init_db
@@ -41,6 +41,17 @@ cache = _Cache()
 load_dotenv(Path(__file__).resolve().parent.parent / ".env")
 
 app = Flask(__name__)
+
+# Rate limiting
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
+
+limiter = Limiter(
+    get_remote_address,
+    app=app,
+    default_limits=["200 per day", "50 per hour"],
+    storage_uri="memory://"
+)
 
 # Disable template caching
 app.jinja_env.cache = None
@@ -87,16 +98,40 @@ ensure_app_ready()
 
 # ——— ERROR HANDLERS ———
 
+@app.errorhandler(400)
+def bad_request(e):
+    """Manejador para 400."""
+    logger.warning(f"400 bad request: {e}")
+    return jsonify({"error": "solicitud inválida"}), 400
+
 @app.errorhandler(404)
 def not_found(e):
     """Manejador para 404."""
-    logger.warning(f"404 no encontrado")
+    logger.warning(f"404 no encontrado: {request.path}")
     return jsonify({"error": "no encontrado"}), 404
+
+@app.errorhandler(405)
+def method_not_allowed(e):
+    """Manejador para 405."""
+    logger.warning(f"405 método no permitido: {request.method} {request.path}")
+    return jsonify({"error": "método no permitido"}), 405
+
+@app.errorhandler(429)
+def rate_limited(e):
+    """Manejador para 429 (rate limiting)."""
+    logger.warning(f"429 rate limit excedido: {request.path}")
+    return jsonify({"error": "límite de solicitudes excedido"}), 429
 
 @app.errorhandler(500)
 def server_error(e):
     """Manejador para 500."""
-    logger.error(f"Error interno del servidor: {e}", exc_info=True)
+    logger.error(f"500 error interno del servidor: {e}", exc_info=True)
+    return jsonify({"error": "error interno del servidor"}), 500
+
+@app.errorhandler(Exception)
+def handle_exception(e):
+    """Manejador genérico para excepciones no controladas."""
+    logger.error(f"Excepción no manejada: {e}", exc_info=True)
     return jsonify({"error": "error interno del servidor"}), 500
 
 if __name__ == "__main__":
