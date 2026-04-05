@@ -1,13 +1,26 @@
 {
   "models": [
     {
-      "title": "DeepSeek Coder",
+      "title": "Code - DeepSeek Coder",
       "provider": "ollama",
-      "model": "deepseek-coder:6.7b-instruct-q4_0"
+      "model": "deepseek-coder:6.7b-instruct-q4_0",
+      "tags": ["programar", "code", "coding", "development", "python", "javascript", "web", "backend", "frontend", "debug"]
+    },
+    {
+      "title": "Enrich - GLM-4",
+      "provider": "ollama",
+      "model": "glm-4.7-flash:latest",
+      "tags": ["enriquecer", "enrich", "learn", "ml", "machine learning", "ia", "ai", "inteligencia", "neural"]
+    },
+    {
+      "title": "General - Llama3",
+      "provider": "ollama",
+      "model": "llama3:latest",
+      "tags": ["general", "chat", "conversation", "ayuda", "preguntas"]
     }
   ],
   "tabAutocompleteModel": {
-    "title": "DeepSeek Coder",
+    "title": "Code - DeepSeek Coder",
     "provider": "ollama",
     "model": "deepseek-coder:6.7b-instruct-q4_0"
   }
