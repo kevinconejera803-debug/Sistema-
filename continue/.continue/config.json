@@ -1,13 +1,18 @@
 {
   "models": [
     {
-      "title": "DeepSeek Coder",
+      "title": "Code - DeepSeek Coder",
       "provider": "ollama",
       "model": "deepseek-coder:latest"
+    },
+    {
+      "title": "Chat - Llama 3.1",
+      "provider": "ollama",
+      "model": "llama3.1:8b"
     }
   ],
   "tabAutocompleteModel": {
-    "title": "DeepSeek Coder",
+    "title": "Code - DeepSeek Coder",
     "provider": "ollama",
     "model": "deepseek-coder:latest"
   }
