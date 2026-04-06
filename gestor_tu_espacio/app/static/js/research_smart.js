@@ -98,10 +98,10 @@
   function performSmartSearch(query, forceAI) {
     if (!query || !query.trim()) return;
     
-    resultsContent.innerHTML = '<div class="loading">🔍 Buscando fuentes y generando respuesta...</div>';
+    resultsContent.innerHTML = '<div class="loading">📚 Buscando en la base de conocimiento...</div>';
     resultsContainer.style.display = 'block';
-    resultsIcon.textContent = '🔬';
-    resultsTitle.textContent = 'Investigando';
+    resultsIcon.textContent = '📖';
+    resultsTitle.textContent = 'Respuesta';
     
     fetch('/api/ai/ask?q=' + encodeURIComponent(query))
       .then(function(r) { return r.json(); })
@@ -128,6 +128,7 @@
         }
       })
       .catch(function(err) {
+        console.error('Search error:', err);
         resultsContent.innerHTML = '<div class="no-answer">Error de conexión. Intenta de nuevo.</div>';
       });
   }
