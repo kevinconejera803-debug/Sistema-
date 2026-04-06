@@ -5,88 +5,72 @@
 <div class="mod-wrap mod-research">
   {% include "modulos/_header.html" %}
 
-  <div class="research-unified">
-    <div class="research-hero-unified">
-      <h1 class="research-title-unified">🔬 Centro de Investigación & AI</h1>
-      <p class="research-subtitle-unified">Búsqueda inteligente, recursos ML y respuestas AI en un solo lugar</p>
+  <div class="research-clean">
+    <div class="hero-clean">
+      <h1 class="title-clean">🔬 Centro de Investigación Inteligente</h1>
+      <p class="subtitle-clean">Pregunta cualquier cosa sobre tecnología, ML, ciberseguridad y más</p>
     </div>
 
-    <div class="search-container-unified">
-      <div class="search-box-unified">
+    <div class="search-clean-wrapper">
+      <div class="search-clean-box">
         <input 
           type="text" 
-          id="unified-search" 
-          class="search-input-unified"
-          placeholder="¿Qué quieres aprender? Pregunta, busca temas, descubrir..."
+          id="smart-search" 
+          class="search-clean-input"
+          placeholder="¿Qué quieres aprender? Ej: qué es machine learning, cómo proteger mi PC..."
           autocomplete="off"
+          autofocus
         />
-        <button id="unified-search-btn" class="search-btn-unified">🔍</button>
-        <button id="ai-ask-btn" class="ai-btn-unified" title="Preguntar a AI">🤖</button>
+        <button id="smart-search-btn" class="search-clean-btn">
+          <span class="btn-icon">🔍</span>
+          <span class="btn-text">Buscar</span>
+        </button>
       </div>
       
-      <div class="search-suggestions">
-        <span class="suggestion-label">Sugerencias:</span>
-        <button class="suggestion-tag" data-q="machine learning intro">machine learning</button>
-        <button class="suggestion-tag" data-q="ciberseguridad básica">ciberseguridad</button>
-        <button class="suggestion-tag" data-q="redes neuronales">redes neuronales</button>
-        <button class="suggestion-tag" data-q="transformación digital">transformación digital</button>
-        <button class="suggestion-tag" data-q="qué es deep learning">deep learning</button>
+      <div class="quick-tags">
+        <button class="quick-tag" data-q="machine learning">Machine Learning</button>
+        <button class="quick-tag" data-q="ciberseguridad">Ciberseguridad</button>
+        <button class="quick-tag" data-q="redes neuronales">Redes Neuronales</button>
+        <button class="quick-tag" data-q="pythonData Science">Python para ML</button>
+        <button class="quick-tag" data-q="deep learning">Deep Learning</button>
+        <button class="quick-tag" data-q="transformación digital">Transformación Digital</button>
       </div>
     </div>
 
-    <div id="unified-results" class="results-container-unified" style="display:none;">
-      <div class="results-header">
-        <span id="results-type">Resultados</span>
-        <button id="close-results" class="close-results-btn">✕</button>
+    <div id="smart-results" class="results-clean" style="display:none;">
+      <div class="results-header-clean">
+        <span id="results-icon">🔍</span>
+        <span id="results-title">Resultados</span>
+        <button id="close-smart-results" class="close-clean">✕</button>
       </div>
-      <div id="results-content" class="results-content-unified"></div>
+      <div id="smart-results-content" class="results-content-clean"></div>
     </div>
 
-    <div class="quick-categories">
-      <h3 class="categories-title">📚 Explora por categoría</h3>
-      <div class="categories-grid">
-        <button class="category-card" data-category="fundamentos">
-          <span class="category-icon">📖</span>
-          <span class="category-name">Fundamentos ML</span>
-          <span class="category-desc">Conceptos básicos</span>
-        </button>
-        <button class="category-card" data-category="modelos">
-          <span class="category-icon">🧠</span>
-          <span class="category-name">Modelos</span>
-          <span class="category-desc">Redes, Transformers</span>
-        </button>
-        <button class="category-card" data-category="seguridad">
-          <span class="category-icon">🛡️</span>
-          <span class="category-name">Ciberseguridad</span>
-          <span class="category-desc">Protección, amenazas</span>
-        </button>
-        <button class="category-card" data-category="python">
-          <span class="category-icon">🐍</span>
-          <span class="category-name">Python ML</span>
-          <span class="category-desc">Librerías, código</span>
-        </button>
-        <button class="category-card" data-category="data">
-          <span class="category-icon">📊</span>
-          <span class="category-name">Data Science</span>
-          <span class="category-desc">Análisis, visualizaciones</span>
-        </button>
-        <button class="category-card" data-category="proyectos">
-          <span class="category-icon">🚀</span>
-          <span class="category-name">Proyectos</span>
-          <span class="category-desc">Prácticos, ejercicios</span>
-        </button>
+    <div class="info-clean">
+      <div class="info-card">
+        <span class="info-icon">💡</span>
+        <div class="info-text">
+          <strong>Escribe cualquier pregunta</strong>
+          <span>El sistema entenderá lo que necesitas y te dará la mejor respuesta</span>
+        </div>
       </div>
-    </div>
-
-    <div id="category-content" class="category-content" style="display:none;">
-      <div class="category-header">
-        <button id="back-categories" class="back-btn">← Volver</button>
-        <h2 id="category-title" class="category-title"></h2>
+      <div class="info-card">
+        <span class="info-icon">🤖</span>
+        <div class="info-text">
+          <strong>Con AI integrado</strong>
+          <span>Si configuras AI_API_KEY, respuestas más inteligentes de OpenAI</span>
+        </div>
       </div>
-      <div id="category-results" class="category-results"></div>
+      <div class="info-card">
+        <span class="info-icon">📚</span>
+        <div class="info-text">
+          <strong>Base de conocimiento</strong>
+          <span>30+ artículos sobre ML, seguridad, Python y proyectos</span>
+        </div>
+      </div>
     </div>
   </div>
 </div>
 
-<script src="{{ url_for('static', filename='js/research_unified.js') }}?v=1"></script>
+<script src="{{ url_for('static', filename='js/research_smart.js') }}?v=1"></script>
 {% endblock %}
