@@ -52,10 +52,6 @@ MERCADOS_TTL = 60.0
 API_TIMEOUT = 10  # segundos
 MAX_RETRIES = 3
 
-# AI / ML Configuration
-AI_PROVIDER = os.environ.get("AI_PROVIDER", "openrouter")  # openrouter, openai, anthropic
-AI_API_KEY = os.environ.get("AI_API_KEY", "")
-AI_MODEL = os.environ.get("AI_MODEL", "openrouter/free")
-AI_MAX_TOKENS = 500
-AI_TEMPERATURE = 0.7
-AI_TIMEOUT = 45
+# Configuración de búsqueda
+SEARCH_TIMEOUT = 15
+SEARCH_ENABLED = True
