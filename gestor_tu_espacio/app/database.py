@@ -9,7 +9,7 @@ Esquema:
 from __future__ import annotations
 
 import os
-from datetime import date, datetime, time, timedelta
+from datetime import date, datetime, time, timedelta, timezone
 from pathlib import Path
 
 from flask_sqlalchemy import SQLAlchemy
@@ -125,6 +125,24 @@ class Assignment(db.Model):
             "status": self.status,
             "weight": self.weight,
             "notes": self.notes
+        }
+
+
+class ChatHistory(db.Model):
+    __tablename__ = 'chat_history'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    user_message = db.Column(db.Text, nullable=False)
+    ai_response = db.Column(db.Text, nullable=False)
+    intent = db.Column(db.String(50), default='general')
+    timestamp = db.Column(db.String(50), default=lambda: datetime.now(timezone.utc).isoformat())
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "user_message": self.user_message,
+            "ai_response": self.ai_response,
+            "intent": self.intent,
+            "timestamp": self.timestamp
         }
 
 

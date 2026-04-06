@@ -138,3 +138,165 @@ def api_research_deprecated():
         "error": "Este endpoint está deprecado. Usa /api/ai/ask para interacturar con IA.",
         "suggestion": "GET /api/ai/ask?q=tu_pregunta"
     }), 410
+
+
+# ============================================================
+# ENDPOINTS INTELIGENTES CON CONTEXTO
+# ============================================================
+
+@research_bp.route("/research/ask", methods=["POST"])
+@log_endpoint
+def api_research_ask():
+    """
+    Endpoint de chat inteligente con contexto del usuario.
+    Usa memoria conversacional y detección de intención.
+    """
+    data = request.get_json(force=True, silent=True) or {}
+    question = data.get("question", "").strip()
+    
+    if not question:
+        return jsonify({"error": "Debes proporcionar una pregunta."}), 400
+    
+    from app.services.chat_service import (
+        detect_intent, get_context_by_intent,
+        get_last_messages, format_conversation_as_text,
+        save_message
+    )
+    from app.services.calendar_service import get_user_context
+    
+    ai_manager = get_ai_manager()
+    
+    intent = detect_intent(question)
+    conversation_history = get_last_messages(limit=5)
+    history_text = format_conversation_as_text(conversation_history)
+    user_context = get_user_context()
+    extra_context = get_context_by_intent(intent)
+    
+    prompt = f"""Eres un asistente personal inteligente enfocado en productividad, organización y toma de decisiones. Ayudas al usuario a anticiparse y actuar mejor.
+
+=== HISTORIAL RECIENTE ===
+{history_text}
+
+=== CONTEXTO DEL USUARIO ===
+{user_context}
+
+=== CONTEXTO ADICIONAL ({intent}) ===
+{extra_context}
+
+=== PREGUNTA ACTUAL ===
+{question}
+
+=== INSTRUCCIONES ===
+- Responde de forma útil, clara y concisa.
+- Considera el historial y contexto previo.
+- Si preguntan sobre eventos, tareas o calendario, usa el contexto adicional.
+- Máximo 2-3 párrafos."""
+
+    try:
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        try:
+            answer = loop.run_until_complete(ai_manager.generate(prompt))
+        finally:
+            loop.close()
+        
+        save_message(question, answer, intent)
+        
+        return jsonify({
+            "question": question,
+            "answer": answer,
+            "provider": ai_manager.provider_name,
+            "intent": intent,
+            "context_used": True
+        })
+        
+    except Exception as e:
+        logger.error(f"Error en research/ask: {e}")
+        return jsonify({"error": str(e)}), 500
+
+
+@research_bp.route("/research/suggestions", methods=["GET"])
+@log_endpoint
+def api_research_suggestions():
+    """
+    Sugerencias proactivas basadas en eventos próximos.
+    """
+    from app.services.calendar_service import get_upcoming_events, format_events_as_text
+    
+    ai_manager = get_ai_manager()
+    events = get_upcoming_events(days=7)
+    events_text = format_events_as_text(events) if events else "No hay eventos próximos."
+    
+    prompt = f"""Basándote en mi calendario, sugiere qué debería hacer para estar preparado:
+
+{events_text}
+
+Responde con sugerencias prácticas y específicas para hoy/semana."""
+
+    try:
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        try:
+            suggestions = loop.run_until_complete(ai_manager.generate(prompt))
+        finally:
+            loop.close()
+        
+        return jsonify({
+            "suggestions": suggestions,
+            "provider": ai_manager.provider_name
+        })
+        
+    except Exception as e:
+        logger.error(f"Error en suggestions: {e}")
+        return jsonify({"error": str(e)}), 500
+
+
+@research_bp.route("/research/notifications", methods=["GET"])
+@log_endpoint
+def api_research_notifications():
+    """
+    Notificaciones de eventos urgentes (próximas 24h).
+    """
+    from app.services.calendar_service import check_upcoming_24h, format_urgent_notifications
+    
+    events = check_upcoming_24h()
+    notifications = format_urgent_notifications(events)
+    
+    return jsonify({
+        "notifications": notifications,
+        "count": len(events)
+    })
+
+
+# ============================================================
+# ENDPOINTS PROACTIVOS
+# ============================================================
+
+@research_bp.route("/assistant/insights", methods=["GET"])
+@log_endpoint
+def api_assistant_insights():
+    """
+    Genera insights proactivos para el usuario.
+    Sugiere acciones sin que el usuario pregunte.
+    """
+    from app.services.proactive_service import generate_proactive_insights
+    
+    ai_manager = get_ai_manager()
+    
+    try:
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        try:
+            insights = loop.run_until_complete(generate_proactive_insights(ai_manager))
+        finally:
+            loop.close()
+        
+        return jsonify({
+            "status": "ok",
+            "insights": insights,
+            "provider": ai_manager.provider_name
+        })
+        
+    except Exception as e:
+        logger.error(f"Error en insights: {e}")
+        return jsonify({"error": str(e)}), 500

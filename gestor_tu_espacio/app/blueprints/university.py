@@ -3,10 +3,12 @@ Blueprint universidad: CRUD de tareas/entregas.
 """
 from __future__ import annotations
 
+import asyncio
 from flask import Blueprint, jsonify, request
 
 from app.config import logger
 from app.database import db, Assignment
+from app.ai.core.manager import get_ai_manager
 from app.utils import (
     validate_assignment_data, validate_partial_assignment_data,
     log_endpoint,
@@ -95,9 +97,34 @@ def api_assignments_delete(aid):
     """DELETE: Elimina tarea."""
     assignment = db.session.get(Assignment, aid)
     if not assignment:
-        return jsonify({"error": "no encontrado"}), 404
-
+        return jsonify({"error": "no encontrada"}), 404
+    
     db.session.delete(assignment)
     db.session.commit()
     logger.info(f"Tarea {aid} eliminada")
     return jsonify({"ok": True})
+
+
+@university_bp.route("/assignments/suggestions", methods=["GET"])
+@log_endpoint
+def api_assignments_suggestions():
+    """Sugerencias de planificación por IA."""
+    from app.services.university_service import generate_task_suggestions
+    
+    ai_manager = get_ai_manager()
+    
+    try:
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        try:
+            suggestions = loop.run_until_complete(generate_task_suggestions(ai_manager))
+        finally:
+            loop.close()
+        
+        return jsonify({
+            "suggestions": suggestions,
+            "provider": ai_manager.provider_name,
+        })
+    except Exception as e:
+        logger.error(f"Error en sugerencias: {e}")
+        return jsonify({"error": str(e)}), 500

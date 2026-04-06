@@ -1,6 +1,6 @@
 # 🎯 Sistema
 
-**Sistema de gestión personal con módulos funcionales y APIs REST.**
+**Sistema de gestión personal con módulos funcionales, IA local y APIs REST.**
 
 > Puerto 5000
 
@@ -10,7 +10,7 @@
 
 | Proyecto | Descripción |
 |----------|-------------|
-| [gestor_tu_espacio](./gestor_tu_espacio/) | Panel principal con módulos funcionales |
+| [gestor_tu_espacio](./gestor_tu_espacio/) | Panel principal con IA integrada |
 
 ---
 
@@ -21,10 +21,26 @@ cd gestor_tu_espacio
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 pip install -r requirements.txt
+```
+
+**Instalar Ollama:** https://ollama.ai
+
+```powershell
+ollama serve
+ollama pull llama3.1
 python run.py
 ```
 
-**Abrir:** http://127.0.0.1:5000/tu-espacio
+**Abrir:** http://127.0.0.1:5000
+
+---
+
+## ✨ Características
+
+- 🤖 IA local (Ollama)
+- 🧠 Memoria conversacional
+- 🎯 Detección de intención
+- ⚡ Recomendaciones proactivas
 
 ---
 
@@ -39,7 +55,18 @@ python run.py
 | Mercados | `/mercados` |
 | Noticias | `/noticias` |
 | Investigación | `/investigacion` |
-| Ciberseguridad | `/cibersecurity` |
+| **Asistente IA** | `/asistente` |
+
+---
+
+## 🔌 Endpoints IA
+
+| Endpoint | Método | Descripción |
+|---------|--------|-------------|
+| `/api/research/ask` | POST | Chat con IA |
+| `/api/assistant/insights` | GET | Sugerencias proactivas |
+| `/api/news/summary` | GET | Resumen de noticias |
+| `/api/markets/analysis` | GET | Análisis de mercados |
 
 ---
 
@@ -50,8 +77,6 @@ cd gestor_tu_espacio
 .\.venv\Scripts\Activate.ps1
 python -m pytest tests/test_app.py -v
 ```
-
-**26 tests passing**
 
 ---
 

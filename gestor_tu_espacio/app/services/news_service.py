@@ -76,3 +76,37 @@ def fetch_news():
 
 def invalidate_news_cache():
     cache.invalidate("news")
+
+
+def summarize_news_items(items: list[dict], max_items: int = 5) -> str:
+    """Genera resumen de noticias usando IA."""
+    if not items:
+        return "No hay noticias disponibles."
+    
+    headlines = [f"- {item['title']}" for item in items[:max_items]]
+    headlines_text = "\n".join(headlines)
+    
+    prompt = f"""Resume brevemente estas noticias en 2-3 oraciones, highlighting los temas más importantes:
+
+{headlines_text}
+
+Resumen:"""
+    return prompt
+
+
+async def generate_news_summary(ai_manager) -> str:
+    """Genera resumen de noticias actuales usando IA."""
+    from app.services.news_service import fetch_news
+    
+    items = fetch_news()
+    if not items:
+        return "No hay noticias disponibles."
+    
+    prompt = summarize_news_items(items)
+    
+    try:
+        summary = await ai_manager.generate(prompt)
+        return summary if isinstance(summary, str) else str(summary)
+    except Exception as e:
+        logger.error(f"Error generando resumen: {e}")
+        return "No se pudo generar el resumen."

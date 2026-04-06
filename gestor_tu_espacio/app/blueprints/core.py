@@ -66,6 +66,14 @@ MODULES = [
         "lead": "Asistente profesional de investigación: Google Scholar y fuentes verificables en tiempo real.",
     },
     {
+        "slug": "asistente",
+        "title": "ASISTENTE IA",
+        "desc": "Chat con inteligencia",
+        "icon": "🤖",
+        "theme": "purple",
+        "lead": "Chat inteligente con contexto de tu calendario y tareas.",
+    },
+    {
         "slug": "ciberseguridad",
         "title": "CIBERSEGURIDAD",
         "desc": "Shadow Network",

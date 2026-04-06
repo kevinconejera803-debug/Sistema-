@@ -55,3 +55,39 @@ def fetch_markets():
 
 def invalidate_markets_cache():
     cache.invalidate("markets")
+
+
+def analyze_market_data(markets: list[dict]) -> str:
+    """Genera prompt para análisis de mercados."""
+    if not markets:
+        return "No hay datos de mercados."
+    
+    summary = "\n".join([
+        f"- {m['symbol']}: {m['price_fmt']} ({m['chg_fmt']})"
+        for m in markets
+    ])
+    
+    prompt = f"""Analiza brevemente estos datos de mercados y menciona puntos clave:
+
+{summary}
+
+Análisis:"""
+    return prompt
+
+
+async def generate_market_analysis(ai_manager) -> str:
+    """Genera análisis de mercados usando IA."""
+    from app.services.markets_service import fetch_markets
+    
+    markets = fetch_markets()
+    if not markets:
+        return "No hay datos de mercados."
+    
+    prompt = analyze_market_data(markets)
+    
+    try:
+        analysis = await ai_manager.generate(prompt)
+        return analysis if isinstance(analysis, str) else str(analysis)
+    except Exception as e:
+        logger.error(f"Error generando análisis: {e}")
+        return "No se pudo generar el análisis."
