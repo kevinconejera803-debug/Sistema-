@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}SYSTEM INTERFACE — Investigación{% endblock %}
+{% block title %}Tu Espacio — Investigación{% endblock %}
 
 {% block main_area %}
 <div class="mod-wrap mod-research">
@@ -7,8 +7,8 @@
 
   <div class="research-clean">
     <div class="hero-clean">
-      <h1 class="title-clean">🔬 Centro de Investigación Inteligente</h1>
-      <p class="subtitle-clean">Pregunta cualquier cosa sobre tecnología, ML, ciberseguridad y más</p>
+      <h1 class="title-clean">📚 Centro de Investigación</h1>
+      <p class="subtitle-clean">Pregunta sobre el mundo actual, historia, ciencia, tecnología y más</p>
     </div>
 
     <div class="search-clean-wrapper">
@@ -17,60 +17,35 @@
           type="text" 
           id="smart-search" 
           class="search-clean-input"
-          placeholder="¿Qué quieres aprender? Ej: qué es machine learning, cómo proteger mi PC..."
+          placeholder="Escribe tu pregunta... Ej: ¿Qué está pasando en el mundo?"
           autocomplete="off"
           autofocus
         />
         <button id="smart-search-btn" class="search-clean-btn">
           <span class="btn-icon">🔍</span>
-          <span class="btn-text">Buscar</span>
+          <span class="btn-text">Investigar</span>
         </button>
       </div>
       
       <div class="quick-tags">
-        <button class="quick-tag" data-q="machine learning">Machine Learning</button>
-        <button class="quick-tag" data-q="ciberseguridad">Ciberseguridad</button>
-        <button class="quick-tag" data-q="redes neuronales">Redes Neuronales</button>
-        <button class="quick-tag" data-q="pythonData Science">Python para ML</button>
-        <button class="quick-tag" data-q="deep learning">Deep Learning</button>
-        <button class="quick-tag" data-q="transformación digital">Transformación Digital</button>
+        <button class="quick-tag" data-q="¿Qué está pasando en Chile?">Chile</button>
+        <button class="quick-tag" data-q="¿Qué es inteligencia artificial?">Tecnología</button>
+        <button class="quick-tag" data-q="¿Qué pasó en la guerra de Ukraine?">Ucranía</button>
+        <button class="quick-tag" data-q="¿Cómo está la economía mundial?">Economía</button>
+        <button class="quick-tag" data-q="¿Qué dicen los expertos sobre el cambio climático?">Medio Ambiente</button>
       </div>
     </div>
 
     <div id="smart-results" class="results-clean" style="display:none;">
       <div class="results-header-clean">
-        <span id="results-icon">🔍</span>
-        <span id="results-title">Resultados</span>
+        <span id="results-icon">📖</span>
+        <span id="results-title">Resultados de Investigación</span>
         <button id="close-smart-results" class="close-clean">✕</button>
       </div>
       <div id="smart-results-content" class="results-content-clean"></div>
     </div>
-
-    <div class="info-clean">
-      <div class="info-card">
-        <span class="info-icon">💡</span>
-        <div class="info-text">
-          <strong>Escribe cualquier pregunta</strong>
-          <span>El sistema entenderá lo que necesitas y te dará la mejor respuesta</span>
-        </div>
-      </div>
-      <div class="info-card">
-        <span class="info-icon">🤖</span>
-        <div class="info-text">
-          <strong>Con AI integrado</strong>
-          <span>Si configuras AI_API_KEY, respuestas más inteligentes de OpenAI</span>
-        </div>
-      </div>
-      <div class="info-card">
-        <span class="info-icon">📚</span>
-        <div class="info-text">
-          <strong>Base de conocimiento</strong>
-          <span>30+ artículos sobre ML, seguridad, Python y proyectos</span>
-        </div>
-      </div>
-    </div>
   </div>
 </div>
 
-<script src="{{ url_for('static', filename='js/research_smart.js') }}?v=1"></script>
+<script src="{{ url_for('static', filename='js/research_smart.js') }}?v=6"></script>
 {% endblock %}

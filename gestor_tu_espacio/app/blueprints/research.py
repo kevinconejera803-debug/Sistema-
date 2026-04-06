@@ -182,14 +182,38 @@ def api_research():
 @research_bp.route("/ai/ask")
 @log_endpoint
 def api_ai_ask():
-    """Endpoint para preguntas directas al AI."""
+    """Endpoint de investigación usando base de conocimiento real."""
     question = request.args.get("q", "").strip()
     if not question:
         return jsonify({"error": "Debes proporcionar una pregunta."}), 400
 
-    from app.services.ai_service import answer_with_ai
-    answer = answer_with_ai(question)
-    return jsonify({"question": question, "answer": answer})
+    from app.services.knowledge_service import get_knowledge_answer
+    from app.services.search_service import search_with_sources
+    
+    # Buscar fuentes web
+    search_results = search_with_sources(question)
+    sources = search_results.get("sources", [])
+    
+    # Respuesta de base de conocimiento
+    answer = get_knowledge_answer(question, sources)
+    
+    return jsonify({
+        "question": question,
+        "answer": answer,
+        "sources": sources[:5] if sources else []
+    })
+
+
+@research_bp.route("/ai/status")
+@log_endpoint
+def api_ai_status():
+    """Verificar estado de la API de AI."""
+    from app.config import AI_API_KEY, AI_PROVIDER, AI_MODEL
+    return jsonify({
+        "configured": bool(AI_API_KEY),
+        "provider": AI_PROVIDER,
+        "model": AI_MODEL
+    })
 
 
 @research_bp.route("/system/scan")

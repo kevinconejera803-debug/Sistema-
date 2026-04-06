@@ -4,18 +4,28 @@ Servicio de AI/ML para respuestas inteligentes.
 import os
 import json
 import requests
-from app.config import logger, AI_PROVIDER, AI_API_KEY, AI_MODEL, AI_MAX_TOKENS, AI_TEMPERATURE, API_TIMEOUT
+from app.config import logger, AI_PROVIDER, AI_API_KEY, AI_MODEL, AI_MAX_TOKENS, AI_TEMPERATURE, AI_TIMEOUT
 
 def _call_openai(prompt: str, system_message: str = "Eres un asistente útil.") -> str:
-    """Llamar a OpenAI API."""
+    """Llamar a OpenAI/OpenRouter API."""
     if not AI_API_KEY:
         return "⚠️ API key no configurada. Configura AI_API_KEY en .env"
     
-    url = "https://api.openai.com/v1/chat/completions"
-    headers = {
-        "Authorization": f"Bearer {AI_API_KEY}",
-        "Content-Type": "application/json"
-    }
+    if AI_PROVIDER == "openrouter":
+        url = "https://openrouter.ai/api/v1/chat/completions"
+        headers = {
+            "Authorization": f"Bearer {AI_API_KEY}",
+            "Content-Type": "application/json",
+            "HTTP-Referer": "http://localhost:5000",
+            "X-Title": "Tu Espacio"
+        }
+    else:
+        url = "https://api.openai.com/v1/chat/completions"
+        headers = {
+            "Authorization": f"Bearer {AI_API_KEY}",
+            "Content-Type": "application/json"
+        }
+    
     data = {
         "model": AI_MODEL,
         "messages": [
@@ -27,7 +37,7 @@ def _call_openai(prompt: str, system_message: str = "Eres un asistente útil.") 
     }
     
     try:
-        response = requests.post(url, headers=headers, json=data, timeout=API_TIMEOUT)
+        response = requests.post(url, headers=headers, json=data, timeout=AI_TIMEOUT)
         response.raise_for_status()
         result = response.json()
         return result["choices"][0]["message"]["content"]
@@ -36,7 +46,7 @@ def _call_openai(prompt: str, system_message: str = "Eres un asistente útil.") 
         return "⏱️ Tiempo de espera agotado. Intenta de nuevo."
     except requests.exceptions.HTTPError as e:
         logger.error(f"OpenAI HTTP error: {e}")
-        return f"❌ Error de OpenAI: {e.response.status_code}"
+        return f"❌ Error: {e.response.status_code}"
     except Exception as e:
         logger.error(f"OpenAI error: {e}")
         return f"❌ Error: {str(e)}"
@@ -60,7 +70,7 @@ def _call_anthropic(prompt: str, system_message: str = "Eres un asistente útil.
     }
     
     try:
-        response = requests.post(url, headers=headers, json=data, timeout=API_TIMEOUT)
+        response = requests.post(url, headers=headers, json=data, timeout=AI_TIMEOUT)
         response.raise_for_status()
         result = response.json()
         return result["content"][0]["text"]

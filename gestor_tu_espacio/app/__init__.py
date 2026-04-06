@@ -9,9 +9,13 @@ import time
 from pathlib import Path
 from typing import Any
 
+# Cargar variables de entorno ANTES de importar CUALQUIER cosa del proyecto
+from pathlib import Path
+env_path = Path(__file__).resolve().parent.parent / ".env"
 from dotenv import load_dotenv
-from flask import Flask, jsonify, request
+load_dotenv(env_path, override=True)
 
+from flask import Flask, jsonify, request
 from app.config import logger
 from app.database import db, init_db
 
@@ -36,9 +40,6 @@ class _Cache:
         self._store.pop(key, None)
 
 cache = _Cache()
-
-# Cargar variables de entorno
-load_dotenv(Path(__file__).resolve().parent.parent / ".env")
 
 app = Flask(__name__)
 

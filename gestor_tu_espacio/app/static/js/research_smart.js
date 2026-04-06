@@ -8,6 +8,8 @@
   var closeBtn = document.getElementById('close-smart-results');
   var quickTags = document.querySelectorAll('.quick-tag');
 
+  // IA lista para usar
+
   var knowledgeBase = [
     { q: "machine learning", a: "Machine Learning (ML) es una rama de la Inteligencia Artificial que permite a las computadoras aprender de datos sin ser programadas explícitamente. Hay 3 tipos principales:\n\n• **Aprendizaje Supervisado**: con etiquetas (clasificación, regresión)\n• **Aprendizaje No Supervisado**: sin etiquetas (clustering, reducción dimensional)\n• **Aprendizaje por Refuerzo**: con recompensas y castigos", tags: ["fundamentos", "básico"] },
     { q: "qué es machine learning", a: "Machine Learning (ML) es una rama de la Inteligencia Artificial que permite a las computadoras aprender de datos sin ser programadas explícitamente. Hay 3 tipos principales:\n\n• **Aprendizaje Supervisado**: con etiquetas (clasificación, regresión)\n• **Aprendizaje No Supervisado**: sin etiquetas (clustering, reducción dimensional)\n• **Aprendizaje por Refuerzo**: con recompensas y castigos", tags: ["fundamentos", "básico"] },
@@ -96,54 +98,38 @@
   function performSmartSearch(query, forceAI) {
     if (!query || !query.trim()) return;
     
-    resultsContent.innerHTML = '<div class="loading">🔍 Buscando la mejor respuesta...</div>';
+    resultsContent.innerHTML = '<div class="loading">🔍 Buscando fuentes y generando respuesta...</div>';
     resultsContainer.style.display = 'block';
+    resultsIcon.textContent = '🔬';
+    resultsTitle.textContent = 'Investigando';
     
-    var useAI = forceAI || query.length > 30 || 
-      ['cómo', 'por qué', 'explica', 'dime', 'qué es', 'cuál'].some(function(w) { 
-        return query.toLowerCase().includes(w); 
+    fetch('/api/ai/ask?q=' + encodeURIComponent(query))
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        if (data.error) {
+          resultsContent.innerHTML = '<div class="no-answer">❌ ' + data.error + '</div>';
+        } else {
+          var html = '<div class="ai-response-full">' + data.answer.replace(/\n/g, '<br>') + '</div>';
+          
+          // Mostrar fuentes si existen
+          if (data.sources && data.sources.length > 0) {
+            html += '<div class="sources-section"><h4>📎 Fuentes consultadas:</h4><ul class="sources-list">';
+            data.sources.forEach(function(s) {
+              html += '<li><a href="' + s.url + '" target="_blank" rel="noopener">' + s.title + '</a>';
+              if (s.snippet) {
+                html += '<p class="source-snippet">' + s.snippet + '</p>';
+              }
+              html += '</li>';
+            });
+            html += '</ul></div>';
+          }
+          
+          resultsContent.innerHTML = html;
+        }
+      })
+      .catch(function(err) {
+        resultsContent.innerHTML = '<div class="no-answer">Error de conexión. Intenta de nuevo.</div>';
       });
-    
-    var match = findBestMatch(query);
-    
-    if (useAI) {
-      resultsIcon.textContent = '🤖';
-      resultsTitle.textContent = 'Respuesta IA';
-      
-      fetch('/api/ai/ask?q=' + encodeURIComponent(query))
-        .then(function(r) { return r.json(); })
-        .then(function(data) {
-          if (data.error) {
-            if (match) {
-              resultsContent.innerHTML = renderAnswer(match, true);
-            } else {
-              resultsContent.innerHTML = '<div class="no-answer">❌ ' + data.error + '</div>';
-            }
-          } else {
-            var html = '<div class="ai-response-full">' + data.answer.replace(/\n/g, '<br>') + '</div>';
-            if (match) {
-              html += '<div class="related-info"><strong>📚 También relacionado:</strong> ' + match.item.q + '</div>';
-            }
-            resultsContent.innerHTML = html;
-          }
-        })
-        .catch(function() {
-          if (match) {
-            resultsContent.innerHTML = renderAnswer(match, true);
-          } else {
-            resultsContent.innerHTML = '<div class="no-answer">No encontré información. Intenta con otras palabras.</div>';
-          }
-        });
-    } else {
-      resultsIcon.textContent = '📚';
-      resultsTitle.textContent = 'Base de conocimiento';
-      
-      if (match) {
-        resultsContent.innerHTML = renderAnswer(match, false);
-      } else {
-        resultsContent.innerHTML = '<div class="no-answer">No encontré resultados exactos. Prueba reformulando tu pregunta.</div>';
-      }
-    }
   }
 
   // Event Listeners
