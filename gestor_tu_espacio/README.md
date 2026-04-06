@@ -1,8 +1,8 @@
 # 🎯 Tu Espacio
 
-**Sistema de gestión personal con módulos funcionales y APIs REST.**
+**Sistema de gestión personal integral con módulos funcionales, base de conocimiento y APIs REST.**
 
-> Panel principal (SYSTEM INTERFACE) - Puerto 5000
+> Panel principal - Puerto 5000 - Uso local
 
 [![Flask](https://img.shields.io/badge/Flask-3.0-blue?style=flat&logo=flask)](https://flask.palletsprojects.com/)
 [![Python](https://img.shields.io/badge/Python-3.14-green?style=flat&logo=python)](https://www.python.org/)
@@ -19,7 +19,7 @@ cd "C:\Users\kevin\.cursor\Kevin\Ejercicios practicos\gestor_tu_espacio"
 
 # Crear entorno virtual
 python -m venv .venv
-.\.venv\Scripts\Activate.ps1
+.venv\Scripts\Activate.ps1
 
 # Instalar dependencias
 pip install -r requirements.txt
@@ -42,8 +42,33 @@ python run.py
 | 👥 Contactos | `/contactos` | CRM con filtro en vivo |
 | 📊 Mercados | `/mercados` | Cotizaciones (yfinance) |
 | 📰 Noticias | `/noticias` | RSS feeds económicos |
-| 🔎 Investigación | `/investigacion` | Búsqueda académica |
+| 🔎 Investigación | `/investigacion` | Base de conocimiento 2025-2026 |
 | 🛡️ Ciberseguridad | `/cibersecurity` | Checklist de seguridad |
+
+---
+
+## 🔎 Centro de Investigación
+
+El módulo de investigación funciona **sin API externa**, usando una base de conocimiento local actualizada con información real:
+
+### Temas cubiertos:
+- 🇨🇱 **Chile** - Gobierno, elecciones 2025, economía, seguridad
+- 🇦🇷 **Argentina** - Economía, gobierno Milei
+- 🇧🇷 **Brasil** - Lula, economía
+- 🇲🇽 **México** - Sheinbaum, nearshoring
+- 🇪🇸 **España** - Política, economía
+- 🇺🇸 **EE.UU.** - Biden, tecnología, inflación
+- ⚔️ **Conflictos** - Ucranía, Gaza
+- 🌡️ **Cambio climático** - COP29, metas 2050
+- 💻 **Tecnología** - IA 2026, computación cuántica
+- 🚀 **Espacio** - Artemis, Starship, Marte
+- 🏥 **Salud** - Pandemia, obesidad, IA médica
+- 📚 **Educación** - IA en aulas, formación continua
+- 💼 **Trabajo** - IA replace, gig economy
+- 🎬 **Cultura** - Cine, música, deportes 2026
+
+### Búsqueda web:
+Opcionalmente puede usar DuckDuckGo para encontrar fuentes adicionales.
 
 ---
 
@@ -65,6 +90,8 @@ gestor_tu_espacio/
 │   │   ├── research.py       # API investigación
 │   │   └── core.py           # Rutas principales
 │   ├── services/             # Lógica de negocio
+│   │   ├── knowledge_service.py  # Base de conocimiento
+│   │   ├── search_service.py     # Búsqueda web
 │   │   ├── news_service.py   # RSS feeds
 │   │   └── markets_service.py# yfinance
 │   ├── templates/            # Jinja2 templates
@@ -104,12 +131,16 @@ gestor_tu_espacio/
 | PUT | `/api/assignments/<id>` | Actualizar tarea |
 | DELETE | `/api/assignments/<id>` | Eliminar tarea |
 
+### Investigación
+| Método | Endpoint | Descripción |
+|--------|----------|-------------|
+| GET | `/api/ai/ask?q=...` | Pregunta a base de conocimiento |
+
 ### Externos
 | Método | Endpoint | Descripción |
 |--------|----------|-------------|
 | GET | `/api/news` | Noticias RSS (cache 90s) |
 | GET | `/api/mercados` | Cotizaciones (cache 60s) |
-| GET | `/api/research?q=...` | Búsqueda académica |
 
 ---
 
@@ -140,7 +171,7 @@ TU_ESPACIO_SEED_DEMO=1
 ## 🧪 Tests
 
 ```powershell
-.\.venv\Scripts\Activate.ps1
+.venv\Scripts\Activate.ps1
 python -m pytest tests/test_app.py -v
 ```
 
@@ -157,7 +188,17 @@ python -m pytest tests/test_app.py -v
 - **python-dotenv** - Variables de entorno
 - **feedparser** - RSS parsing
 - **yfinance** - Datos financieros
+- **beautifulsoup4** - Web scraping
 - **pytest** - Testing
+
+---
+
+## 🔒 Seguridad
+
+- Sin API keys externas requeridas
+- Investigación funciona 100% offline
+- Endpoints de ejecución de sistema eliminados
+- Para uso local exclusivamente
 
 ---
 
