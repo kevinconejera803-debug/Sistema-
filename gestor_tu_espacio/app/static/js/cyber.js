@@ -1,10 +1,17 @@
 (function () {
   var root = document.getElementById("cyber-root");
-  var header = document.getElementById("cyber-header");
+  var progressCircle = document.getElementById("progress-circle");
+  var progressPct = document.getElementById("progress-pct");
+  var statDone = document.getElementById("stat-done");
+  var statTotal = document.getElementById("stat-total");
+  var statAlta = document.getElementById("stat-alta");
+  var filterButtons = document.querySelectorAll(".cyber-filter");
   if (!root) return;
 
-  var KEY = "tu_espacio_cyber_v2";
+  var KEY = "tu_espacio_cyber_v3";
   var state = { checks: {}, notes: {}, dates: {} };
+  var currentFilter = "all";
+
   try {
     var saved = localStorage.getItem(KEY);
     if (saved) {
@@ -19,53 +26,58 @@
     {
       title: "IDENTIDAD Y ACCESO",
       priority: "alta",
+      icon: "🔑",
       items: [
-        { label: "Contraseñas únicas y gestor de secretos", desc: "Usar Bitwarden, 1Password o similar. Ninguna contraseña reutilizada." },
-        { label: "Segundo factor (2FA) en correo y cuentas críticas", desc: "优先 Authenticator o hardware key (YubiKey). Evitar SMS." },
-        { label: "Revisión de sesiones activa mensual", desc: "Verificar dispositivos autorizados en Google, GitHub, banks." },
-        { label: "Contraseña de sistema cifrada con FileVault/BitLocker", desc: "Cifrado completo del disco duro." },
+        { label: "Contraseñas únicas y gestor de secretos", desc: "Usar Bitwarden, 1Password. Ninguna contraseña reutilizada." },
+        { label: "Segundo factor (2FA) en correo y cuentas críticas", desc: "Autenticador o hardware key (YubiKey). Evitar SMS." },
+        { label: "Revisión de sesiones activa mensual", desc: "Verificar dispositivos en Google, GitHub, bancos." },
+        { label: "Contraseña de sistema cifrada (FileVault/BitLocker)", desc: "Cifrado completo del disco duro." },
       ],
     },
     {
       title: "DISPOSITIVO Y RED",
       priority: "alta",
+      icon: "💻",
       items: [
-        { label: "Bloqueo automático (< 5 min)", desc: "Pantalla se bloquea automáticamente tras inactividad." },
-        { label: "Firewall activo en sistema", desc: "Cortafuegos de sistema habilitado (Windows Defender/Firewall)."},
-        { label: "WiFi público solo con VPN", desc: "Usar VPN (WireGuard, Mullvad, ProtonVPN) en redes públicas." },
-        { label: "Copias de seguridad cifradas fuera del equipo", desc: "3-2-1: 3 copias, 2 medios diferentes, 1 offsite (Cloud encrypted)."},
-        { label: "Actualizaciones automáticas del sistema", desc: "Mantener SO y aplicaciones actualizadas." },
+        { label: "Bloqueo automático (< 5 min)", desc: "Pantalla se bloquea tras inactividad." },
+        { label: "Firewall activo en sistema", desc: "Windows Defender/Firewall habilitado." },
+        { label: "WiFi público solo con VPN", desc: "Usar VPN (WireGuard, Mullvad, ProtonVPN)." },
+        { label: "Copias de seguridad cifradas fuera del equipo", desc: "3-2-1: 3 copias, 2 medios, 1 offsite." },
+        { label: "Actualizaciones automáticas del sistema", desc: "Mantener SO y apps actualizadas." },
       ],
     },
     {
       title: "DATOS Y CORREO",
       priority: "media",
+      icon: "📧",
       items: [
-        { label: "No abrir adjuntos inesperados", desc: "Verificar remitente. Adjuntos sospechosos: escanear con VirusTotal." },
-        { label: "Verificar remitente antes de enlaces sensibles", desc: "Hover sobre enlace. Chequear dominio exacto." },
-        { label: "Clasificar datos personales vs trabajo", desc: "Separar datos sensibles en carpetas cifradas." },
-        { label: "Correo electrónico con SPF/DKIM/DMARC", desc: "Verificar configuración de seguridad del dominio." },
+        { label: "No abrir adjuntos inesperados", desc: "Verificar remitente. Escanear con VirusTotal." },
+        { label: "Verificar remitente antes de enlaces", desc: "Hover sobre enlace. Chequear dominio." },
+        { label: "Clasificar datos personales vs trabajo", desc: "Separar datos en carpetas cifradas." },
+        { label: "Correo con SPF/DKIM/DMARC", desc: "Verificar seguridad del dominio." },
         { label: "Datos sensibles cifrados en reposo", desc: "Usar AES-256 para archivos importantes." },
       ],
     },
     {
       title: "RESPUESTA Y CONCIENCIA",
       priority: "media",
+      icon: "🧠",
       items: [
-        { label: "Plan de respuesta ante pérdida de dispositivo", desc: "Procedimiento de wipe remoto (Find My Device, etc)."},
-        { label: "Formación periódica en phishing", desc: "Realizar simulaciones cada 6 meses. Reportar correos sospechosos." },
-        { label: "No pagar rescates sin asesoría", desc: "Contactar a autoridades (PDI, CERT) antes de cualquier pago." },
-        { label: "Contraseñas de recuperación configuradas", desc: "Verificar que las cuentas de recuperación estén actualizadas." },
+        { label: "Plan de respuesta ante pérdida de dispositivo", desc: "Procedimiento de wipe remoto." },
+        { label: "Formación periódica en phishing", desc: "Simulaciones cada 6 meses." },
+        { label: "No pagar rescates sin asesoría", desc: "Contactar PDI/CERT antes de pago." },
+        { label: "Contraseñas de recuperación actualizadas", desc: "Verificar cuentas de recuperación." },
       ],
     },
     {
       title: "CUENTA DE DESARROLLADOR",
       priority: "alta",
+      icon: "👨‍💻",
       items: [
-        { label: "Tokens de acceso con scope mínimo", desc: "GitHub tokens solo con permisos necesarios." },
-        { label: "Secrets en variables de entorno, no en código", desc: "Usar .env con .gitignore." },
-        { label: "2FA en GitHub, npm, PyPI, Docker Hub", desc: "Tokens de acceso con expiración." },
-        { label: "Revisar commits por datos sensibles", desc: "Usar git-secrets o similares antes de push." },
+        { label: "Tokens de acceso con scope mínimo", desc: "GitHub tokens solo permisos necesarios." },
+        { label: "Secrets en variables de entorno", desc: "Usar .env con .gitignore." },
+        { label: "2FA en GitHub, npm, PyPI, Docker Hub", desc: "Tokens con expiración." },
+        { label: "Revisar commits por datos sensibles", desc: "Usar git-secrets antes de push." },
       ],
     },
   ];
@@ -81,80 +93,121 @@
   }
 
   function countProgress() {
-    var total = 0;
-    var done = 0;
+    var total = 0, done = 0, altaDone = 0, altaTotal = 0;
     groups.forEach(function (g) {
       g.items.forEach(function (_, idx) {
         total++;
         var id = g.title + "::" + idx;
-        if (state.checks[id]) done++;
+        if (state.checks[id]) {
+          done++;
+          if (g.priority === "alta") altaDone++;
+        }
+        if (g.priority === "alta") altaTotal++;
       });
     });
-    return { total: total, done: done, pct: total ? Math.round((done / total) * 100) : 0 };
+    return { total: total, done: done, pct: total ? Math.round((done / total) * 100) : 0, altaDone: altaDone, altaTotal: altaTotal };
   }
 
-  function renderHeader() {
-    if (!header) return;
+  function updateStats() {
     var p = countProgress();
-    header.innerHTML =
-      '<div class="cyber-header__inner">' +
-      '<div class="cyber-donut" style="--p:' + p.pct + '" aria-hidden="true"><span class="cyber-donut__hole">' + p.pct + "%</span></div>" +
-      '<div class="cyber-header__text"><strong class="cyber-header__title">Postura de seguridad</strong>' +
-      "<span class=\"cyber-header__sub\">" + p.done + " de " + p.total + " controles revisados</span></div>" +
-      '<div class="cyber-header__actions">' +
-      '<button class="cyber-btn" id="export-btn" title="Exportar">📤</button>' +
-      '<button class="cyber-btn" id="import-btn" title="Importar">📥</button>' +
-      '<input type="file" id="import-file" accept=".json" style="display:none">';
+    progressPct.textContent = p.pct + "%";
+    statDone.textContent = p.done;
+    statTotal.textContent = p.total;
+    statAlta.textContent = p.altaDone + "/" + p.altaTotal;
+    var circumference = 2 * Math.PI * 52;
+    var offset = circumference - (p.pct / 100) * circumference;
+    progressCircle.style.strokeDashoffset = offset;
+  }
+
+  function shouldShowItem(id, priority) {
+    if (currentFilter === "all") return true;
+    var isChecked = state.checks[id];
+    if (currentFilter === "pendiente") return !isChecked;
+    if (currentFilter === "completado") return isChecked;
+    if (currentFilter === "alta") return priority === "alta";
+    if (currentFilter === "media") return priority === "media";
+    return true;
   }
 
   function render() {
     root.innerHTML = "";
     groups.forEach(function (g) {
-      var sec = document.createElement("div");
-      sec.className = "cyber-cat";
-      var priorityBadge = '<span class="cyber-priority cyber-priority--' + g.priority + '">' + g.priority + '</span>';
-      var h = document.createElement("h4");
-      h.innerHTML = g.title + " " + priorityBadge;
-      sec.appendChild(h);
+      var groupHasVisibleItems = g.items.some(function (_, idx) {
+        var id = g.title + "::" + idx;
+        return shouldShowItem(id, g.priority);
+      });
+
+      if (!groupHasVisibleItems) return;
+
+      var section = document.createElement("div");
+      section.className = "cyber-section";
+
+      var header = document.createElement("div");
+      header.className = "cyber-section__header";
+
+      var icon = document.createElement("span");
+      icon.className = "cyber-section__icon";
+      icon.textContent = g.icon;
+
+      var title = document.createElement("h3");
+      title.className = "cyber-section__title";
+      title.textContent = g.title;
+
+      var priority = document.createElement("span");
+      priority.className = "cyber-priority-badge cyber-priority-badge--" + g.priority;
+      priority.textContent = g.priority === "alta" ? "ALTA" : "MEDIA";
+
+      header.appendChild(icon);
+      header.appendChild(title);
+      header.appendChild(priority);
+      section.appendChild(header);
+
+      var list = document.createElement("div");
+      list.className = "cyber-section__items";
+
       g.items.forEach(function (item, idx) {
         var id = g.title + "::" + idx;
-        var row = document.createElement("div");
-        row.className = "cyber-row";
+        if (!shouldShowItem(id, g.priority)) return;
 
-        var cb = document.createElement("input");
-        cb.type = "checkbox";
-        cb.checked = !!state.checks[id];
-        cb.addEventListener("change", function () {
-          state.checks[id] = cb.checked;
-          if (cb.checked) {
+        var itemEl = document.createElement("div");
+        itemEl.className = "cyber-item";
+
+        var checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.className = "cyber-checkbox";
+        checkbox.checked = !!state.checks[id];
+        checkbox.addEventListener("change", function () {
+          state.checks[id] = checkbox.checked;
+          if (checkbox.checked) {
             state.dates[id] = Date.now();
           } else {
             delete state.dates[id];
           }
           save();
-          renderHeader();
+          updateStats();
           render();
         });
 
         var content = document.createElement("div");
-        content.className = "cyber-row__content";
+        content.className = "cyber-item__content";
 
-        var titleRow = document.createElement("div");
-        titleRow.className = "cyber-row__title";
-        var titleSpan = document.createElement("span");
-        titleSpan.className = "cyber-row__label";
-        titleSpan.textContent = item.label;
-        titleRow.appendChild(titleSpan);
+        var label = document.createElement("div");
+        label.className = "cyber-item__label";
+        label.textContent = item.label;
 
-        var descSpan = document.createElement("span");
-        descSpan.className = "cyber-row__desc";
-        descSpan.textContent = item.desc;
-        content.appendChild(titleRow);
-        content.appendChild(descSpan);
+        var desc = document.createElement("div");
+        desc.className = "cyber-item__desc";
+        desc.textContent = item.desc;
+
+        content.appendChild(label);
+        content.appendChild(desc);
+
+        var actions = document.createElement("div");
+        actions.className = "cyber-item__actions";
 
         var noteBtn = document.createElement("button");
-        noteBtn.className = "cyber-note-btn";
-        noteBtn.textContent = state.notes[id] ? "✏️" : "📝";
+        noteBtn.className = "cyber-item__btn";
+        noteBtn.textContent = state.notes[id] ? "📝" : "✏️";
         noteBtn.title = "Agregar nota";
         noteBtn.addEventListener("click", function () {
           var note = prompt("Nota para '" + item.label + "':", state.notes[id] || "");
@@ -169,90 +222,84 @@
           }
         });
 
-        var noteDisplay = document.createElement("div");
-        noteDisplay.className = "cyber-row__note-display";
+        actions.appendChild(noteBtn);
+        itemEl.appendChild(checkbox);
+        itemEl.appendChild(content);
+        itemEl.appendChild(actions);
+
         if (state.notes[id]) {
+          var noteDisplay = document.createElement("div");
+          noteDisplay.className = "cyber-item__note";
           noteDisplay.textContent = "📝 " + state.notes[id];
+          itemEl.appendChild(noteDisplay);
         }
 
-        var dateDisplay = document.createElement("div");
-        dateDisplay.className = "cyber-row__date";
         if (state.dates[id]) {
-          dateDisplay.textContent = "✓ Completado: " + formatDate(state.dates[id]);
+          var dateDisplay = document.createElement("div");
+          dateDisplay.className = "cyber-item__date";
+          dateDisplay.textContent = "✓ Completado el " + formatDate(state.dates[id]);
+          itemEl.appendChild(dateDisplay);
         }
 
-        row.appendChild(cb);
-        row.appendChild(content);
-        row.appendChild(noteBtn);
-        sec.appendChild(row);
-        if (state.notes[id]) {
-          var noteRow = document.createElement("div");
-          noteRow.className = "cyber-row-note";
-          noteRow.appendChild(noteDisplay);
-          sec.appendChild(noteRow);
-        }
-        if (state.dates[id]) {
-          var dateRow = document.createElement("div");
-          dateRow.className = "cyber-row-date";
-          dateRow.appendChild(dateDisplay);
-          sec.appendChild(dateRow);
-        }
+        list.appendChild(itemEl);
       });
-      root.appendChild(sec);
+
+      section.appendChild(list);
+      root.appendChild(section);
     });
-    renderHeader();
-    setupImportExport();
+    updateStats();
   }
 
-  function setupImportExport() {
-    var exportBtn = document.getElementById("export-btn");
-    var importBtn = document.getElementById("import-btn");
-    var importFile = document.getElementById("import-file");
+  // Filters
+  filterButtons.forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      filterButtons.forEach(function (b) { b.classList.remove("cyber-filter--active"); });
+      btn.classList.add("cyber-filter--active");
+      currentFilter = btn.getAttribute("data-filter");
+      render();
+    });
+  });
 
-    if (exportBtn) {
-      exportBtn.addEventListener("click", function () {
-        var data = JSON.stringify(state, null, 2);
-        var blob = new Blob([data], { type: "application/json" });
-        var url = URL.createObjectURL(blob);
-        var a = document.createElement("a");
-        a.href = url;
-        a.download = "ciberseguridad-" + new Date().toISOString().split("T")[0] + ".json";
-        a.click();
-        URL.revokeObjectURL(url);
-      });
-    }
+  // Export
+  var exportBtn = document.getElementById("export-data");
+  if (exportBtn) {
+    exportBtn.addEventListener("click", function () {
+      var data = JSON.stringify(state, null, 2);
+      var blob = new Blob([data], { type: "application/json" });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement("a");
+      a.href = url;
+      a.download = "ciberseguridad-" + new Date().toISOString().split("T")[0] + ".json";
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+  }
 
-    if (importBtn && importFile) {
-      importBtn.addEventListener("click", function () {
-        importFile.click();
-      });
-      importFile.addEventListener("change", function (e) {
-        var file = e.target.files[0];
-        if (!file) return;
-        var reader = new FileReader();
-        reader.onload = function (evt) {
-          try {
-            var imported = JSON.parse(evt.target.result);
-            if (imported.checks) {
-              state.checks = imported.checks;
-            }
-            if (imported.notes) {
-              state.notes = imported.notes;
-            }
-            if (imported.dates) {
-              state.dates = imported.dates;
-            }
-            save();
-            render();
-            alert("Importación exitosa!");
-          } catch (err) {
-            alert("Error al importar: " + err.message);
-          }
-        };
-        reader.readAsText(file);
-        importFile.value = "";
-      });
-    }
+  // Import
+  var importBtn = document.getElementById("import-data");
+  var importFile = document.getElementById("import-file");
+  if (importBtn && importFile) {
+    importBtn.addEventListener("click", function () { importFile.click(); });
+    importFile.addEventListener("change", function (e) {
+      var file = e.target.files[0];
+      if (!file) return;
+      var reader = new FileReader();
+      reader.onload = function (evt) {
+        try {
+          var imported = JSON.parse(evt.target.result);
+          if (imported.checks) state.checks = imported.checks;
+          if (imported.notes) state.notes = imported.notes;
+          if (imported.dates) state.dates = imported.dates;
+          save();
+          render();
+          alert("✅ Importación exitosa!");
+        } catch (err) {
+          alert("❌ Error al importar: " + err.message);
+        }
+      };
+      reader.readAsText(file);
+      importFile.value = "";
+    });
   }
 
   render();

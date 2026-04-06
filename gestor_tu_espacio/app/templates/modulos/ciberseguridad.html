@@ -5,13 +5,61 @@
 <div class="mod-wrap mod-page mod-page--cyber" id="cyber-page">
   {% include "modulos/_header.html" %}
 
-  <p class="mod-page__kicker mod-page__kicker--teal">Checklist de postura: el progreso vive solo en este navegador (localStorage).</p>
+  <p class="mod-page__kicker mod-page__kicker--teal">🛡️ Checklist de postura de seguridad — Protege tu entorno digital</p>
 
-  <div id="cyber-header" class="cyber-header" aria-live="polite"></div>
-  <div class="mod-cal__side cyber-panel" id="cyber-root"></div>
+  <div class="cyber-dashboard">
+    <div class="cyber-progress-section">
+      <div class="cyber-progress-ring" id="cyber-progress-ring">
+        <svg viewBox="0 0 120 120">
+          <circle class="progress-bg" cx="60" cy="60" r="52" />
+          <circle class="progress-bar" cx="60" cy="60" r="52" id="progress-circle" />
+        </svg>
+        <div class="progress-text">
+          <span class="progress-pct" id="progress-pct">0%</span>
+          <span class="progress-label">Completado</span>
+        </div>
+      </div>
+      <div class="cyber-stats">
+        <div class="cyber-stat">
+          <span class="cyber-stat__value" id="stat-done">0</span>
+          <span class="cyber-stat__label">Completados</span>
+        </div>
+        <div class="cyber-stat">
+          <span class="cyber-stat__value" id="stat-total">21</span>
+          <span class="cyber-stat__label">Total</span>
+        </div>
+        <div class="cyber-stat">
+          <span class="cyber-stat__value" id="stat-alta" style="color:#ef4444">0</span>
+          <span class="cyber-stat__label">Alta prioridad</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="cyber-actions">
+      <button class="cyber-action-btn" id="export-data">
+        <span class="cyber-action-btn__icon">📤</span>
+        <span class="cyber-action-btn__text">Exportar</span>
+      </button>
+      <button class="cyber-action-btn" id="import-data">
+        <span class="cyber-action-btn__icon">📥</span>
+        <span class="cyber-action-btn__text">Importar</span>
+      </button>
+      <input type="file" id="import-file" accept=".json" style="display:none">
+    </div>
+  </div>
+
+  <div class="cyber-filters">
+    <button class="cyber-filter cyber-filter--active" data-filter="all">Todos</button>
+    <button class="cyber-filter" data-filter="alta">🔴 Alta prioridad</button>
+    <button class="cyber-filter" data-filter="media">🟡 Media prioridad</button>
+    <button class="cyber-filter" data-filter="pendiente">⏳ Pendientes</button>
+    <button class="cyber-filter" data-filter="completado">✅ Completados</button>
+  </div>
+
+  <div class="cyber-categories" id="cyber-root"></div>
 </div>
 {% endblock %}
 
 {% block extra_scripts %}
-<script src="{{ url_for('static', filename='js/cyber.js') }}?v=3"></script>
+<script src="{{ url_for('static', filename='js/cyber.js') }}?v=4"></script>
 {% endblock %}

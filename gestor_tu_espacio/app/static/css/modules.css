@@ -2162,7 +2162,282 @@
 
 .cyber-btn:hover {
   background: rgba(46, 230, 214, 0.2);
+}
+
+/* === NUEVO DISEÑO CIBERSEGURIDAD === */
+.cyber-dashboard {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  align-items: center;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, rgba(46, 230, 214, 0.08), rgba(139, 92, 246, 0.08));
+  border: 1px solid rgba(46, 230, 214, 0.2);
+  border-radius: 16px;
+  margin-bottom: 1.5rem;
+}
+
+.cyber-progress-section {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  flex: 1;
+  min-width: 280px;
+}
+
+.cyber-progress-ring {
+  position: relative;
+  width: 120px;
+  height: 120px;
+}
+
+.cyber-progress-ring svg {
+  transform: rotate(-90deg);
+  width: 120px;
+  height: 120px;
+}
+
+.cyber-progress-ring .progress-bg {
+  fill: none;
+  stroke: rgba(46, 230, 214, 0.1);
+  stroke-width: 8;
+}
+
+.cyber-progress-ring .progress-bar {
+  fill: none;
+  stroke: var(--teal);
+  stroke-width: 8;
+  stroke-linecap: round;
+  stroke-dasharray: 326.73;
+  stroke-dashoffset: 326.73;
+  transition: stroke-dashoffset 0.5s ease;
+}
+
+.cyber-progress-ring .progress-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.cyber-progress-ring .progress-pct {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--teal);
+}
+
+.cyber-progress-ring .progress-label {
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+}
+
+.cyber-stats {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.cyber-stat {
+  text-align: center;
+}
+
+.cyber-stat__value {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--teal);
+}
+
+.cyber-stat__label {
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+}
+
+.cyber-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.cyber-action-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: rgba(6, 12, 22, 0.8);
+  border: 1px solid rgba(46, 230, 214, 0.3);
+  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.cyber-action-btn:hover {
+  background: rgba(46, 230, 214, 0.15);
   border-color: var(--teal);
+  color: #fff;
+}
+
+.cyber-filters {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.cyber-filter {
+  padding: 0.5rem 1rem;
+  background: rgba(6, 12, 22, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.cyber-filter:hover {
+  border-color: rgba(46, 230, 214, 0.4);
+}
+
+.cyber-filter--active {
+  background: rgba(46, 230, 214, 0.2);
+  border-color: var(--teal);
+  color: var(--teal);
+}
+
+.cyber-categories {
+  display: grid;
+  gap: 1rem;
+}
+
+.cyber-section {
+  background: rgba(6, 12, 22, 0.85);
+  border: 1px solid rgba(46, 230, 214, 0.15);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.cyber-section__header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  background: linear-gradient(90deg, rgba(46, 230, 214, 0.1), transparent);
+  border-bottom: 1px solid rgba(46, 230, 214, 0.1);
+}
+
+.cyber-section__icon {
+  font-size: 1.25rem;
+}
+
+.cyber-section__title {
+  margin: 0;
+  flex: 1;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--teal);
+  letter-spacing: 0.02em;
+}
+
+.cyber-priority-badge {
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.cyber-priority-badge--alta {
+  background: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.cyber-priority-badge--media {
+  background: rgba(251, 191, 36, 0.2);
+  color: #fbbf24;
+  border: 1px solid rgba(251, 191, 36, 0.3);
+}
+
+.cyber-section__items {
+  padding: 0.5rem;
+}
+
+.cyber-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+
+.cyber-item:hover {
+  background: rgba(46, 230, 214, 0.05);
+}
+
+.cyber-checkbox {
+  width: 20px;
+  height: 20px;
+  margin-top: 0.1rem;
+  accent-color: var(--teal);
+  cursor: pointer;
+}
+
+.cyber-item__content {
+  flex: 1;
+}
+
+.cyber-item__label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 0.25rem;
+}
+
+.cyber-item__desc {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.5);
+  line-height: 1.4;
+}
+
+.cyber-item__actions {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.cyber-item__btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  opacity: 0.5;
+  padding: 0.25rem;
+  transition: opacity 0.2s;
+}
+
+.cyber-item__btn:hover {
+  opacity: 1;
+}
+
+.cyber-item__note {
+  margin-top: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background: rgba(139, 92, 246, 0.1);
+  border-radius: 6px;
+  font-size: 0.8rem;
+  color: rgba(167, 139, 250, 0.9);
+}
+
+.cyber-item__date {
+  margin-top: 0.25rem;
+  padding-left: 2.5rem;
+  font-size: 0.7rem;
+  color: rgba(34, 197, 94, 0.8);
 }
 
 /* â€”â€”â€” BÃºsqueda â€”â€”â€” */
