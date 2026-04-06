@@ -1,80 +1,120 @@
 """
-OllamaAdapter: Adaptador para modelos locales via Ollama.
-Pendiente de implementar cuando el usuario tenga Ollama instalado.
+OllamaProvider - Proveedor de IA para Ollama (modelos locales).
 
-Usage:
+INSTALACIÓN:
 1. Instalar Ollama: https://ollama.ai
 2. Ejecutar: ollama serve
 3. Descargar modelo: ollama pull llama3
 4. Configurar en .env: AI_PROVIDER=ollama
+
+CONFIGURACIÓN (.env):
+AI_PROVIDER=ollama
+OLLAMA_URL=http://localhost:11434
+OLLAMA_MODEL=llama3
 """
-from typing import Optional
+import time
 import requests
 from app.ai import AIProvider, AIResponse
 from app.config import logger
 
 class OllamaProvider(AIProvider):
-    """
-    Proveedor para Ollama (modelos locales).
-    Ventajas:
-    - Sin costo de API
-    - Privacidad total (datos no salen del equipo)
-    -离线可用
+    """Proveedor de IA usando Ollama (modelos locales)."""
     
-    Desventajas:
-    - Requiere hardware decente (8GB+ RAM, GPU recomendada)
-    - Más lento que APIs cloud
-    - Modelos menos capaces que GPT-4/Claude
-    """
+    DEFAULT_TIMEOUT = 30  # segundos
     
     def __init__(self, config: dict = None):
+        config = config or {}
         super().__init__(config)
+        
         self.base_url = config.get("ollama_url", "http://localhost:11434")
         self.model = config.get("ollama_model", "llama3")
-        self._verify_connection()
-    
-    def _verify_connection(self):
-        """Verifica que Ollama esté corriendo."""
-        try:
-            response = requests.get(f"{self.base_url}/api/tags", timeout=2)
-            if response.status_code == 200:
-                logger.info(f"Ollama disponible en {self.base_url}")
-                self._available = True
-            else:
-                self._available = False
-        except Exception:
-            self._available = False
+        self.timeout = config.get("timeout", self.DEFAULT_TIMEOUT)
+        
+        # Verificar conexión al inicializar
+        self._available = self._check_connection()
+        
+        if self._available:
+            logger.info(f"Ollama inicializado con modelo: {self.model}")
+        else:
             logger.warning(f"Ollama no disponible en {self.base_url}")
     
-    async def generate(self, prompt: str, **kwargs) -> AIResponse:
-        """Genera respuesta usando Ollama."""
-        import time
+    def _check_connection(self) -> bool:
+        """Verifica que Ollama esté corriendo y disponible."""
+        try:
+            response = requests.get(
+                f"{self.base_url}/api/tags",
+                timeout=5
+            )
+            return response.status_code == 200
+        except requests.exceptions.ConnectException:
+            logger.error(f"No se puede conectar a Ollama en {self.base_url}")
+            return False
+        except requests.exceptions.Timeout:
+            logger.error("Timeout verificando conexión a Ollama")
+            return False
+        except Exception as e:
+            logger.error(f"Error verificando Ollama: {e}")
+            return False
+    
+    def generate(self, prompt: str, **kwargs) -> AIResponse:
+        """
+        Genera una respuesta usando Ollama.
+        
+        Args:
+            prompt: Texto de entrada para el modelo
+            **kwargs: Parámetros adicionales (temperature, max_tokens)
+            
+        Returns:
+            AIResponse con la respuesta del modelo
+        """
+        if not self.is_available():
+            return AIResponse(
+                content="❌ Ollama no está disponible. Asegúrate de:\n"
+                       "1.Tener Ollama instalado (ollama.ai)\n"
+                       "2.Ejecutar 'ollama serve' en terminal\n"
+                       "3.Tener un modelo descargado ('ollama pull llama3')",
+                model=f"ollama:{self.model}"
+            )
+        
         start_time = time.time()
         
-        # Construir request
+        # Opciones del modelo
+        temperature = kwargs.get("temperature", 0.7)
+        max_tokens = kwargs.get("max_tokens", 500)
+        
+        # Construir payload para Ollama
         payload = {
             "model": self.model,
             "prompt": prompt,
             "stream": False,
             "options": {
-                "temperature": kwargs.get("temperature", 0.7),
-                "num_predict": kwargs.get("max_tokens", 500),
-                "stop": kwargs.get("stop", []),
+                "temperature": temperature,
+                "num_predict": max_tokens,
             }
         }
         
         try:
+            logger.info(f"Ollama request: model={self.model}, prompt_len={len(prompt)}")
+            
             response = requests.post(
                 f"{self.base_url}/api/generate",
                 json=payload,
-                timeout=kwargs.get("timeout", 60)
+                timeout=self.timeout
             )
-            response.raise_for_status()
             
+            # Verificar respuesta
+            response.raise_for_status()
             result = response.json()
-            content = result.get("response", "")
+            
+            # Extraer respuesta
+            content = result.get("response", "").strip()
+            
+            if not content:
+                logger.warning("Ollama retornó respuesta vacía")
+                content = "El modelo no generó respuesta. Intenta con otro prompt."
             
             latency = int((time.time() - start_time) * 1000)
+            logger.info(f"Ollama response: {len(content)} chars, {latency}ms")
             
             return AIResponse(
                 content=content,
@@ -83,19 +123,41 @@ class OllamaProvider(AIProvider):
             )
             
         except requests.exceptions.Timeout:
+            logger.error("Timeout esperando respuesta de Ollama")
             return AIResponse(
-                content="Timeout: El modelo tardó demasiado en responder.",
+                content="⏱️ Timeout: Ollama tardó demasiado en responder.\n"
+                       "El modelo puede estar muy ocupado o sin suficientes recursos.",
                 model=f"ollama:{self.model}"
             )
-        except Exception as e:
-            logger.error(f"Ollama error: {e}")
+            
+        except requests.exceptions.ConnectionError:
+            logger.error("No se pudo conectar a Ollama")
             return AIResponse(
-                content=f"Error connecting to Ollama: {str(e)}",
+                content="🔌 No se puede conectar a Ollama.\n"
+                       "Verifica que 'ollama serve' esté ejecutándose.",
+                model=f"ollama:{self.model}"
+            )
+            
+        except requests.exceptions.HTTPError as e:
+            logger.error(f"Error HTTP de Ollama: {e}")
+            return AIResponse(
+                content=f"❌ Error de Ollama: {e.response.status_code}\n"
+                       "El modelo puede no estar instalado. Prueba 'ollama list'",
+                model=f"ollama:{self.model}"
+            )
+            
+        except Exception as e:
+            logger.error(f"Error inesperado con Ollama: {e}")
+            return AIResponse(
+                content=f"❌ Error inesperado: {str(e)}",
                 model=f"ollama:{self.model}"
             )
     
-    async def embed(self, text: str) -> list[float]:
-        """Genera embeddings usando Ollama."""
+    def embed(self, text: str) -> list[float]:
+        """
+        Genera embeddings para texto (si el modelo lo soporta).
+        Nota: No todos los modelos de Ollama soportan embeddings.
+        """
         try:
             response = requests.post(
                 f"{self.base_url}/api/embeddings",
@@ -110,13 +172,16 @@ class OllamaProvider(AIProvider):
             return []
     
     def is_available(self) -> bool:
-        """Verifica si Ollama está corriendo."""
-        return getattr(self, "_available", False)
+        """Retorna si Ollama está disponible."""
+        return self._available
     
     def list_models(self) -> list[str]:
-        """Lista modelos disponibles en Ollama."""
+        """Lista los modelos disponibles en Ollama."""
         try:
-            response = requests.get(f"{self.base_url}/api/tags", timeout=5)
+            response = requests.get(
+                f"{self.base_url}/api/tags",
+                timeout=5
+            )
             if response.status_code == 200:
                 data = response.json()
                 return [m["name"] for m in data.get("models", [])]
@@ -125,17 +190,27 @@ class OllamaProvider(AIProvider):
         return []
 
 
-# Ejemplo de uso futuro:
+# ============================================================
+# EJEMPLO DE USO
+# ============================================================
 """
-# Para habilitar Ollama, agregar al .env:
+# Configuración en .env:
 AI_PROVIDER=ollama
 OLLAMA_URL=http://localhost:11434
 OLLAMA_MODEL=llama3
 
-# Models disponibles en Ollama:
-# - llama3 (recommended)
-# - mistral
-# - codellama
-# - phi3
-# - neural-chat
+# Uso directo:
+from app.ai.adapters.ollama_provider import OllamaProvider
+
+config = {"ollama_url": "http://localhost:11434", "ollama_model": "llama3"}
+provider = OllamaProvider(config)
+
+if provider.is_available():
+    response = provider.generate("Hola, ¿cómo estás?")
+    print(response.content)
+else:
+    print("Ollama no está disponible")
+
+# Via endpoint:
+# GET /api/ai/ask?q=Hola
 """
