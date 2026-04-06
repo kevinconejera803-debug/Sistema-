@@ -3,7 +3,7 @@
   var header = document.getElementById("cyber-header");
   if (!root) return;
 
-  var KEY = "tu_espacio_cyber_v1";
+  var KEY = "tu_espacio_cyber_v2";
   var state = {};
   try {
     state = JSON.parse(localStorage.getItem(KEY) || "{}") || {};
@@ -14,34 +14,54 @@
   var groups = [
     {
       title: "IDENTIDAD Y ACCESO",
+      priority: "alta",
       items: [
-        "Contraseñas únicas y gestor de secretos",
-        "Segundo factor (2FA) en correo y cuentas críticas",
-        "Revisión de sesiones activas mensual",
+        { label: "Contraseñas únicas y gestor de secretos", desc: "Usar Bitwarden, 1Password o similar. Ninguna contraseña reutilizada." },
+        { label: "Segundo factor (2FA) en correo y cuentas críticas", desc: "优先 Authenticator o hardware key (YubiKey). Evitar SMS." },
+        { label: "Revisión de sesiones activa mensual", desc: "Verificar dispositivos autorizados en Google, GitHub, banks." },
+        { label: "Contraseña de sistema cifrada con FileVault/BitLocker", desc: "Cifrado completo del disco duro." },
       ],
     },
     {
       title: "DISPOSITIVO Y RED",
+      priority: "alta",
       items: [
-        "Disco cifrado y bloqueo automático",
-        "Firewall activo; WiFi público solo con VPN",
-        "Copias de seguridad cifradas fuera del equipo",
+        { label: "Bloqueo automático (< 5 min)", desc: "Pantalla se bloquea automáticamente tras inactividad." },
+        { label: "Firewall activo en sistema", desc: "Cortafuegos de sistema habilitado (Windows Defender/Firewall)."},
+        { label: "WiFi público solo con VPN", desc: "Usar VPN (WireGuard, Mullvad, ProtonVPN) en redes públicas." },
+        { label: "Copias de seguridad cifradas fuera del equipo", desc: "3-2-1: 3 copias, 2 medios diferentes, 1 offsite (Cloud encrypted)."},
+        { label: "Actualizaciones automáticas del sistema", desc: "Mantener SO y aplicaciones actualizadas." },
       ],
     },
     {
       title: "DATOS Y CORREO",
+      priority: "media",
       items: [
-        "No abrir adjuntos inesperados",
-        "Verificar remitente antes de enlaces sensibles",
-        "Clasificar datos personales vs trabajo",
+        { label: "No abrir adjuntos inesperados", desc: "Verificar remitente. Adjuntos sospechosos: escanear con VirusTotal." },
+        { label: "Verificar remitente antes de enlaces sensibles", desc: "Hover sobre enlace. Chequear dominio exacto." },
+        { label: "Clasificar datos personales vs trabajo", desc: "Separar datos sensibles en carpetas cifradas." },
+        { label: "Correo electrónico con SPF/DKIM/DMARC", desc: "Verificar configuración de seguridad del dominio." },
+        { label: "Datos sensibles cifrados en reposo", desc: "Usar AES-256 para archivos importantes." },
       ],
     },
     {
       title: "RESPUESTA Y CONCIENCIA",
+      priority: "media",
       items: [
-        "Plan de respuesta ante pérdida de dispositivo",
-        "Formación periódica en phishing y ingeniería social",
-        "Registrar incidencias y no pagar rescates sin asesoría",
+        { label: "Plan de respuesta ante pérdida de dispositivo", desc: "Procedimiento de wipe remoto (Find My Device, etc)."},
+        { label: "Formación periódica en phishing", desc: "Realizar simulaciones cada 6 meses. Reportar correos sospechosos." },
+        { label: "No pagar rescates sin asesoría", desc: "Contactar a autoridades (PDI, CERT) antes de cualquier pago." },
+        { label: "Contraseñas de recuperación configuradas", desc: "Verificar que las cuentas de recuperación estén actualizadas." },
+      ],
+    },
+    {
+      title: "CUENTA DE DESARROLLADOR",
+      priority: "alta",
+      items: [
+        { label: "Tokens de acceso con scope mínimo", desc: "GitHub tokens solo con permisos necesarios." },
+        { label: "Secrets en variables de entorno, no en código", desc: "Usar .env con .gitignore." },
+        { label: "2FA en GitHub, npm, PyPI, Docker Hub", desc: "Tokens de acceso con expiración." },
+        { label: "Revisar commits por datos sensibles", desc: "Usar git-secrets o similares antes de push." },
       ],
     },
   ];
@@ -86,10 +106,11 @@
     groups.forEach(function (g) {
       var sec = document.createElement("div");
       sec.className = "cyber-cat";
+      var priorityBadge = '<span class="cyber-priority cyber-priority--' + g.priority + '">' + g.priority + '</span>';
       var h = document.createElement("h4");
-      h.textContent = g.title;
+      h.innerHTML = g.title + " " + priorityBadge;
       sec.appendChild(h);
-      g.items.forEach(function (label, idx) {
+      g.items.forEach(function (item, idx) {
         var id = g.title + "::" + idx;
         var row = document.createElement("label");
         row.className = "cyber-row";
@@ -101,10 +122,18 @@
           save();
           renderHeader();
         });
-        var span = document.createElement("span");
-        span.textContent = label;
+        var content = document.createElement("div");
+        content.className = "cyber-row__content";
+        var titleSpan = document.createElement("span");
+        titleSpan.className = "cyber-row__label";
+        titleSpan.textContent = item.label;
+        var descSpan = document.createElement("span");
+        descSpan.className = "cyber-row__desc";
+        descSpan.textContent = item.desc;
+        content.appendChild(titleSpan);
+        content.appendChild(descSpan);
         row.appendChild(cb);
-        row.appendChild(span);
+        row.appendChild(content);
         sec.appendChild(row);
       });
       root.appendChild(sec);

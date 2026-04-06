@@ -14,40 +14,65 @@
     </div>
   </section>
 
-  <section class="mod-research-search" aria-labelledby="research-search-title" style="display: grid !important; visibility: visible !important;">
-    <h2 id="research-search-title" class="mod-research-search__title">🔍 Asistente de investigación académica</h2>
-    <form id="research-search-form" class="mod-research-search__form" autocomplete="off">
-      <div class="mod-research-search__input-wrap" style="display: flex !important;">
-        <input
-          type="search"
-          id="research-search-input"
-          name="q"
-          placeholder="Pregunta, encuentra…"
-          required
-          aria-label="Término de búsqueda"
-          autofocus
-          style="display: block !important; visibility: visible !important;"
-        />
-        <button type="submit" class="mod-research-search__btn" style="display: block !important; visibility: visible !important;">
-          Buscar
-        </button>
-      </div>
-      <div class="mod-research-search__hints" style="display: flex !important;">
-        <span class="mod-research-search__hint-label">Prueba con:</span>
-        <button type="button" class="mod-research-search__hint-btn" data-query="transformación digital">transformación digital</button>
-        <button type="button" class="mod-research-search__hint-btn" data-query="inteligencia artificial">IA en educación</button>
-        <button type="button" class="mod-research-search__hint-btn" data-query="análisis de datos">análisis de datos</button>
-        <button type="button" class="mod-research-search__hint-btn" data-query="ciberseguridad">ciberseguridad</button>
-      </div>
-    </form>
-    <div id="research-search-status" class="mod-research-search__status">Escribe tu búsqueda para comenzar.</div>
+  <nav class="mod-research-tabs" role="tablist" aria-label="Secciones de investigación">
+    <button role="tab" aria-selected="true" data-tab="search" class="mod-research-tab mod-research-tab--active">🔍 Búsqueda Académica</button>
+    <button role="tab" aria-selected="false" data-tab="ml" class="mod-research-tab">🤖 Machine Learning</button>
+  </nav>
+
+  <section id="tab-search" class="mod-research-tab-content">
+    <section class="mod-research-search" aria-labelledby="research-search-title" style="display: grid !important; visibility: visible !important;">
+      <h2 id="research-search-title" class="mod-research-search__title">🔍 Asistente de investigación académica</h2>
+      <form id="research-search-form" class="mod-research-search__form" autocomplete="off">
+        <div class="mod-research-search__input-wrap" style="display: flex !important;">
+          <input
+            type="search"
+            id="research-search-input"
+            name="q"
+            placeholder="Pregunta, encuentra…"
+            required
+            aria-label="Término de búsqueda"
+            autofocus
+            style="display: block !important; visibility: visible !important;"
+          />
+          <button type="submit" class="mod-research-search__btn" style="display: block !important; visibility: visible !important;">
+            Buscar
+          </button>
+        </div>
+        <div class="mod-research-search__hints" style="display: flex !important;">
+          <span class="mod-research-search__hint-label">Prueba con:</span>
+          <button type="button" class="mod-research-search__hint-btn" data-query="transformación digital">transformación digital</button>
+          <button type="button" class="mod-research-search__hint-btn" data-query="inteligencia artificial">IA en educación</button>
+          <button type="button" class="mod-research-search__hint-btn" data-query="análisis de datos">análisis de datos</button>
+          <button type="button" class="mod-research-search__hint-btn" data-query="ciberseguridad">ciberseguridad</button>
+        </div>
+      </form>
+      <div id="research-search-status" class="mod-research-search__status">Escribe tu búsqueda para comenzar.</div>
+    </section>
+
+    <section id="research-results-section" class="mod-research-results" style="display: none;">
+      <h2 class="mod-research-results__title">📊 Resultados de búsqueda</h2>
+      <div id="research-results-list" class="mod-research-results__list"></div>
+    </section>
   </section>
 
-  <section id="research-results-section" class="mod-research-results" style="display: none;">
-    <h2 class="mod-research-results__title">📊 Resultados de búsqueda</h2>
-    <div id="research-results-list" class="mod-research-results__list"></div>
+  <section id="tab-ml" class="mod-research-tab-content" style="display: none;">
+    <section class="mod-ml-hero" aria-labelledby="ml-hero-title">
+      <h2 id="ml-hero-title" class="mod-ml-title">🧠 Machine Learning & IA</h2>
+      <p class="mod-ml-lead">
+        Explora recursos especializados en aprendizaje automático, modelos predictivos e inteligencia artificial aplicada.
+      </p>
+    </section>
+
+    <div class="mod-ml-categories" id="ml-categories">
+      <button class="mod-ml-category mod-ml-category--active" data-category="fundamentos">Fundamentos</button>
+      <button class="mod-ml-category" data-category="modelos">Modelos</button>
+      <button class="mod-ml-category" data-category="recursos">Recursos</button>
+      <button class="mod-ml-category" data-category="proyectos">Proyectos</button>
+    </div>
+
+    <div id="ml-results" class="mod-ml-results"></div>
   </section>
 </div>
 
-<script src="{{ url_for('static', filename='js/research.js') }}?v=2"></script>
+<script src="{{ url_for('static', filename='js/research.js') }}?v=3"></script>
 {% endblock %}

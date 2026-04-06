@@ -1384,6 +1384,158 @@
   outline-offset: 2px;
 }
 
+/* Tabs */
+.mod-research-tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.mod-research-tab {
+  padding: 0.75rem 1.25rem;
+  background: rgba(6, 12, 22, 0.85);
+  border: 1px solid rgba(46, 230, 214, 0.2);
+  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.mod-research-tab:hover {
+  background: rgba(46, 230, 214, 0.1);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.mod-research-tab--active {
+  background: rgba(46, 230, 214, 0.2);
+  border-color: var(--teal);
+  color: var(--teal);
+}
+
+/* ML Section */
+.mod-ml-hero {
+  padding: 1.5rem;
+  background: linear-gradient(135deg, rgba(46, 230, 214, 0.08), rgba(139, 92, 246, 0.08));
+  border-radius: 12px;
+  border: 1px solid rgba(46, 230, 214, 0.15);
+  margin-bottom: 1.5rem;
+}
+
+.mod-ml-title {
+  margin: 0 0 0.5rem;
+  font-size: 1.4rem;
+  color: var(--teal);
+}
+
+.mod-ml-lead {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.mod-ml-categories {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.mod-ml-category {
+  padding: 0.6rem 1rem;
+  background: rgba(6, 12, 22, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.mod-ml-category:hover {
+  border-color: rgba(46, 230, 214, 0.4);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.mod-ml-category--active {
+  background: rgba(46, 230, 214, 0.2);
+  border-color: var(--teal);
+  color: var(--teal);
+}
+
+.mod-ml-results {
+  display: grid;
+  gap: 1rem;
+}
+
+.mod-ml-card {
+  padding: 1.25rem;
+  background: rgba(6, 12, 22, 0.85);
+  border: 1px solid rgba(46, 230, 214, 0.12);
+  border-radius: 10px;
+  transition: all 0.2s ease;
+}
+
+.mod-ml-card:hover {
+  border-color: rgba(46, 230, 214, 0.3);
+  background: rgba(46, 230, 214, 0.05);
+}
+
+.mod-ml-card__title {
+  margin: 0 0 0.5rem;
+  font-size: 1rem;
+}
+
+.mod-ml-card__title a {
+  color: var(--teal);
+  text-decoration: none;
+}
+
+.mod-ml-card__title a:hover {
+  text-decoration: underline;
+}
+
+.mod-ml-card__meta {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 0.75rem;
+}
+
+.mod-ml-card__summary {
+  margin: 0 0 0.75rem;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.mod-ml-card__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 0.75rem;
+}
+
+.mod-ml-tag {
+  padding: 0.2rem 0.5rem;
+  background: rgba(139, 92, 246, 0.2);
+  border-radius: 4px;
+  font-size: 0.7rem;
+  color: rgba(167, 139, 250, 0.9);
+}
+
+.mod-ml-card__link {
+  display: inline-block;
+  color: var(--teal);
+  font-size: 0.85rem;
+  text-decoration: none;
+}
+
+.mod-ml-card__link:hover {
+  text-decoration: underline;
+}
+
 .mod-research-guide {
   display: grid;
   gap: 1.2rem;
@@ -1787,7 +1939,37 @@
   font-size: 0.62rem;
   letter-spacing: 0.16em;
   color: var(--teal);
+  display: inline-block;
+  vertical-align: middle;
 }
+
+.cyber-priority {
+  font-size: 0.55rem;
+  padding: 0.15rem 0.4rem;
+  border-radius: 3px;
+  margin-left: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.cyber-priority--alta {
+  background: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.cyber-priority--media {
+  background: rgba(251, 191, 36, 0.2);
+  color: #fbbf24;
+  border: 1px solid rgba(251, 191, 36, 0.3);
+}
+
+.cyber-priority--baja {
+  background: rgba(34, 197, 94, 0.2);
+  color: #22c55e;
+  border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
 .cyber-row {
   display: flex;
   align-items: flex-start;
@@ -1801,6 +1983,23 @@
 }
 .cyber-row:focus-within {
   color: var(--text);
+}
+
+.cyber-row__content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.cyber-row__label {
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.cyber-row__desc {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.5);
+  line-height: 1.4;
 }
 
 /* â€”â€”â€” BÃºsqueda â€”â€”â€” */
