@@ -5,47 +5,316 @@
 <div class="mod-wrap mod-research">
   {% include "modulos/_header.html" %}
 
-  <div class="research-clean">
-    <div class="hero-clean">
-      <h1 class="title-clean">📚 Centro de Investigación</h1>
-      <p class="subtitle-clean">Pregunta sobre el mundo actual, historia, ciencia, tecnología y más</p>
+  <div class="research-section">
+    <div class="research-header">
+      <h1 class="research-title">🔍 Centro de Investigación</h1>
+      <p class="research-subtitle">Pregunta sobre el mundo actual, historia, ciencia, tecnología y más</p>
     </div>
 
-    <div class="search-clean-wrapper">
-      <div class="search-clean-box">
-        <input 
-          type="text" 
-          id="smart-search" 
-          class="search-clean-input"
-          placeholder="Escribe tu pregunta... Ej: ¿Qué está pasando en el mundo?"
-          autocomplete="off"
-          autofocus
-        />
-        <button id="smart-search-btn" class="search-clean-btn">
-          <span class="btn-icon">🔍</span>
-          <span class="btn-text">Investigar</span>
-        </button>
-      </div>
-      
-      <div class="quick-tags">
-        <button class="quick-tag" data-q="¿Qué está pasando en Chile?">Chile</button>
-        <button class="quick-tag" data-q="¿Qué es inteligencia artificial?">Tecnología</button>
-        <button class="quick-tag" data-q="¿Qué pasó en la guerra de Ukraine?">Ucranía</button>
-        <button class="quick-tag" data-q="¿Cómo está la economía mundial?">Economía</button>
-        <button class="quick-tag" data-q="¿Qué dicen los expertos sobre el cambio climático?">Medio Ambiente</button>
-      </div>
+    <div class="research-form">
+      <input 
+        type="text" 
+        id="research-input" 
+        class="research-input"
+        placeholder="Escribe tu pregunta... Ej: ¿Qué está pasando en Chile?"
+        autocomplete="off"
+      />
+      <button id="research-btn" class="research-btn">
+        <span>🔍</span>
+        <span>Buscar</span>
+      </button>
     </div>
 
-    <div id="smart-results" class="results-clean" style="display:none;">
-      <div class="results-header-clean">
-        <span id="results-icon">📖</span>
-        <span id="results-title">Resultados de Investigación</span>
-        <button id="close-smart-results" class="close-clean">✕</button>
+    <div class="research-tags">
+      <button class="tag-btn" data-query="¿Qué está pasando en Chile?">🇨🇱 Chile</button>
+      <button class="tag-btn" data-query="¿Qué es inteligencia artificial?">💻 IA</button>
+      <button class="tag-btn" data-query="¿Qué pasó en la guerra de Ucrania?">⚔️ Ucranía</button>
+      <button class="tag-btn" data-query="¿Cómo está la economía mundial?">📊 Economía</button>
+      <button class="tag-btn" data-query="¿Qué dicen del cambio climático?">🌡️ Clima</button>
+      <button class="tag-btn" data-query="¿Qué tecnología está de moda?">🚀 Tecnología</button>
+    </div>
+
+    <div id="research-results" class="research-results" style="display: none;">
+      <div class="results-header">
+        <span class="results-icon">📖</span>
+        <span class="results-title">Respuesta</span>
+        <button class="results-close" id="close-results">✕</button>
       </div>
-      <div id="smart-results-content" class="results-content-clean"></div>
+      <div id="results-content" class="results-content"></div>
     </div>
   </div>
 </div>
 
-<script src="{{ url_for('static', filename='js/research_smart.js') }}?v=20"></script>
+<style>
+.research-section {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.research-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.research-title {
+  font-size: 2rem;
+  color: #fff;
+  margin-bottom: 0.5rem;
+}
+
+.research-subtitle {
+  color: rgba(255,255,255,0.6);
+  font-size: 1rem;
+}
+
+.research-form {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.research-input {
+  flex: 1;
+  padding: 1rem 1.25rem;
+  font-size: 1rem;
+  border: 2px solid rgba(139, 92, 246, 0.3);
+  border-radius: 12px;
+  background: rgba(0,0,0,0.3);
+  color: #fff;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.research-input:focus {
+  border-color: rgba(139, 92, 246, 0.7);
+}
+
+.research-input::placeholder {
+  color: rgba(255,255,255,0.4);
+}
+
+.research-btn {
+  padding: 0 1.5rem;
+  background: linear-gradient(135deg, #8b5cf6, #6366f1);
+  border: none;
+  border-radius: 12px;
+  color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.research-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);
+}
+
+.research-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.tag-btn {
+  padding: 0.5rem 1rem;
+  background: rgba(139, 92, 246, 0.15);
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  border-radius: 20px;
+  color: #a78bfa;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.tag-btn:hover {
+  background: rgba(139, 92, 246, 0.3);
+  border-color: rgba(139, 92, 246, 0.6);
+}
+
+.research-results {
+  background: rgba(0,0,0,0.3);
+  border: 1px solid rgba(139, 92, 246, 0.2);
+  border-radius: 16px;
+  overflow: hidden;
+  margin-top: 1rem;
+}
+
+.results-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  background: rgba(139, 92, 246, 0.1);
+  border-bottom: 1px solid rgba(139, 92, 246, 0.2);
+}
+
+.results-icon {
+  font-size: 1.25rem;
+}
+
+.results-title {
+  flex: 1;
+  font-weight: 600;
+  color: #fff;
+}
+
+.results-close {
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.5);
+  font-size: 1.25rem;
+  cursor: pointer;
+  padding: 0.25rem;
+}
+
+.results-close:hover {
+  color: #fff;
+}
+
+.results-content {
+  padding: 1.5rem;
+  max-height: 500px;
+  overflow-y: auto;
+  color: rgba(255,255,255,0.9);
+  line-height: 1.7;
+}
+
+.loading {
+  text-align: center;
+  padding: 2rem;
+  color: rgba(255,255,255,0.5);
+}
+
+.error-msg {
+  text-align: center;
+  padding: 2rem;
+  color: #ef4444;
+}
+
+.answer-text {
+  white-space: pre-line;
+}
+
+.answer-text h1, .answer-text h2, .answer-text h3 {
+  color: #a78bfa;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.answer-text ul, .answer-text ol {
+  margin: 0.5rem 0;
+  padding-left: 1.5rem;
+}
+
+.answer-text li {
+  margin-bottom: 0.25rem;
+}
+
+.sources-section {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+.sources-section h4 {
+  color: #8b5cf6;
+  font-size: 0.9rem;
+  margin-bottom: 0.75rem;
+}
+
+.sources-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sources-list li {
+  margin-bottom: 0.5rem;
+}
+
+.sources-list a {
+  color: #a78bfa;
+  text-decoration: none;
+  font-size: 0.85rem;
+}
+
+.sources-list a:hover {
+  text-decoration: underline;
+}
+</style>
+
+<script>
+(function() {
+  var input = document.getElementById('research-input');
+  var btn = document.getElementById('research-btn');
+  var results = document.getElementById('research-results');
+  var content = document.getElementById('results-content');
+  var closeBtn = document.getElementById('close-results');
+  var tags = document.querySelectorAll('.tag-btn');
+
+  function doSearch(query) {
+    if (!query || !query.trim()) return;
+    
+    content.innerHTML = '<div class="loading">📚 Buscando en la base de conocimiento...</div>';
+    results.style.display = 'block';
+    
+    fetch('/api/ai/ask?q=' + encodeURIComponent(query))
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        if (data.error) {
+          content.innerHTML = '<div class="error-msg">❌ ' + data.error + '</div>';
+        } else {
+          var html = '<div class="answer-text">' + data.answer.replace(/\n/g, '<br>') + '</div>';
+          
+          if (data.sources && data.sources.length > 0) {
+            html += '<div class="sources-section"><h4>📎 Fuentes:</h4><ul class="sources-list">';
+            data.sources.forEach(function(s) {
+              html += '<li><a href="' + s.url + '" target="_blank">' + s.title + '</a></li>';
+            });
+            html += '</ul></div>';
+          }
+          
+          content.innerHTML = html;
+        }
+      })
+      .catch(function(err) {
+        content.innerHTML = '<div class="error-msg">❌ Error de conexión</div>';
+      });
+  }
+
+  if (btn) {
+    btn.addEventListener('click', function() {
+      doSearch(input.value);
+    });
+  }
+
+  if (input) {
+    input.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        doSearch(input.value);
+      }
+    });
+  }
+
+  if (closeBtn) {
+    closeBtn.addEventListener('click', function() {
+      results.style.display = 'none';
+    });
+  }
+
+  tags.forEach(function(tag) {
+    tag.addEventListener('click', function() {
+      var query = tag.getAttribute('data-query');
+      input.value = query;
+      doSearch(query);
+    });
+  });
+})();
+</script>
 {% endblock %}
