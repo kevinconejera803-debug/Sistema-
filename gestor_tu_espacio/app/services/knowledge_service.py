@@ -547,42 +547,462 @@ Chile: Atacama más seca century, projects
 """,
 
     # ============ TECHNOLOGY ============
-    "tecnologia": """TECNOLOGÍA 2026:
-IA Revolution:
-- Generativa: GPT-5, Claude 4, Gemini 3
-- MLOps: Companies adopting
-- Regulation: UE AI Act active
- 
-Semiconductores:
-- TSMC: Dominando advanced chips
-- EE.UU.-China: Guerra tecnológica
-- Inversión: $500B+ globally
- 
-Vehículos:
-- EV: 30%+ market share
-- Tesla: Liderando, pero competition growing
-- China: BYD, NIO growing fast
- 
-Crypto: Bitcoin ETF approved, institucional adoption
+    "mejores ia": """MEJORES INTELIGENCIAS ARTIFICIALES 2026:
+
+LIDERAZGO ACTUAL:
+1. OpenAI (ChatGPT)
+- GPT-4o: Más avanzado, multimodal
+- ChatGPT: 200M+ usuarios
+- Impacto: Revolucionó el mundo
+- Ingresos: $3.4B+ (2024)
+- Inversor principal: Microsoft ($10B+)
+
+2. Anthropic (Claude)
+- Claude 3.5 Sonnet: Competidor fuerte
+- Enfoque: AI safety, helpful
+- Usuarios: 100K+ empresas
+- Inversion: Amazon ($4B), Google ($2B)
+- Diferenciación: Mejor reasoning
+
+3. Google (Gemini)
+- Gemini 2.0: Multimodal advanced
+- Bard → Gemini rebrand
+- Integración: Android, Search, Workspace
+- Ventaja: Datos, compute, escala
+
+4. Meta (Llama)
+- Llama 4: Open source strong
+- Facebook: IA en todos productos
+- Estrategia: Open source vs closed
+
+5. xAI (Grok)
+- Grok-2: Humor, personalidad
+- Twitter/X: Integración directa
+- Elon Musk: Ambición Mars-level
+
+OTRAS IMPORTANTES:
+- Mistral (Europa): Mixtral 8x7B
+- Cohere: Enterprise focus
+- Anthropic rival: AI21, Jasper
+- China: Baidu (ERNIE), Tencent
+
+IMPACTO GLOBAL:
+- Trabajos: 30% de tareas automatizables
+- Economía: $15.7T projected (2030)
+- Educación: Personalización masiva
+- Salud: Diagnóstico revolucinado
+- Creación: Arte, música, video con IA
 """,
 
-    "inteligencia artificial": """INTELIGENCIA ARTIFICIAL 2026:
-Models: GPT-4o, Claude 3.5, Gemini 2.0, Llama 4
-Capabilities: Multimodal, reasoning, coding
- 
-Applications:
-- Código: 30% programmers using
-- Salud: Diagnóstico, drug discovery
-- Educación: Personalized tutoring
-- Arte: Midjourney v7, Sora
- 
-Riesgos:
-- Desinformation: Deepfakes everywhere
-- Jobs: Replacement fears
-- Alignment: Safe AI debate
-- Concentration: Big tech controlling
- 
-Regulation: UE AI Act, EE.UU. executive orders
+    "ia impacto": """IMPACTO DE LA IA 2026:
+
+ECONOMÍA MUNDIAL:
+- GDP global: +15% projected para 2030
+- Inversion: $200B+ anuales
+- Empresas: 80% usando IA algún área
+- Empleos: 85M lost, 97M gained (2025)
+
+SECTORES TRANSFORMADOS:
+- Salud: Diagnóstico癌症 95% accuracy
+- Finanzas: Trading algorítmico, fraud detection
+- Manufactura: Robots, predictive maintenance
+- Retail: Personalización, inventory
+- Educación: Tutores personalizados
+- Entretenimiento: Contenido generado
+
+PROBLEMAS Y RIESGOS:
+- Desigualdad: Países ricos受益 más
+- Desinformación: Deepfakes, fake news
+- Concentración: 5 companies controlling 80%
+- Sesgos: Algoritmos discriminatorios
+- Sustentabilidad: Energía massive
+- Jobs: Reemplazo de trabajos rutinarios
+
+REGULACIÓN:
+- UE AI Act: Primero del mundo (2024)
+- EE.UU.: Executive orders, estados
+- China: Reglas estrictas content
+- Global: UNESCO framework
+
+PERCEPCIÓN PÚBLICA:
+- 70% preocupado por IA
+- 60% no confía en companies
+- 80% quiere regulación
+- Gen Z: Más positive, menos miedo
+""",
+
+    "openai": """OPENAI 2026:
+Fundación: 2015 (non-profit → profit 2019)
+CEO: Sam Altman (since 2019)
+
+Productos:
+- ChatGPT: 200M+ usuarios activos
+- GPT-4o: Modelo más capable
+- API: 2M+ developers
+- DALL-E 3: Generación imágenes
+- Sora: Generación video
+- Codex: Code assistance (deprecated)
+
+Negocios:
+- Microsoft: $10B+ inversión
+- Azure: Exclusivo cloud partner
+- Valor: $157B (2024)
+- Ingresos: $3.4B ARR
+
+ Controversias:
+- Board firing Altman (2023)
+- Safety concerns internos
+- Employee departures
+- Competencia grows
+
+Futuro: AGI pursuit, scaling laws
+""",
+
+    "anthropic": """ANTHROPIC 2026:
+Fundación: 2020 (ex-OpenAI employees)
+CEO: Dario Amodei (original)
+
+Productos:
+- Claude 3.5 Sonnet: Best overall
+- Claude 3 Opus: Best reasoning
+- Claude 3 Haiku: Fast, cheap
+- API: Enterprise focused
+- Claude Code: Coding assistant
+
+Negocios:
+- Amazon: $4B inversión
+- Google: $2B inversión
+- Valor: $73B (2025)
+- Focus: AI Safety, Helpful
+
+Diferenciación:
+- Constitutional AI approach
+- Redteaming interno
+- Less capable but safer
+- Enterprise trust
+
+Equipo: Top AI researchers from OpenAI, Google Brain
+""",
+
+    "google ia": """GOOGLE DEEPMIND IA 2026:
+Fundación: DeepMind 2010, Alphabet 2015
+
+Productos:
+- Gemini 2.0: Advanced multimodal
+- Gemini Ultra: Best capabilities
+- Gemini Flash: Fast, cheap
+- Bard → Gemini: Rebrand
+- Search: IA integrada
+- Workspace: Duet AI
+
+Hardware:
+- TPUs: Tensor Processing Units
+- Custom chips para IA
+
+Investigación:
+- AlphaFold: Protein folding
+- AlphaGo: Game theory
+- AlphaZero: Chess, Go, Shogi
+
+Competencia:
+- Microsoft/OpenAI: Behind but catching
+- Google: Search business risk
+- Advantage: Data, compute, talent
+
+Future: AGI pursuit, Singularity
+""",
+
+    "meta ia": """META IA 2026:
+Estrategia: Open source leader
+
+Productos:
+- Llama 4: Open source best
+- Meta AI: Assistant en todos productos
+- Facebook/Instagram/WhatsApp: IA everywhere
+- Quest: VR/AR with IA
+
+Hardware:
+- Custom chips: MTIA
+- Data centers massive
+
+Open Source:
+- Llama: Downloaded 1B+ times
+- Community: Huge contribution
+- Risk: Open AI capabilities
+
+Impacto:
+- 3B+ users con IA
+- Content moderation: IA
+- Ads: Targeting with IA
+- Safety: Detection systems
+
+ Zuckerberg: Metaverse → AI pivot
+""",
+
+    "python": """PYTHON 2026:
+Lenguaje más popular para:
+- IA/Machine Learning: 80%+ libraries
+- Data Science: Pandas, NumPy, Scikit
+- Web: Django, Flask, FastAPI
+- Automation: Scripts, tooling
+- DevOps: Infrastructure as code
+
+Librerías esenciales IA:
+- TensorFlow: Google, production
+- PyTorch: Meta, research dominant
+- Hugging Face: Transformers, democratized
+- LangChain: LLM apps
+- LangGraph: Agents
+
+Librerías Data:
+- Pandas: DataFrames, analysis
+- NumPy: Arrays, math
+- Matplotlib/Seaborn: Visualization
+- Scikit-learn: ML clásico
+
+Tools:
+- Jupyter: Notebooks everywhere
+- VS Code: IDE dominant
+- Colab: Free GPU access
+- Docker: Containers standard
+
+Comunidad:
+- PyPI: 400K+ packages
+- Stack Overflow: Top language
+- GitHub: Most repositories
+- Salary: $120K+ average
+""",
+
+    "programacion": """PROGRAMACIÓN 2026:
+
+LENGUAJES TOP:
+1. Python: IA, data, web
+2. JavaScript: Web full-stack
+3. TypeScript: JS con tipos
+4. Rust: Systems programming
+5. Go: Cloud, backend
+6. Java: Enterprise
+7. C++: Performance critical
+8. Kotlin: Android
+
+TRENDING:
+- Rust: Memory safety, growing
+- Zig: C replacement
+- Carbon: C++ successor (Google)
+- Mojo: Python + performance
+- Bun: JS runtime fast
+
+TENDENCIAS 2026:
+- AI Coding: GitHub Copilot, Cursor, Claude Code
+- Low-code/No-code: Democratization
+- Serverless: Lambda, Cloudflare
+- Edge computing: IoT
+- WebAssembly: Browser apps
+
+TRABAJO:
+- Salarios: $100K-200K+ US
+- Remote: Ahora norma
+- Skills: Constant learning
+- AI: Complement not replace
+
+CARRERA:
+- Full-stack: Still safe
+- AI/ML: Highest demand
+- Cloud: AWS/Azure/GCP
+- DevOps: Essential
+- Security: Critical
+""",
+
+    "machine learning": """MACHINE LEARNING 2026:
+
+TIPOS APRENDIZAJE:
+- Supervisado: Classification, regression
+- No supervisado: Clustering, PCA
+- Refuerzo: RL, robotics
+- Generativo: LLMs, diffusion
+- Multimodal: Text, image, audio
+
+ALGORITMOS PRINCIPALES:
+- Redes neuronales: Deep learning
+- Transformers: LLM backbone
+- CNN: Visión computacional
+- RNN/LSTM: Secuencias
+- XGBoost/LightGBM: Tabular
+- K-Means: Clustering
+- PCA: Reducción dimensional
+
+FRAMEWORKS:
+- PyTorch: Research, flexibility
+- TensorFlow: Production, Google
+- JAX: Google, functional
+- Hugging Face: Transformers
+
+PROYECTOS COMUNES:
+- Clasificación imágenes: MNIST, CIFAR, ImageNet
+- NLP: Sentiment, translation, chatbots
+- Predicción: Ventas, precios, demanda
+- Recomendación: Netflix, Amazon
+- Detección: Fraude, objetos, enfermedades
+
+CARRERA ML:
+- Skills: Math, stats, coding
+- Salary: $150K-250K US
+- Demand: Very high
+- Path: Learn → Projects → Portfolio → Job
+""",
+
+    "deep learning": """DEEP LEARNING 2026:
+
+ARQUITECTURAS:
+- MLP: Simple feedforward
+- CNN: Imágenes, visión
+- RNN/LSTM: Secuencias, texto
+- Transformers: NLP, estado del arte
+- GANs: Generación imágenes
+- Diffusers: Imagen/video alta calidad
+- Attention: Mecanismo clave
+
+COMPONENTES:
+- Capas: Dense, Conv, Recurrent
+- Activation: ReLU, Sigmoid, Tanh
+- Optimizadores: Adam, SGD, AdamW
+- Loss: Cross-entropy, MSE
+- Regularización: Dropout, L2
+
+ENTRENAMIENTO:
+- Datos: Big data crucial
+- Compute: GPU/TPU necesarios
+- Fine-tuning: Transfer learning
+- Prompt engineering: LLM optimization
+- RAG: Retrieval augmented generation
+
+HARDWARE:
+- NVIDIA: Dominante (A100, H100)
+- Google: TPU v5
+- Apple: M-series neural engine
+- Custom: Major players
+
+AVANCES 2026:
+- Larger models: More parameters
+- Multimodal: Text, image, audio, video
+- Agents: Autonomous tasks
+- Efficient: Quantization, distillation
+""",
+
+    "llegando": """TECNOLOGÍAS PUNTA 2026:
+
+CUANTUM COMPUTING:
+- IBM: 1000+ qubits
+- Google: Quantum supremacy
+- Aplicaciones: Criptografía, drug discovery
+- Timeline: 5-10 años para práctica
+
+ROBÓTICA:
+- Boston Dynamics: Atlas walking
+- Figure AI: Humanoid workers
+- Tesla: Optimus robot
+- Aplicaciones: Manufacturing, healthcare
+
+BIOTECH:
+- CRISPR: Gene editing approved
+- mRNA: Vacunas, treatments
+- Digital health: Wearables
+- Longevity: Anti-aging research
+
+ENERGY:
+- Fusión: ITER progress
+- Nuclear small modular
+- Battery: Solid state coming
+- Hydrogen: Green
+
+INTERNET:
+- 6G: Research starting
+- Satellite: Starlink, OneWeb
+- Metaverse: VR/AR advancing
+- Web3: Still evolving
+
+ESPACIO:
+- Starship: Regular flights soon
+- Artemis: Base lunar 2028
+- Mars: 2030s target
+- Mining: Asteroides
+""",
+
+    "tecnologia": """TECNOLOGÍA 2026 - RESUMEN:
+
+SEMICONDUCTORES:
+- TSMC: 90% advanced chips
+- NVIDIA: Dominando GPU AI
+- China: Behind but growing
+- Inversión: $500B+ global
+
+IA REVOLUTION:
+- Generativa: Contenido automático
+- Agents: Tareas autonomous
+- Multimodal: Todo integrado
+- Edge: IA local devices
+
+COMPUTACIÓN:
+- Cloud: AWS, Azure, GCP
+- Edge: Processing local
+- Quantum: Coming soon
+- Neuromorphic: Brain-like chips
+
+CONECTIVIDAD:
+- 5G: Everywhere
+- 6G: Research
+- WiFi 7: Faster
+- Starlink: Global internet
+
+SOSTENIBILIDAD:
+- Clean energy: Solar, wind
+- EVs: 30%+ market
+- Circular: Recycling
+- Carbon capture: Scaling
+
+CYBERSECURITY:
+- AI: Attack and defense
+- Zero trust: New standard
+- Quantum: Post-quantum crypto
+- Skills: Shortage massive
+""",
+
+    "inteligencia artificial": """INTELIGENCIA ARTIFICIAL 2026 - RESUMEN:
+
+MODELOS LIDERES:
+- GPT-4o (OpenAI): Más capaz
+- Claude 3.5 (Anthropic): Más seguro
+- Gemini 2.0 (Google): Multimodal
+- Llama 4 (Meta): Open source
+
+CAPACIDADES:
+- Reasoning: Pensar logical
+- Multimodal: Ver, escuchar, hablar
+- Coding: Escribir código
+- Creativo: Arte, música, video
+- Memoria: Contexto largo
+
+APLICACIONES:
+- Chatbots: Atención cliente
+- Asistentes: Productivity
+- Búsqueda: New paradigm
+- Código: Developer tools
+- Creativo: Contenido
+- Salud: Diagnóstico
+
+PROBLEMAS:
+- Alucinaciones: Factual errors
+- Bias: Discriminación
+- Privacidad: Data concerns
+- Energy: Consumo massive
+- Control: Alignment problem
+
+FUTURO:
+- AGI: 5-10 años?
+- Singularidad: Debate
+- Regulation: Increasing
+- Jobs: Transformación
+- Society: Cambios profundos
 """,
 
     "espacio": """EXPLORACIÓN ESPACIAL 2026:
@@ -740,12 +1160,35 @@ KNOWLEDGE_KEYWORDS = {
     "clima": " cambio climatico",
     "cambio climatico": " cambio climatico",
     "agua": "agua",
-    # Tech
+    # Tech - expandido
     "tecnologia": "tecnologia",
     "tech": "tecnologia",
     "ia": "inteligencia artificial",
     "inteligencia artificial": "inteligencia artificial",
     "machine learning": "inteligencia artificial",
+    "deep learning": "inteligencia artificial",
+    "python": "python",
+    "programacion": "programacion",
+    "codigo": "programacion",
+    "programar": "programacion",
+    "desarrollo": "programacion",
+    "mejores ia": "mejores ia",
+    "mejor ia": "mejores ia",
+    "chatgpt": "mejores ia",
+    "claude": "mejores ia",
+    "gemini": "mejores ia",
+    "openai": "openai",
+    "anthropic": "anthropic",
+    "google ia": "google ia",
+    "meta ia": "meta ia",
+    "llama": "mejores ia",
+    "grok": "mejores ia",
+    "ia impacto": "ia impacto",
+    "impacto ia": "ia impacto",
+    "efectos ia": "ia impacto",
+    "llegando": "llegando",
+    "tecnologias nueva": "llegando",
+    "futuro tech": "llegando",
     "espacio": "espacio",
     "nasa": "espacio",
     # Otros
