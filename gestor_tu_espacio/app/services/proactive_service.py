@@ -141,29 +141,17 @@ async def generate_proactive_insights(ai_manager) -> list[str]:
             for m in chat_history[-3:]
         ])
     
-    prompt = f"""Eres un asistente personal PROACTIVO. No esperes a que el usuario pregunte - sugieres acciones.
+    prompt = f"""Eres un asistente personal. Solo usa la información de abajo. No hables de otros temas.
 
-=== EVENTOS PRÓXIMOS (próximas 72h) ===
+Tus eventos próximos:
 {events_text}
 
-=== TAREAS PENDIENTES ===
+Tus tareas pendientes:
 {assignments_text}
 
-=== histoRIAL RECIENTE ===
-{history_summary}
-
-=== INSTRUCCIONES ===
-Analiza los datos y genera 2-4 recomendaciones específicas y accionables.
-- Prioriza eventos de alta prioridad (🔴)
-- Considera fechas de entrega cercanas
-- Sé concreto: qué hacer, cuándo y cómo
-- No repetitions información conocida
-
-Responde en español, en formato de lista numerada.
-Cada recomendación debe ser una sola línea clara.
-Ejemplo:
-1. Estudia matemáticas hoy (examen mañana)
-2. Envía el proyecto antes del viernes"""
+Responde con 2-3 recomendaciones prácticas basadas SOLO en esos datos.
+Formato: lista simple, máximo 1 línea cada una.
+Ejemplo: "Estudiar para el examen de matemáticas mañana""
 
     try:
         result = await ai_manager.generate(prompt)
