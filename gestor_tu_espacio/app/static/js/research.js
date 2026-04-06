@@ -180,6 +180,7 @@
       document.getElementById('tab-search').style.display = tabName === 'search' ? 'block' : 'none';
       document.getElementById('tab-ml').style.display = tabName === 'ml' ? 'block' : 'none';
       document.getElementById('tab-playground').style.display = tabName === 'playground' ? 'block' : 'none';
+      document.getElementById('tab-ask').style.display = tabName === 'ask' ? 'block' : 'none';
     });
   });
 
@@ -247,6 +248,36 @@
   // Initial playground load
   if (playgroundCode) {
     loadExercise('regression');
+  }
+
+  // AI Ask functionality
+  var aiForm = document.getElementById('ai-ask-form');
+  var aiQuestion = document.getElementById('ai-question');
+  var aiResponse = document.getElementById('ai-response');
+  var aiAnswer = document.getElementById('ai-answer');
+
+  if (aiForm) {
+    aiForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var question = aiQuestion.value.trim();
+      if (!question) return;
+
+      aiAnswer.textContent = '🤖 Pensando...';
+      aiResponse.style.display = 'block';
+
+      fetch('/api/ai/ask?q=' + encodeURIComponent(question))
+        .then(function (response) { return response.json(); })
+        .then(function (data) {
+          if (data.error) {
+            aiAnswer.textContent = '❌ Error: ' + data.error;
+          } else {
+            aiAnswer.textContent = data.answer;
+          }
+        })
+        .catch(function () {
+          aiAnswer.textContent = '❌ No se pudo conectar. Verifica tu conexión.';
+        });
+    });
   }
 
   if (searchForm) {

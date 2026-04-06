@@ -3,6 +3,7 @@ Configuración centralizada: logging, constantes, validaciones.
 """
 import logging
 import logging.handlers
+import os
 from pathlib import Path
 
 # Directorio de logs
@@ -50,3 +51,10 @@ NEWS_TTL = 90.0
 MERCADOS_TTL = 60.0
 API_TIMEOUT = 10  # segundos
 MAX_RETRIES = 3
+
+# AI / ML Configuration
+AI_PROVIDER = os.environ.get("AI_PROVIDER", "openai")  # openai, anthropic, local
+AI_API_KEY = os.environ.get("AI_API_KEY", "")
+AI_MODEL = os.environ.get("AI_MODEL", "gpt-3.5-turbo")
+AI_MAX_TOKENS = 500
+AI_TEMPERATURE = 0.7

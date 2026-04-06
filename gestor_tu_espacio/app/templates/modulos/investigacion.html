@@ -15,21 +15,22 @@
   </section>
 
   <nav class="mod-research-tabs" role="tablist" aria-label="Secciones de investigación">
-    <button role="tab" aria-selected="true" data-tab="search" class="mod-research-tab mod-research-tab--active">🔍 Búsqueda Académica</button>
-    <button role="tab" aria-selected="false" data-tab="ml" class="mod-research-tab">🤖 Machine Learning</button>
+    <button role="tab" aria-selected="true" data-tab="search" class="mod-research-tab mod-research-tab--active">🔍 Búsqueda</button>
+    <button role="tab" aria-selected="false" data-tab="ml" class="mod-research-tab">🤖 ML & IA</button>
     <button role="tab" aria-selected="false" data-tab="playground" class="mod-research-tab">🧪 Playground</button>
+    <button role="tab" aria-selected="false" data-tab="ask" class="mod-research-tab">💬 Preguntar AI</button>
   </nav>
 
   <section id="tab-search" class="mod-research-tab-content">
     <section class="mod-research-search" aria-labelledby="research-search-title" style="display: grid !important; visibility: visible !important;">
-      <h2 id="research-search-title" class="mod-research-search__title">🔍 Asistente de investigación académica</h2>
+      <h2 id="research-search-title" class="mod-research-search__title">🔍 Búsqueda académica</h2>
       <form id="research-search-form" class="mod-research-search__form" autocomplete="off">
         <div class="mod-research-search__input-wrap" style="display: flex !important;">
           <input
             type="search"
             id="research-search-input"
             name="q"
-            placeholder="Pregunta, encuentra…"
+            placeholder="Pregunta, busca temas..."
             required
             aria-label="Término de búsqueda"
             autofocus
@@ -40,10 +41,9 @@
           </button>
         </div>
         <div class="mod-research-search__hints" style="display: flex !important;">
-          <span class="mod-research-search__hint-label">Prueba con:</span>
+          <span class="mod-research-search__hint-label">Prueba:</span>
           <button type="button" class="mod-research-search__hint-btn" data-query="transformación digital">transformación digital</button>
           <button type="button" class="mod-research-search__hint-btn" data-query="inteligencia artificial">IA en educación</button>
-          <button type="button" class="mod-research-search__hint-btn" data-query="análisis de datos">análisis de datos</button>
           <button type="button" class="mod-research-search__hint-btn" data-query="ciberseguridad">ciberseguridad</button>
         </div>
       </form>
@@ -51,7 +51,7 @@
     </section>
 
     <section id="research-results-section" class="mod-research-results" style="display: none;">
-      <h2 class="mod-research-results__title">📊 Resultados de búsqueda</h2>
+      <h2 class="mod-research-results__title">📊 Resultados</h2>
       <div id="research-results-list" class="mod-research-results__list"></div>
     </section>
   </section>
@@ -60,7 +60,7 @@
     <section class="mod-ml-hero" aria-labelledby="ml-hero-title">
       <h2 id="ml-hero-title" class="mod-ml-title">🧠 Machine Learning & IA</h2>
       <p class="mod-ml-lead">
-        Explora recursos especializados en aprendizaje automático, modelos predictivos e inteligencia artificial aplicada.
+        Explora recursos especializados en aprendizaje automático y modelos predictivos.
       </p>
     </section>
 
@@ -78,7 +78,7 @@
     <section class="mod-ml-hero" aria-labelledby="playground-title">
       <h2 id="playground-title" class="mod-ml-title">🧪 ML Playground</h2>
       <p class="mod-ml-lead">
-        Experimenta con algoritmos de ML. Ejecuta código, visualiza datos y aprende haciendo.
+        Experimenta con algoritmos de ML. Código Python editable con explicaciones.
       </p>
     </section>
 
@@ -86,7 +86,7 @@
       <button class="mod-ml-category mod-ml-category--active" data-exercise="regression">Regresión Lineal</button>
       <button class="mod-ml-category" data-exercise="classification">Clasificación</button>
       <button class="mod-ml-category" data-exercise="clustering">Clustering K-Means</button>
-      <button class="mod-ml-category" data-exercise="neural">Red Neuronal Simple</button>
+      <button class="mod-ml-category" data-exercise="neural">Red Neuronal</button>
     </div>
 
     <div id="playground-content" class="mod-playground">
@@ -103,6 +103,25 @@
     </div>
 
     <div id="playground-explanation" class="mod-playground__info"></div>
+  </section>
+
+  <section id="tab-ask" class="mod-research-tab-content" style="display: none;">
+    <section class="mod-ml-hero" aria-labelledby="ask-title">
+      <h2 id="ask-title" class="mod-ml-title">💬 Pregunta al AI</h2>
+      <p class="mod-ml-lead">
+        Haz preguntas sobre ciberseguridad, machine learning, productividad o cualquier tema. El AI te responderá.
+      </p>
+    </section>
+
+    <form id="ai-ask-form" class="mod-ai-form">
+      <textarea id="ai-question" class="mod-ai-input" placeholder="¿Cómo puedo mejorar la seguridad de mi computador?"></textarea>
+      <button type="submit" class="mod-ai-btn">🤖 Preguntar</button>
+    </form>
+
+    <div id="ai-response" class="mod-ai-response" style="display:none;">
+      <div class="mod-ai-response__label">Respuesta:</div>
+      <div id="ai-answer" class="mod-ai-response__content"></div>
+    </div>
   </section>
 </div>
 

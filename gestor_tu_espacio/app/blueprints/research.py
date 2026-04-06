@@ -1,5 +1,5 @@
 """
-Blueprint investigación: API de búsqueda académica.
+Blueprint investigación: API de búsqueda académica y AI.
 """
 from __future__ import annotations
 
@@ -177,3 +177,37 @@ def api_research():
     results = [item for item, score in scored_results if score > 0] or [item for item, _ in scored_results[:4]]
 
     return jsonify({"query": query, "results": results[:10]})
+
+
+@research_bp.route("/ai/ask")
+@log_endpoint
+def api_ai_ask():
+    """Endpoint para preguntas directas al AI."""
+    question = request.args.get("q", "").strip()
+    if not question:
+        return jsonify({"error": "Debes proporcionar una pregunta."}), 400
+
+    from app.services.ai_service import answer_with_ai
+    answer = answer_with_ai(question)
+    return jsonify({"question": question, "answer": answer})
+
+
+@research_bp.route("/system/scan")
+@log_endpoint
+def api_system_scan():
+    """Escanear estado de seguridad del sistema."""
+    from app.services.system_service import get_security_status
+    return jsonify(get_security_status())
+
+
+@research_bp.route("/system/command")
+@log_endpoint
+def api_system_command():
+    """Ejecutar comando en el sistema local."""
+    command = request.args.get("cmd", "").strip()
+    if not command:
+        return jsonify({"error": "Debes proporcionar un comando."}), 400
+
+    from app.services.system_service import run_command
+    result = run_command(command)
+    return jsonify(result)
