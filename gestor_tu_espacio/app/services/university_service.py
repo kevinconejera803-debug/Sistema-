@@ -40,8 +40,6 @@ Sugerencia:"""
 
 async def generate_task_suggestions(ai_manager) -> str:
     """Genera sugerencias de planificación usando IA."""
-    from app.services.university_service import get_upcoming_assignments
-    
     assignments = get_upcoming_assignments()
     if not assignments:
         return "No hay tareas pendientes."

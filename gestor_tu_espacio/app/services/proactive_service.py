@@ -38,7 +38,12 @@ def get_upcoming_events_prioritized(days: int = 3) -> list[dict]:
 
 def calculate_priority(event_dict_or_obj) -> str:
     """Calcula prioridad basada en palabras clave y tiempo."""
-    hours = calculate_hours_until(event_dict_or_obj.get("start_iso", ""))
+    if isinstance(event_dict_or_obj, dict):
+        start_iso = event_dict_or_obj.get("start_iso", "")
+    else:
+        start_iso = getattr(event_dict_or_obj, "start_iso", "")
+    
+    hours = calculate_hours_until(start_iso)
     
     if hours < 24:
         return "high"

@@ -7,6 +7,7 @@ from __future__ import annotations
 import asyncio
 from flask import Blueprint, jsonify, request
 from app.utils import log_endpoint
+from app.config import logger
 
 # AI Layer
 from app.ai.core.manager import get_ai_manager
@@ -37,14 +38,7 @@ def api_ai_chat():
     
     # Generar respuesta usando async
     try:
-        loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(loop)
-        try:
-            answer = loop.run_until_complete(
-                ai_manager.generate(question, **options)
-            )
-        finally:
-            loop.close()
+        answer = asyncio.run(ai_manager.generate(question, **options))
         
         return jsonify({
             "question": question,
@@ -246,12 +240,7 @@ Responde:
 3. Usar datos reales, NO inventar"""
 
     try:
-        loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(loop)
-        try:
-            answer = loop.run_until_complete(ai_manager.generate(prompt))
-        finally:
-            loop.close()
+        answer = asyncio.run(ai_manager.generate(prompt))
         
         answer = _clean_response(answer)
         save_message(question, answer, intent)
@@ -290,12 +279,7 @@ def api_research_suggestions():
 Responde con sugerencias prácticas y específicas para hoy/semana."""
 
     try:
-        loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(loop)
-        try:
-            suggestions = loop.run_until_complete(ai_manager.generate(prompt))
-        finally:
-            loop.close()
+        suggestions = asyncio.run(ai_manager.generate(prompt))
         
         return jsonify({
             "suggestions": suggestions,
@@ -340,12 +324,7 @@ def api_assistant_insights():
     ai_manager = get_ai_manager()
     
     try:
-        loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(loop)
-        try:
-            insights = loop.run_until_complete(generate_proactive_insights(ai_manager))
-        finally:
-            loop.close()
+        insights = asyncio.run(generate_proactive_insights(ai_manager))
         
         return jsonify({
             "status": "ok",

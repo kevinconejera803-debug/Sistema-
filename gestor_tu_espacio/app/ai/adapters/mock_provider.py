@@ -2,6 +2,7 @@
 MockAIProvider: Proveedor simulado para testing y desarrollo.
 Simula respuestas sin usar ningún modelo real.
 """
+import asyncio
 import time
 import random
 from typing import Optional
@@ -50,8 +51,8 @@ class MockAIProvider(AIProvider):
         prompt_lower = prompt.lower()
         response_text = self._select_response(prompt_lower)
         
-        # Simular latencia (100-500ms)
-        time.sleep(random.uniform(0.1, 0.5))
+        # Simular latencia async (100-500ms)
+        await asyncio.sleep(random.uniform(0.1, 0.5))
         
         latency = int((time.time() - start_time) * 1000)
         
@@ -67,13 +68,8 @@ class MockAIProvider(AIProvider):
         )
     
     async def embed(self, text: str) -> list[float]:
-        """Simula embeddings con vector aleatorio (dimension 384)."""
-        # Embedding simulado de 384 dimensiones
-        import numpy as np
-        np = self._try_import_numpy()
-        if np:
-            return np.random.randn(384).tolist()
-        return [random.random() for _ in range(384)]
+        """Simula embeddings con vector aleatorio (dimension 384). Sin dependencias externas."""
+        return [random.gauss(0, 1) for _ in range(384)]
     
     def _select_response(self, prompt: str) -> str:
         """Selecciona respuesta apropiada basada en el prompt."""
@@ -88,14 +84,6 @@ class MockAIProvider(AIProvider):
                 return random.choice(self._responses[category])
         
         return random.choice(self._responses["default"])
-    
-    def _try_import_numpy(self):
-        """Intenta importar numpy si está disponible."""
-        try:
-            import numpy as np
-            return np
-        except ImportError:
-            return None
     
     def is_available(self) -> bool:
         """Mock siempre disponible."""
