@@ -202,36 +202,3 @@ def api_ai_ask():
         "answer": answer,
         "sources": sources[:5] if sources else []
     })
-
-
-@research_bp.route("/ai/status")
-@log_endpoint
-def api_ai_status():
-    """Verificar estado de la API de AI."""
-    from app.config import AI_API_KEY, AI_PROVIDER, AI_MODEL
-    return jsonify({
-        "configured": bool(AI_API_KEY),
-        "provider": AI_PROVIDER,
-        "model": AI_MODEL
-    })
-
-
-@research_bp.route("/system/scan")
-@log_endpoint
-def api_system_scan():
-    """Escanear estado de seguridad del sistema."""
-    from app.services.system_service import get_security_status
-    return jsonify(get_security_status())
-
-
-@research_bp.route("/system/command")
-@log_endpoint
-def api_system_command():
-    """Ejecutar comando en el sistema local."""
-    command = request.args.get("cmd", "").strip()
-    if not command:
-        return jsonify({"error": "Debes proporcionar un comando."}), 400
-
-    from app.services.system_service import run_command
-    result = run_command(command)
-    return jsonify(result)
