@@ -203,6 +203,7 @@ def api_research_ask():
         save_message
     )
     from app.services.calendar_service import get_user_context
+    from app.services.external_data_service import fetch_external_data, format_external_data, get_sources_list, classify_question
     
     ai_manager = get_ai_manager()
     
@@ -212,21 +213,37 @@ def api_research_ask():
     user_context = get_user_context()
     extra_context = get_context_by_intent(intent)
     
-    # Prompt mejorado con personalidad fuerte
-    prompt = f"""Eres un asistente personal. Reglas:
+    # Obtener datos externos si es tema actual
+    external_data, data_type = fetch_external_data(question)
+    external_text = format_external_data(external_data, data_type)
+    sources_list = get_sources_list(external_data)
+    
+    has_external = bool(external_data)
+    
+    # Prompt con datos externos
+    prompt = f"""Eres un asistente personal confiable.
 
-- Responde de forma clara, natural y útil
-- No inventes cosas técnicas
-- No menciones sistemas internos
-- Si no sabes algo, dilo simple
+REGLAS ESTRICTAS:
+- NO inventar información
+- SI hay datos reales → usarlos Y añadir fuentes
+- SIEMPRE incluir enlaces de fuentes
+- Si no hay datos → decir "No tengo información actualizada"
 
-Contexto: {user_context}
+DATOS REALES DISPONIBLES:
+{external_text}
 
-Historial: {history_text}
+TU CONTEXTO (calendario/tareas):
+{user_context}
 
-Pregunta: {question}
+HISTORIAL:
+{history_text}
 
-Responde en español, máximo 2 oraciones."""
+PREGUNTA: {question}
+
+Responde:
+1. En español, máximo 3 líneas
+2. SI hay datos → incluir fuentes
+3. Usar datos reales, NO inventar"""
 
     try:
         loop = asyncio.new_event_loop()
@@ -244,6 +261,8 @@ Responde en español, máximo 2 oraciones."""
             "answer": answer,
             "provider": ai_manager.provider_name,
             "intent": intent,
+            "data_type": data_type if has_external else "none",
+            "sources": sources_list if has_external else "",
             "context_used": True
         })
         
