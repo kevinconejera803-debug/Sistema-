@@ -144,6 +144,35 @@ def api_research_deprecated():
 # ENDPOINTS INTELIGENTES CON CONTEXTO
 # ============================================================
 
+# Saludos tratados directamente (sin IA)
+GREETINGS = {"hola", "buenas", "buenas tardes", "buenas días", "hi", "hello", "hey", "qué tal", "como estas", "cómo estás"}
+
+# Respuestas predefinidas para saludos
+GREETING_RESPONSES = [
+    "Hola 👋 ¿En qué puedo ayudarte hoy?",
+    "¡Hola! ¿Qué necesitas?",
+    "¡Hey! ¿En qué te veo?",  #
+]
+
+
+def _is_greeting(text: str) -> bool:
+    """Detecta si es un saludo."""
+    text_lower = text.lower().strip()
+    return text_lower in GREETINGS or any(text_lower.startswith(g) for g in ["hola", "buenas", "hi", "hey", "que tal"])
+
+
+def _clean_response(response: str) -> str:
+    """Limpia respuestas malas."""
+    bad_phrases = ["ollama", "no estoy familiarizado", "no puedo responder", "no tengo capacidad", "no fui entrenado"]
+    response_lower = response.lower()
+    
+    for phrase in bad_phrases:
+        if phrase in response_lower:
+            return "No entendí bien tu pregunta. ¿Puedes reformularla?"
+    
+    return response
+
+
 @research_bp.route("/research/ask", methods=["POST"])
 @log_endpoint
 def api_research_ask():
@@ -157,6 +186,17 @@ def api_research_ask():
     if not question:
         return jsonify({"error": "Debes proporcionar una pregunta."}), 400
     
+    # Tratar saludos directamente
+    if _is_greeting(question):
+        import random
+        response = random.choice(GREETING_RESPONSES)
+        return jsonify({
+            "question": question,
+            "answer": response,
+            "provider": "system",
+            "context_used": False
+        })
+    
     from app.services.chat_service import (
         detect_intent, get_context_by_intent,
         get_last_messages, format_conversation_as_text,
@@ -167,30 +207,26 @@ def api_research_ask():
     ai_manager = get_ai_manager()
     
     intent = detect_intent(question)
-    conversation_history = get_last_messages(limit=5)
+    conversation_history = get_last_messages(limit=3)
     history_text = format_conversation_as_text(conversation_history)
     user_context = get_user_context()
     extra_context = get_context_by_intent(intent)
     
-    prompt = f"""Eres un asistente personal inteligente enfocado en productividad, organización y toma de decisiones. Ayudas al usuario a anticiparse y actuar mejor.
+    # Prompt mejorado con personalidad fuerte
+    prompt = f"""Eres un asistente personal. Reglas:
 
-=== HISTORIAL RECIENTE ===
-{history_text}
+- Responde de forma clara, natural y útil
+- No inventes cosas técnicas
+- No menciones sistemas internos
+- Si no sabes algo, dilo simple
 
-=== CONTEXTO DEL USUARIO ===
-{user_context}
+Contexto: {user_context}
 
-=== CONTEXTO ADICIONAL ({intent}) ===
-{extra_context}
+Historial: {history_text}
 
-=== PREGUNTA ACTUAL ===
-{question}
+Pregunta: {question}
 
-=== INSTRUCCIONES ===
-- Responde de forma útil, clara y concisa.
-- Considera el historial y contexto previo.
-- Si preguntan sobre eventos, tareas o calendario, usa el contexto adicional.
-- Máximo 2-3 párrafos."""
+Responde en español, máximo 2 oraciones."""
 
     try:
         loop = asyncio.new_event_loop()
@@ -200,6 +236,7 @@ def api_research_ask():
         finally:
             loop.close()
         
+        answer = _clean_response(answer)
         save_message(question, answer, intent)
         
         return jsonify({
