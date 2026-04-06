@@ -5,125 +5,88 @@
 <div class="mod-wrap mod-research">
   {% include "modulos/_header.html" %}
 
-  <section class="mod-research-hero" aria-labelledby="research-hero-title">
-    <div>
-      <h2 id="research-hero-title" class="mod-research-title">Asistente profesional de investigación</h2>
-      <p class="mod-research-lead">
-        Motor de búsqueda académica con fuentes verificadas. Descubre publicaciones, análisis y referencias de alto valor en tiempo real.
-      </p>
-    </div>
-  </section>
-
-  <nav class="mod-research-tabs" role="tablist" aria-label="Secciones de investigación">
-    <button role="tab" aria-selected="true" data-tab="search" class="mod-research-tab mod-research-tab--active">🔍 Búsqueda</button>
-    <button role="tab" aria-selected="false" data-tab="ml" class="mod-research-tab">🤖 ML & IA</button>
-    <button role="tab" aria-selected="false" data-tab="playground" class="mod-research-tab">🧪 Playground</button>
-    <button role="tab" aria-selected="false" data-tab="ask" class="mod-research-tab">💬 Preguntar AI</button>
-  </nav>
-
-  <section id="tab-search" class="mod-research-tab-content">
-    <section class="mod-research-search" aria-labelledby="research-search-title" style="display: grid !important; visibility: visible !important;">
-      <h2 id="research-search-title" class="mod-research-search__title">🔍 Búsqueda académica</h2>
-      <form id="research-search-form" class="mod-research-search__form" autocomplete="off">
-        <div class="mod-research-search__input-wrap" style="display: flex !important;">
-          <input
-            type="search"
-            id="research-search-input"
-            name="q"
-            placeholder="Pregunta, busca temas..."
-            required
-            aria-label="Término de búsqueda"
-            autofocus
-            style="display: block !important; visibility: visible !important;"
-          />
-          <button type="submit" class="mod-research-search__btn" style="display: block !important; visibility: visible !important;">
-            Buscar
-          </button>
-        </div>
-        <div class="mod-research-search__hints" style="display: flex !important;">
-          <span class="mod-research-search__hint-label">Prueba:</span>
-          <button type="button" class="mod-research-search__hint-btn" data-query="transformación digital">transformación digital</button>
-          <button type="button" class="mod-research-search__hint-btn" data-query="inteligencia artificial">IA en educación</button>
-          <button type="button" class="mod-research-search__hint-btn" data-query="ciberseguridad">ciberseguridad</button>
-        </div>
-      </form>
-      <div id="research-search-status" class="mod-research-search__status">Escribe tu búsqueda para comenzar.</div>
-    </section>
-
-    <section id="research-results-section" class="mod-research-results" style="display: none;">
-      <h2 class="mod-research-results__title">📊 Resultados</h2>
-      <div id="research-results-list" class="mod-research-results__list"></div>
-    </section>
-  </section>
-
-  <section id="tab-ml" class="mod-research-tab-content" style="display: none;">
-    <section class="mod-ml-hero" aria-labelledby="ml-hero-title">
-      <h2 id="ml-hero-title" class="mod-ml-title">🧠 Machine Learning & IA</h2>
-      <p class="mod-ml-lead">
-        Explora recursos especializados en aprendizaje automático y modelos predictivos.
-      </p>
-    </section>
-
-    <div class="mod-ml-categories" id="ml-categories">
-      <button class="mod-ml-category mod-ml-category--active" data-category="fundamentos">Fundamentos</button>
-      <button class="mod-ml-category" data-category="modelos">Modelos</button>
-      <button class="mod-ml-category" data-category="recursos">Recursos</button>
-      <button class="mod-ml-category" data-category="proyectos">Proyectos</button>
+  <div class="research-unified">
+    <div class="research-hero-unified">
+      <h1 class="research-title-unified">🔬 Centro de Investigación & AI</h1>
+      <p class="research-subtitle-unified">Búsqueda inteligente, recursos ML y respuestas AI en un solo lugar</p>
     </div>
 
-    <div id="ml-results" class="mod-ml-results"></div>
-  </section>
-
-  <section id="tab-playground" class="mod-research-tab-content" style="display: none;">
-    <section class="mod-ml-hero" aria-labelledby="playground-title">
-      <h2 id="playground-title" class="mod-ml-title">🧪 ML Playground</h2>
-      <p class="mod-ml-lead">
-        Experimenta con algoritmos de ML. Código Python editable con explicaciones.
-      </p>
-    </section>
-
-    <div class="mod-ml-categories" id="playground-categories">
-      <button class="mod-ml-category mod-ml-category--active" data-exercise="regression">Regresión Lineal</button>
-      <button class="mod-ml-category" data-exercise="classification">Clasificación</button>
-      <button class="mod-ml-category" data-exercise="clustering">Clustering K-Means</button>
-      <button class="mod-ml-category" data-exercise="neural">Red Neuronal</button>
-    </div>
-
-    <div id="playground-content" class="mod-playground">
-      <div class="mod-playground__header">
-        <span class="mod-playground__label">Código Python</span>
-        <button id="run-code" class="mod-playground__run">▶ Ejecutar</button>
+    <div class="search-container-unified">
+      <div class="search-box-unified">
+        <input 
+          type="text" 
+          id="unified-search" 
+          class="search-input-unified"
+          placeholder="¿Qué quieres aprender? Pregunta, busca temas, descubrir..."
+          autocomplete="off"
+        />
+        <button id="unified-search-btn" class="search-btn-unified">🔍</button>
+        <button id="ai-ask-btn" class="ai-btn-unified" title="Preguntar a AI">🤖</button>
       </div>
-      <textarea id="playground-code" class="mod-playground__code" spellcheck="false"></textarea>
-      <div class="mod-playground__header">
-        <span class="mod-playground__label">Salida</span>
-        <button id="clear-output" class="mod-playground__clear">🗑 Limpiar</button>
+      
+      <div class="search-suggestions">
+        <span class="suggestion-label">Sugerencias:</span>
+        <button class="suggestion-tag" data-q="machine learning intro">machine learning</button>
+        <button class="suggestion-tag" data-q="ciberseguridad básica">ciberseguridad</button>
+        <button class="suggestion-tag" data-q="redes neuronales">redes neuronales</button>
+        <button class="suggestion-tag" data-q="transformación digital">transformación digital</button>
+        <button class="suggestion-tag" data-q="qué es deep learning">deep learning</button>
       </div>
-      <pre id="playground-output" class="mod-playground__output"></pre>
     </div>
 
-    <div id="playground-explanation" class="mod-playground__info"></div>
-  </section>
-
-  <section id="tab-ask" class="mod-research-tab-content" style="display: none;">
-    <section class="mod-ml-hero" aria-labelledby="ask-title">
-      <h2 id="ask-title" class="mod-ml-title">💬 Pregunta al AI</h2>
-      <p class="mod-ml-lead">
-        Haz preguntas sobre ciberseguridad, machine learning, productividad o cualquier tema. El AI te responderá.
-      </p>
-    </section>
-
-    <form id="ai-ask-form" class="mod-ai-form">
-      <textarea id="ai-question" class="mod-ai-input" placeholder="¿Cómo puedo mejorar la seguridad de mi computador?"></textarea>
-      <button type="submit" class="mod-ai-btn">🤖 Preguntar</button>
-    </form>
-
-    <div id="ai-response" class="mod-ai-response" style="display:none;">
-      <div class="mod-ai-response__label">Respuesta:</div>
-      <div id="ai-answer" class="mod-ai-response__content"></div>
+    <div id="unified-results" class="results-container-unified" style="display:none;">
+      <div class="results-header">
+        <span id="results-type">Resultados</span>
+        <button id="close-results" class="close-results-btn">✕</button>
+      </div>
+      <div id="results-content" class="results-content-unified"></div>
     </div>
-  </section>
+
+    <div class="quick-categories">
+      <h3 class="categories-title">📚 Explora por categoría</h3>
+      <div class="categories-grid">
+        <button class="category-card" data-category="fundamentos">
+          <span class="category-icon">📖</span>
+          <span class="category-name">Fundamentos ML</span>
+          <span class="category-desc">Conceptos básicos</span>
+        </button>
+        <button class="category-card" data-category="modelos">
+          <span class="category-icon">🧠</span>
+          <span class="category-name">Modelos</span>
+          <span class="category-desc">Redes, Transformers</span>
+        </button>
+        <button class="category-card" data-category="seguridad">
+          <span class="category-icon">🛡️</span>
+          <span class="category-name">Ciberseguridad</span>
+          <span class="category-desc">Protección, amenazas</span>
+        </button>
+        <button class="category-card" data-category="python">
+          <span class="category-icon">🐍</span>
+          <span class="category-name">Python ML</span>
+          <span class="category-desc">Librerías, código</span>
+        </button>
+        <button class="category-card" data-category="data">
+          <span class="category-icon">📊</span>
+          <span class="category-name">Data Science</span>
+          <span class="category-desc">Análisis, visualizaciones</span>
+        </button>
+        <button class="category-card" data-category="proyectos">
+          <span class="category-icon">🚀</span>
+          <span class="category-name">Proyectos</span>
+          <span class="category-desc">Prácticos, ejercicios</span>
+        </button>
+      </div>
+    </div>
+
+    <div id="category-content" class="category-content" style="display:none;">
+      <div class="category-header">
+        <button id="back-categories" class="back-btn">← Volver</button>
+        <h2 id="category-title" class="category-title"></h2>
+      </div>
+      <div id="category-results" class="category-results"></div>
+    </div>
+  </div>
 </div>
 
-<script src="{{ url_for('static', filename='js/research.js') }}?v=3"></script>
+<script src="{{ url_for('static', filename='js/research_unified.js') }}?v=1"></script>
 {% endblock %}
