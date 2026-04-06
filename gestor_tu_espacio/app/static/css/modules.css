@@ -1536,6 +1536,114 @@
   text-decoration: underline;
 }
 
+/* Playground */
+.mod-playground {
+  background: rgba(6, 12, 22, 0.9);
+  border: 1px solid rgba(46, 230, 214, 0.2);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+
+.mod-playground__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background: rgba(46, 230, 214, 0.1);
+  border-bottom: 1px solid rgba(46, 230, 214, 0.15);
+}
+
+.mod-playground__label {
+  font-size: 0.8rem;
+  color: var(--teal);
+  font-weight: 500;
+}
+
+.mod-playground__run,
+.mod-playground__clear {
+  padding: 0.4rem 0.8rem;
+  background: var(--teal);
+  border: none;
+  border-radius: 6px;
+  color: #000;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.mod-playground__run:hover {
+  background: rgba(46, 230, 214, 0.8);
+}
+
+.mod-playground__clear {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.mod-playground__clear:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+}
+
+.mod-playground__code {
+  width: 100%;
+  min-height: 250px;
+  padding: 1rem;
+  background: #0d1117;
+  border: none;
+  color: #c9d1d9;
+  font-family: 'Fira Code', 'Consolas', monospace;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  resize: vertical;
+}
+
+.mod-playground__code:focus {
+  outline: none;
+}
+
+.mod-playground__output {
+  min-height: 150px;
+  max-height: 300px;
+  padding: 1rem;
+  background: #0d1117;
+  color: #7ee787;
+  font-family: 'Fira Code', 'Consolas', monospace;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  overflow: auto;
+  white-space: pre-wrap;
+  margin: 0;
+  border-top: 1px solid rgba(46, 230, 214, 0.15);
+}
+
+.mod-playground__info {
+  padding: 1rem;
+  background: rgba(139, 92, 246, 0.1);
+  border: 1px solid rgba(139, 92, 246, 0.2);
+  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.mod-playground__info h3 {
+  margin: 0 0 0.5rem;
+  color: var(--teal);
+  font-size: 1rem;
+}
+
+.mod-playground__info ul {
+  margin: 0.5rem 0 0;
+  padding-left: 1.25rem;
+}
+
+.mod-playground__info li {
+  margin-bottom: 0.25rem;
+}
+
 .mod-research-guide {
   display: grid;
   gap: 1.2rem;
@@ -2000,6 +2108,61 @@
   font-size: 0.75rem;
   color: rgba(255, 255, 255, 0.5);
   line-height: 1.4;
+}
+
+.cyber-row__title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.cyber-note-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  opacity: 0.6;
+  padding: 0.2rem;
+  transition: opacity 0.2s;
+}
+
+.cyber-note-btn:hover {
+  opacity: 1;
+}
+
+.cyber-row-note {
+  padding: 0.5rem 0.5rem 0.5rem 2rem;
+  font-size: 0.8rem;
+  color: rgba(139, 92, 246, 0.9);
+  background: rgba(139, 92, 246, 0.05);
+  border-left: 2px solid rgba(139, 92, 246, 0.3);
+}
+
+.cyber-row-date {
+  padding: 0.25rem 0.5rem 0.5rem 2rem;
+  font-size: 0.7rem;
+  color: rgba(34, 197, 94, 0.8);
+}
+
+.cyber-header__actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-left: auto;
+}
+
+.cyber-btn {
+  background: rgba(46, 230, 214, 0.1);
+  border: 1px solid rgba(46, 230, 214, 0.3);
+  border-radius: 6px;
+  padding: 0.4rem 0.6rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+}
+
+.cyber-btn:hover {
+  background: rgba(46, 230, 214, 0.2);
+  border-color: var(--teal);
 }
 
 /* â€”â€”â€” BÃºsqueda â€”â€”â€” */

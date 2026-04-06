@@ -4,11 +4,15 @@
   if (!root) return;
 
   var KEY = "tu_espacio_cyber_v2";
-  var state = {};
+  var state = { checks: {}, notes: {}, dates: {} };
   try {
-    state = JSON.parse(localStorage.getItem(KEY) || "{}") || {};
+    var saved = localStorage.getItem(KEY);
+    if (saved) {
+      var parsed = JSON.parse(saved);
+      state = { checks: parsed.checks || {}, notes: parsed.notes || {}, dates: parsed.dates || {} };
+    }
   } catch (e) {
-    state = {};
+    state = { checks: {}, notes: {}, dates: {} };
   }
 
   var groups = [
@@ -70,6 +74,12 @@
     localStorage.setItem(KEY, JSON.stringify(state));
   }
 
+  function formatDate(timestamp) {
+    if (!timestamp) return "";
+    var d = new Date(timestamp);
+    return d.toLocaleDateString("es-CL", { day: "2-digit", month: "short", year: "numeric" });
+  }
+
   function countProgress() {
     var total = 0;
     var done = 0;
@@ -77,7 +87,7 @@
       g.items.forEach(function (_, idx) {
         total++;
         var id = g.title + "::" + idx;
-        if (state[id]) done++;
+        if (state.checks[id]) done++;
       });
     });
     return { total: total, done: done, pct: total ? Math.round((done / total) * 100) : 0 };
@@ -88,17 +98,13 @@
     var p = countProgress();
     header.innerHTML =
       '<div class="cyber-header__inner">' +
-      '<div class="cyber-donut" style="--p:' +
-      p.pct +
-      '" aria-hidden="true"><span class="cyber-donut__hole">' +
-      p.pct +
-      "%</span></div>" +
+      '<div class="cyber-donut" style="--p:' + p.pct + '" aria-hidden="true"><span class="cyber-donut__hole">' + p.pct + "%</span></div>" +
       '<div class="cyber-header__text"><strong class="cyber-header__title">Postura de seguridad</strong>' +
-      "<span class=\"cyber-header__sub\">" +
-      p.done +
-      " de " +
-      p.total +
-      " controles revisados</span></div></div>";
+      "<span class=\"cyber-header__sub\">" + p.done + " de " + p.total + " controles revisados</span></div>" +
+      '<div class="cyber-header__actions">' +
+      '<button class="cyber-btn" id="export-btn" title="Exportar">📤</button>' +
+      '<button class="cyber-btn" id="import-btn" title="Importar">📥</button>' +
+      '<input type="file" id="import-file" accept=".json" style="display:none">';
   }
 
   function render() {
@@ -112,33 +118,141 @@
       sec.appendChild(h);
       g.items.forEach(function (item, idx) {
         var id = g.title + "::" + idx;
-        var row = document.createElement("label");
+        var row = document.createElement("div");
         row.className = "cyber-row";
+
         var cb = document.createElement("input");
         cb.type = "checkbox";
-        cb.checked = !!state[id];
+        cb.checked = !!state.checks[id];
         cb.addEventListener("change", function () {
-          state[id] = cb.checked;
+          state.checks[id] = cb.checked;
+          if (cb.checked) {
+            state.dates[id] = Date.now();
+          } else {
+            delete state.dates[id];
+          }
           save();
           renderHeader();
+          render();
         });
+
         var content = document.createElement("div");
         content.className = "cyber-row__content";
+
+        var titleRow = document.createElement("div");
+        titleRow.className = "cyber-row__title";
         var titleSpan = document.createElement("span");
         titleSpan.className = "cyber-row__label";
         titleSpan.textContent = item.label;
+        titleRow.appendChild(titleSpan);
+
         var descSpan = document.createElement("span");
         descSpan.className = "cyber-row__desc";
         descSpan.textContent = item.desc;
-        content.appendChild(titleSpan);
+        content.appendChild(titleRow);
         content.appendChild(descSpan);
+
+        var noteBtn = document.createElement("button");
+        noteBtn.className = "cyber-note-btn";
+        noteBtn.textContent = state.notes[id] ? "✏️" : "📝";
+        noteBtn.title = "Agregar nota";
+        noteBtn.addEventListener("click", function () {
+          var note = prompt("Nota para '" + item.label + "':", state.notes[id] || "");
+          if (note !== null) {
+            if (note.trim()) {
+              state.notes[id] = note.trim();
+            } else {
+              delete state.notes[id];
+            }
+            save();
+            render();
+          }
+        });
+
+        var noteDisplay = document.createElement("div");
+        noteDisplay.className = "cyber-row__note-display";
+        if (state.notes[id]) {
+          noteDisplay.textContent = "📝 " + state.notes[id];
+        }
+
+        var dateDisplay = document.createElement("div");
+        dateDisplay.className = "cyber-row__date";
+        if (state.dates[id]) {
+          dateDisplay.textContent = "✓ Completado: " + formatDate(state.dates[id]);
+        }
+
         row.appendChild(cb);
         row.appendChild(content);
+        row.appendChild(noteBtn);
         sec.appendChild(row);
+        if (state.notes[id]) {
+          var noteRow = document.createElement("div");
+          noteRow.className = "cyber-row-note";
+          noteRow.appendChild(noteDisplay);
+          sec.appendChild(noteRow);
+        }
+        if (state.dates[id]) {
+          var dateRow = document.createElement("div");
+          dateRow.className = "cyber-row-date";
+          dateRow.appendChild(dateDisplay);
+          sec.appendChild(dateRow);
+        }
       });
       root.appendChild(sec);
     });
     renderHeader();
+    setupImportExport();
+  }
+
+  function setupImportExport() {
+    var exportBtn = document.getElementById("export-btn");
+    var importBtn = document.getElementById("import-btn");
+    var importFile = document.getElementById("import-file");
+
+    if (exportBtn) {
+      exportBtn.addEventListener("click", function () {
+        var data = JSON.stringify(state, null, 2);
+        var blob = new Blob([data], { type: "application/json" });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement("a");
+        a.href = url;
+        a.download = "ciberseguridad-" + new Date().toISOString().split("T")[0] + ".json";
+        a.click();
+        URL.revokeObjectURL(url);
+      });
+    }
+
+    if (importBtn && importFile) {
+      importBtn.addEventListener("click", function () {
+        importFile.click();
+      });
+      importFile.addEventListener("change", function (e) {
+        var file = e.target.files[0];
+        if (!file) return;
+        var reader = new FileReader();
+        reader.onload = function (evt) {
+          try {
+            var imported = JSON.parse(evt.target.result);
+            if (imported.checks) {
+              state.checks = imported.checks;
+            }
+            if (imported.notes) {
+              state.notes = imported.notes;
+            }
+            if (imported.dates) {
+              state.dates = imported.dates;
+            }
+            save();
+            render();
+            alert("Importación exitosa!");
+          } catch (err) {
+            alert("Error al importar: " + err.message);
+          }
+        };
+        reader.readAsText(file);
+        importFile.value = "";
+      });
+    }
   }
 
   render();

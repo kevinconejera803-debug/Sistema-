@@ -17,6 +17,7 @@
   <nav class="mod-research-tabs" role="tablist" aria-label="Secciones de investigación">
     <button role="tab" aria-selected="true" data-tab="search" class="mod-research-tab mod-research-tab--active">🔍 Búsqueda Académica</button>
     <button role="tab" aria-selected="false" data-tab="ml" class="mod-research-tab">🤖 Machine Learning</button>
+    <button role="tab" aria-selected="false" data-tab="playground" class="mod-research-tab">🧪 Playground</button>
   </nav>
 
   <section id="tab-search" class="mod-research-tab-content">
@@ -71,6 +72,37 @@
     </div>
 
     <div id="ml-results" class="mod-ml-results"></div>
+  </section>
+
+  <section id="tab-playground" class="mod-research-tab-content" style="display: none;">
+    <section class="mod-ml-hero" aria-labelledby="playground-title">
+      <h2 id="playground-title" class="mod-ml-title">🧪 ML Playground</h2>
+      <p class="mod-ml-lead">
+        Experimenta con algoritmos de ML. Ejecuta código, visualiza datos y aprende haciendo.
+      </p>
+    </section>
+
+    <div class="mod-ml-categories" id="playground-categories">
+      <button class="mod-ml-category mod-ml-category--active" data-exercise="regression">Regresión Lineal</button>
+      <button class="mod-ml-category" data-exercise="classification">Clasificación</button>
+      <button class="mod-ml-category" data-exercise="clustering">Clustering K-Means</button>
+      <button class="mod-ml-category" data-exercise="neural">Red Neuronal Simple</button>
+    </div>
+
+    <div id="playground-content" class="mod-playground">
+      <div class="mod-playground__header">
+        <span class="mod-playground__label">Código Python</span>
+        <button id="run-code" class="mod-playground__run">▶ Ejecutar</button>
+      </div>
+      <textarea id="playground-code" class="mod-playground__code" spellcheck="false"></textarea>
+      <div class="mod-playground__header">
+        <span class="mod-playground__label">Salida</span>
+        <button id="clear-output" class="mod-playground__clear">🗑 Limpiar</button>
+      </div>
+      <pre id="playground-output" class="mod-playground__output"></pre>
+    </div>
+
+    <div id="playground-explanation" class="mod-playground__info"></div>
   </section>
 </div>
 
