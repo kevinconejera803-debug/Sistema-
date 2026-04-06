@@ -1,83 +1,156 @@
-# 🎯 Sistema
-
-**Sistema de gestión personal con módulos funcionales, IA local y APIs REST.**
-
-> Puerto 5000
+# 🚀 Tu Espacio  
+> Asistente personal inteligente con IA local
 
 ---
 
-## 📦 Proyectos
+## 🧠 Descripción
 
-| Proyecto | Descripción |
-|----------|-------------|
-| [gestor_tu_espacio](./gestor_tu_espacio/) | Panel principal con IA integrada |
+**Tu Espacio** es una aplicación web que combina gestión personal (calendario, estudios, noticias y mercados) con un asistente de inteligencia artificial contextual.
 
----
-
-## 🚀 Quick Start - Gestor Tu Espacio
-
-```powershell
-cd gestor_tu_espacio
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-pip install -r requirements.txt
-```
-
-**Instalar Ollama:** https://ollama.ai
-
-```powershell
-ollama serve
-ollama pull llama3.1
-python run.py
-```
-
-**Abrir:** http://127.0.0.1:5000
+El sistema utiliza IA local mediante Ollama, evitando dependencias de APIs externas y permitiendo mayor privacidad, control y escalabilidad.
 
 ---
 
 ## ✨ Características
 
-- 🤖 IA local (Ollama)
-- 🧠 Memoria conversacional
-- 🎯 Detección de intención
+- 🤖 IA local (Ollama - llama3.1)
+- 🧠 Memoria conversacional persistente (SQLite)
+- 🎯 Detección de intención del usuario
+- 📅 Contexto dinámico desde calendario
 - ⚡ Recomendaciones proactivas
+- 📰 Resumen inteligente de noticias
+- 📊 Análisis de mercados
+- 🎓 Gestión académica inteligente
+- 💬 Interfaz de chat integrada
 
 ---
 
-## 📋 Módulos
+## 💡 Ejemplo
 
-| Módulo | Ruta |
-|--------|------|
-| Panel Principal | `/tu-espacio` |
-| Calendario | `/calendario` |
-| Universidad | `/universidad` |
-| Contactos | `/contactos` |
-| Mercados | `/mercados` |
-| Noticias | `/noticias` |
-| Investigación | `/investigacion` |
-| **Asistente IA** | `/asistente` |
+**Usuario:**
+```bash
+¿Qué debería hacer hoy?
+```
 
----
-
-## 🔌 Endpoints IA
-
-| Endpoint | Método | Descripción |
-|---------|--------|-------------|
-| `/api/research/ask` | POST | Chat con IA |
-| `/api/assistant/insights` | GET | Sugerencias proactivas |
-| `/api/news/summary` | GET | Resumen de noticias |
-| `/api/markets/analysis` | GET | Análisis de mercados |
-
----
-
-## 🧪 Tests
-
-```powershell
-cd gestor_tu_espacio
-.\.venv\Scripts\Activate.ps1
-python -m pytest tests/test_app.py -v
+**Respuesta:**
+```bash
+Tienes un examen mañana. Te recomiendo estudiar al menos 2 horas hoy.
 ```
 
 ---
 
-*Actualizado: Abril 2026*
+## 🏗️ Arquitectura
+
+```text
+Frontend (HTML/JS)
+        ↓
+Flask (Blueprints)
+        ↓
+Services (lógica)
+        ↓
+AIManager
+        ↓
+Ollama (llama3.1)
+```
+
+---
+
+## 🛠️ Tecnologías
+
+**Backend**
+- Python
+- Flask
+- SQLAlchemy
+- SQLite
+
+**IA**
+- Ollama
+- llama3.1
+
+**Frontend**
+- HTML
+- CSS
+- JavaScript
+
+**Otros**
+- dotenv
+- requests
+- asyncio
+
+---
+
+## ⚙️ Instalación
+
+```bash
+git clone <repo>
+cd Sistema
+python -m venv venv
+venv\Scripts\activate
+pip install -r requirements.txt
+```
+
+Instalar Ollama:
+https://ollama.ai
+
+```bash
+ollama serve
+ollama pull llama3.1
+```
+
+Crear `.env`:
+
+```env
+AI_PROVIDER=ollama
+OLLAMA_MODEL=llama3.1:latest
+```
+
+Ejecutar:
+
+```bash
+python run.py
+```
+
+---
+
+## 🔌 Endpoints
+
+| Endpoint | Método | Descripción |
+|--------|--------|------------|
+| /api/research/ask | POST | Chat IA |
+| /api/assistant/insights | GET | Sugerencias |
+| /api/research/notifications | GET | Eventos |
+| /api/news/summary | GET | Noticias |
+| /api/markets/analysis | GET | Mercados |
+
+---
+
+## 🧠 IA
+
+El sistema combina:
+
+- historial conversacional
+- contexto del usuario
+- detección de intención
+
+Generando respuestas personalizadas y accionables.
+
+---
+
+## 📈 Roadmap
+
+- Multiusuario
+- Notificaciones automáticas
+- Mejor UI tipo chat
+- Optimización de IA
+
+---
+
+## 🤝 Contribución
+
+Fork → cambios → Pull Request
+
+---
+
+## ⚡ Visión
+
+Crear un asistente que anticipe necesidades y ayude a tomar decisiones.
