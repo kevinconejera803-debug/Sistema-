@@ -66,12 +66,15 @@ def api_ai_status():
     """Estado del sistema de IA."""
     ai_manager = get_ai_manager()
     
+    # Modelo real del provider activo
+    active_model = ai_manager.provider.model_name if ai_manager.provider else ai_manager._config.get("model")
+    
     return jsonify({
         "provider": ai_manager.provider_name,
+        "model": active_model,
         "available": ai_manager.is_available(),
         "available_providers": ai_manager.get_available_providers(),
         "config": {
-            "model": ai_manager._config.get("model"),
             "temperature": ai_manager._config.get("temperature"),
             "max_tokens": ai_manager._config.get("max_tokens"),
         }

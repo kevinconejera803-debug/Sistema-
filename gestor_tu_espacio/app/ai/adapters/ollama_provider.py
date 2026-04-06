@@ -12,6 +12,7 @@ AI_PROVIDER=ollama
 OLLAMA_URL=http://localhost:11434
 OLLAMA_MODEL=llama3
 """
+import asyncio
 import time
 import requests
 from app.ai import AIProvider, AIResponse
@@ -56,7 +57,7 @@ class OllamaProvider(AIProvider):
             logger.error(f"Error verificando Ollama: {e}")
             return False
     
-    def generate(self, prompt: str, **kwargs) -> AIResponse:
+    async def generate(self, prompt: str, **kwargs) -> AIResponse:
         """
         Genera una respuesta usando Ollama.
         
@@ -76,13 +77,16 @@ class OllamaProvider(AIProvider):
                 model=f"ollama:{self.model}"
             )
         
+        result = await asyncio.to_thread(self._generate_sync, prompt, kwargs)
+        return result
+    
+    def _generate_sync(self, prompt: str, kwargs: dict) -> AIResponse:
+        """Versión síncrona para llamar via to_thread."""
         start_time = time.time()
         
-        # Opciones del modelo
         temperature = kwargs.get("temperature", 0.7)
         max_tokens = kwargs.get("max_tokens", 500)
         
-        # Construir payload para Ollama
         payload = {
             "model": self.model,
             "prompt": prompt,
@@ -102,11 +106,9 @@ class OllamaProvider(AIProvider):
                 timeout=self.timeout
             )
             
-            # Verificar respuesta
             response.raise_for_status()
             result = response.json()
             
-            # Extraer respuesta
             content = result.get("response", "").strip()
             
             if not content:
@@ -153,11 +155,15 @@ class OllamaProvider(AIProvider):
                 model=f"ollama:{self.model}"
             )
     
-    def embed(self, text: str) -> list[float]:
+    async def embed(self, text: str) -> list[float]:
         """
         Genera embeddings para texto (si el modelo lo soporta).
         Nota: No todos los modelos de Ollama soportan embeddings.
         """
+        return await asyncio.to_thread(self._embed_sync, text)
+    
+    def _embed_sync(self, text: str) -> list[float]:
+        """Versión síncrona para embeddings."""
         try:
             response = requests.post(
                 f"{self.base_url}/api/embeddings",

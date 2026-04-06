@@ -30,15 +30,28 @@ class AIManager:
     
     def _load_config(self) -> dict:
         """Carga configuración desde variables de entorno."""
+        ai_provider = os.environ.get("AI_PROVIDER", "NOT_SET")
+        ollama_url = os.environ.get("OLLAMA_URL", "NOT_SET")
+        ollama_model = os.environ.get("OLLAMA_MODEL", "NOT_SET")
+        
+        logger.info(f"[DEBUG] AI_PROVIDER env: '{ai_provider}'")
+        logger.info(f"[DEBUG] OLLAMA_URL env: '{ollama_url}'")
+        logger.info(f"[DEBUG] OLLAMA_MODEL env: '{ollama_model}'")
+        
+        # Modelo correcto según proveedor
+        if ai_provider == "ollama":
+            model = ollama_model or "llama3.1:latest"
+        else:
+            model = os.environ.get("AI_MODEL", "mock")
+        
         return {
-            "provider": os.environ.get("AI_PROVIDER", "mock"),
-            "model": os.environ.get("AI_MODEL", "mock"),
+            "provider": ai_provider if ai_provider != "NOT_SET" else "mock",
+            "model": model,
             "temperature": float(os.environ.get("AI_TEMPERATURE", "0.7")),
             "max_tokens": int(os.environ.get("AI_MAX_TOKENS", "500")),
             "timeout": int(os.environ.get("AI_TIMEOUT", "30")),
-            # Ollama específico
             "ollama_url": os.environ.get("OLLAMA_URL", "http://localhost:11434"),
-            "ollama_model": os.environ.get("OLLAMA_MODEL", "llama3"),
+            "ollama_model": ollama_model or "llama3.1:latest",
         }
     
     def _initialize_provider(self):
