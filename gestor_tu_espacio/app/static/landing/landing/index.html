@@ -165,6 +165,18 @@
     .sys-market__trend.down { color: #ef4444; }
     .sys-market.up { border-left: 3px solid #22c55e; }
     .sys-market.down { border-left: 3px solid #ef4444; }
+    .sys-mkt-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem; }
+    .sys-mkt-card { display: flex; flex-direction: column; align-items: center; padding: 1.5rem 1rem; background: var(--surface); border: 1px solid var(--stroke); border-radius: 0.75rem; transition: all 0.2s; }
+    .sys-mkt-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
+    .sys-mkt-card.up { border-top: 3px solid #22c55e; }
+    .sys-mkt-card.down { border-top: 3px solid #ef4444; }
+    .sys-mkt-card-icon { font-size: 2rem; margin-bottom: 0.5rem; }
+    .sys-mkt-card-symbol { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); }
+    .sys-mkt-card-name { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.5rem; }
+    .sys-mkt-card-price { font-size: 1.5rem; font-weight: 700; margin-bottom: 0.25rem; }
+    .sys-mkt-card-change { font-size: 0.9rem; font-weight: 600; }
+    .sys-mkt-card-change.up { color: #22c55e; }
+    .sys-mkt-card-change.down { color: #ef4444; }
     .sys-news { display: flex; flex-direction: column; gap: 0.75rem; }
     .sys-news__item { background: var(--surface); border: 1px solid var(--stroke); border-radius: 0.5rem; padding: 1rem; }
     .sys-news__title { font-weight: 500; margin-bottom: 0.5rem; }
@@ -241,6 +253,28 @@
     .sys-tab.active { background: var(--accent); border-color: var(--accent); color: var(--bg); }
     .sys-btn-icon.star { font-size: 1rem; }
     .sys-btn-icon.star.active { color: #f59e0b; }
+    .sys-con-tabs { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; align-items: center; }
+    .sys-con-tab { display: flex; align-items: center; gap: 0.4rem; padding: 0.6rem 1rem; background: var(--surface); border: 1px solid var(--stroke); border-radius: 0.5rem; color: var(--text-muted); font-size: 0.85rem; cursor: pointer; transition: all 0.2s; }
+    .sys-con-tab:hover { border-color: var(--accent); }
+    .sys-con-tab.active { background: var(--accent); border-color: var(--accent); color: var(--bg); }
+    .sys-con-btn-add { margin-left: auto; padding: 0.6rem 1rem; background: var(--accent); border: none; border-radius: 0.5rem; color: var(--bg); font-weight: 600; cursor: pointer; }
+    .sys-con-search { margin-bottom: 1rem; }
+    .sys-con-search .sys-search { width: 100%; }
+    .sys-con-empty { display: flex; flex-direction: column; align-items: center; padding: 3rem; text-align: center; }
+    .sys-con-empty-icon { font-size: 4rem; margin-bottom: 1rem; opacity: 0.5; }
+    .sys-con-empty-text { font-size: 1.1rem; color: var(--text-muted); margin-bottom: 1.5rem; }
+    .sys-con-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; }
+    .sys-con-card { display: flex; gap: 1rem; align-items: center; padding: 1rem; background: var(--surface); border: 1px solid var(--stroke); border-radius: 0.75rem; transition: all 0.2s; }
+    .sys-con-card:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 4px 20px rgba(0,0,0,0.2); }
+    .sys-con-card-avatar { width: 3.5rem; height: 3.5rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 700; color: white; flex-shrink: 0; }
+    .sys-con-card-info { flex: 1; min-width: 0; }
+    .sys-con-card-name { font-weight: 600; font-size: 1rem; margin-bottom: 0.125rem; }
+    .sys-con-card-company { font-size: 0.8rem; color: var(--accent); margin-bottom: 0.25rem; }
+    .sys-con-card-contact { display: flex; flex-direction: column; gap: 0.125rem; }
+    .sys-con-card-contact a { font-size: 0.75rem; color: var(--text-muted); text-decoration: none; }
+    .sys-con-card-contact a:hover { color: var(--accent); }
+    .sys-con-card-fav { background: none; border: none; font-size: 1.25rem; cursor: pointer; opacity: 0.5; transition: all 0.2s; }
+    .sys-con-card-fav:hover, .sys-con-card-fav.active { opacity: 1; }
     .sys-week-view { display: flex; flex-direction: column; border: 1px solid var(--stroke); border-radius: 0.5rem; overflow: hidden; }
     .sys-week-header { display: grid; grid-template-columns: repeat(7, 1fr); background: var(--surface); border-bottom: 1px solid var(--stroke); }
     .sys-week-day { display: flex; flex-direction: column; align-items: center; padding: 0.75rem; border-right: 1px solid var(--stroke); }
@@ -302,8 +336,8 @@
       .sys-markets { grid-template-columns: 1fr; }
     }
   </style>
-  <script type="module" crossorigin src="/static/landing/assets/index-CpNXfarb.js"></script>
-  <link rel="stylesheet" crossorigin href="/static/landing/assets/index-r849xsAl.css">
+  <script type="module" crossorigin src="/static/landing/assets/index-CjU71_X_.js"></script>
+  <link rel="stylesheet" crossorigin href="/static/landing/assets/index-i-7tNxjI.css">
 </head>
 <body>
   <div id="root"></div>

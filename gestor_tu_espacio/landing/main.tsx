@@ -615,7 +615,6 @@ const ContactosView = memo(function ContactosView() {
     setFavorites(prev => prev.includes(id) ? prev.filter(f => f !== id) : [...prev, id]);
   };
   const filtered = contacts.filter(c => c.name?.toLowerCase().includes(filter.toLowerCase()) || c.email?.toLowerCase().includes(filter.toLowerCase()));
-  const letterIndex = Array.from(new Set(contacts.map(c => c.name?.charAt(0).toUpperCase()).filter(Boolean))).sort();
   const favoriteContacts = contacts.filter(c => favorites.includes(c.id));
   
   const displayContacts = tab === 'favorites' ? favoriteContacts : (selectedLetter ? filtered.filter(c => c.name?.charAt(0).toUpperCase() === selectedLetter) : filtered);
@@ -624,65 +623,70 @@ const ContactosView = memo(function ContactosView() {
     <div className="sys-module">
       <div className="sys-module__header">
         <h1 className="sys-module__title">CONTACTOS</h1>
-        <p className="sys-module__kicker">{contacts.length} contactos · {favorites.length} favoritos</p>
+        <p className="sys-module__kicker">{contacts.length} en tu agenda</p>
       </div>
-      <div className="sys-tabs">
-        <button className={`sys-tab ${tab === 'all' ? 'active' : ''}`} onClick={() => setTab('all')}>TODOS</button>
-        <button className={`sys-tab ${tab === 'favorites' ? 'active' : ''}`} onClick={() => setTab('favorites')}>⭐ FAVORITOS</button>
+      
+      <div className="sys-con-tabs">
+        <button className={`sys-con-tab ${tab === 'all' ? 'active' : ''}`} onClick={() => setTab('all')}>
+          <span>👥</span>Todos ({contacts.length})
+        </button>
+        <button className={`sys-con-tab ${tab === 'favorites' ? 'active' : ''}`} onClick={() => setTab('favorites')}>
+          <span>⭐</span>Favoritos ({favorites.length})
+        </button>
+        <button className="sys-con-btn-add" onClick={() => setShowForm(!showForm)}>+ AGREGAR</button>
       </div>
-      <div className="sys-toolbar">
-        {tab === 'all' && <input type="search" className="sys-search" placeholder="Buscar por nombre, email..." value={filter} onChange={(e) => { setFilter(e.target.value); setSelectedLetter(null); }} />}
-        <div className="sys-toolbar__spacer"></div>
-        <button className="sys-btn sys-btn--primary" onClick={() => setShowForm(!showForm)}>+ NUEVO</button>
-      </div>
-      {tab === 'all' && letterIndex.length > 0 && (
-        <div className="sys-letter-index">
-          <button className={`sys-letter ${!selectedLetter ? 'active' : ''}`} onClick={() => setSelectedLetter(null)}>TODO</button>
-          {letterIndex.map(l => (
-            <button key={l} className={`sys-letter ${selectedLetter === l ? 'active' : ''}`} onClick={() => setSelectedLetter(l)}>{l}</button>
-          ))}
+
+      {tab === 'all' && (
+        <div className="sys-con-search">
+          <input type="search" className="sys-search" placeholder="Buscar nombres, emails..." value={filter} onChange={(e) => { setFilter(e.target.value); setSelectedLetter(null); }} />
         </div>
       )}
+
       {showForm && (
         <div className="sys-form">
           <div className="sys-form__head"><span className="sys-form__badge">Nuevo Contacto</span></div>
           <div className="sys-form__row">
-            <input type="text" placeholder="Nombre *" className="sys-input" value={newContact.name} onChange={(e) => setNewContact({ ...newContact, name: e.target.value })} />
+            <input type="text" placeholder="Nombre completo" className="sys-input" value={newContact.name} onChange={(e) => setNewContact({ ...newContact, name: e.target.value })} />
           </div>
           <div className="sys-form__row">
-            <input type="email" placeholder="Email" className="sys-input" value={newContact.email} onChange={(e) => setNewContact({ ...newContact, email: e.target.value })} />
-            <input type="tel" placeholder="Telefono" className="sys-input" value={newContact.phone} onChange={(e) => setNewContact({ ...newContact, phone: e.target.value })} />
+            <input type="email" placeholder="Correo electrónico" className="sys-input" value={newContact.email} onChange={(e) => setNewContact({ ...newContact, email: e.target.value })} />
+            <input type="tel" placeholder="Teléfono" className="sys-input" value={newContact.phone} onChange={(e) => setNewContact({ ...newContact, phone: e.target.value })} />
           </div>
           <div className="sys-form__row">
-            <input type="text" placeholder="Empresa/Rol" className="sys-input" value={newContact.company} onChange={(e) => setNewContact({ ...newContact, company: e.target.value })} />
+            <input type="text" placeholder="Empresa o rol" className="sys-input" value={newContact.company} onChange={(e) => setNewContact({ ...newContact, company: e.target.value })} />
           </div>
-          <button className="sys-btn sys-btn--primary" onClick={handleAddContact}>GUARDAR</button>
+          <button className="sys-btn sys-btn--primary" onClick={handleAddContact}>GUARDAR CONTACTO</button>
         </div>
       )}
+
       {loading ? (
-        <div className="sys-loading-inline"><div className="sys-spinner"></div>Cargando contactos...</div>
+        <div className="sys-loading-inline"><div className="sys-spinner"></div>Cargando...</div>
       ) : displayContacts.length === 0 ? (
-        <div className="sys-empty">
-          <div className="sys-empty__icon">📇</div>
-          <p>{tab === 'favorites' ? 'No tienes favoritos' : filter ? 'No se encontraron contactos' : 'No tienes contactos aún'}</p>
-          {tab === 'all' && <button className="sys-btn sys-btn--primary" onClick={() => setShowForm(true)}>AGREGAR CONTACTO</button>}
+        <div className="sys-con-empty">
+          <div className="sys-con-empty-icon">📇</div>
+          <div className="sys-con-empty-text">
+            {tab === 'favorites' ? 'Sin favoritos aún' : filter ? 'Sin resultados' : 'Tu agenda está vacía'}
+          </div>
+          {tab === 'all' && <button className="sys-btn sys-btn--primary" onClick={() => setShowForm(true)}>AGREGAR PRIMER CONTACTO</button>}
         </div>
       ) : (
-        <div className="sys-contacts">
+        <div className="sys-con-grid">
           {displayContacts.map(c => (
-            <div key={c.id} className="sys-contact">
-              <div className="sys-contact__avatar" style={{ background: `hsl(${c.name?.charCodeAt(0) * 10 % 360}, 60%, 40%)` }}>{c.name?.charAt(0) || '?'}</div>
-              <div className="sys-contact__info">
-                <div className="sys-contact__name">{c.name}</div>
-                <div className="sys-contact__email">{c.email}</div>
-                <div className="sys-contact__phone">{c.phone}</div>
-                <div className="sys-contact__company">{c.company}</div>
+            <div key={c.id} className="sys-con-card">
+              <div className="sys-con-card-avatar" style={{ background: `linear-gradient(135deg, hsl(${c.name?.charCodeAt(0) * 10 % 360}, 70%, 50%), hsl(${c.name?.charCodeAt(0) * 10 % 360 + 30}, 60%, 40%))` }}>
+                {c.name?.charAt(0) || '?'}
               </div>
-              <div className="sys-contact__actions">
-                <button className={`sys-btn-icon star ${favorites.includes(c.id) ? 'active' : ''}`} onClick={() => toggleFavorite(c.id)}>{favorites.includes(c.id) ? '⭐' : '☆'}</button>
-                {c.phone && <button className="sys-btn-icon" title="Llamar" onClick={() => window.location.href = `tel:${c.phone}`}>📞</button>}
-                {c.email && <button className="sys-btn-icon" title="Email" onClick={() => window.location.href = `mailto:${c.email}`}>✉️</button>}
+              <div className="sys-con-card-info">
+                <div className="sys-con-card-name">{c.name}</div>
+                {c.company && <div className="sys-con-card-company">{c.company}</div>}
+                <div className="sys-con-card-contact">
+                  {c.email && <a href={`mailto:${c.email}`}>{c.email}</a>}
+                  {c.phone && <a href={`tel:${c.phone}`}>{c.phone}</a>}
+                </div>
               </div>
+              <button className={`sys-con-card-fav ${favorites.includes(c.id) ? 'active' : ''}`} onClick={() => toggleFavorite(c.id)}>
+                {favorites.includes(c.id) ? '⭐' : '☆'}
+              </button>
             </div>
           ))}
         </div>
@@ -693,27 +697,29 @@ const ContactosView = memo(function ContactosView() {
 
 const MercadosView = memo(function MercadosView() {
   const [markets] = useState([
-    { symbol: 'SPX', name: 'S&P 500', price: '5,234.18', change: '+0.45%', positive: true, trend: 'up' },
-    { symbol: 'NDX', name: 'Nasdaq', price: '18,432.90', change: '+0.72%', positive: true, trend: 'up' },
-    { symbol: 'EUR/USD', name: 'Euro/Dolar', price: '1.0842', change: '-0.12%', positive: false, trend: 'down' },
-    { symbol: 'CL', name: 'Cobre Chile', price: '85.32', change: '+1.23%', positive: true, trend: 'up' },
+    { id: 1, symbol: 'SPX', name: 'S&P 500', price: '5,234.18', change: '+0.45%', positive: true, icon: '📊' },
+    { id: 2, symbol: 'NDX', name: 'Nasdaq', price: '18,432.90', change: '+0.72%', positive: true, icon: '📈' },
+    { id: 3, symbol: 'EUR/USD', name: 'Euro/Dólar', price: '1.0842', change: '-0.12%', positive: false, icon: '💶' },
+    { id: 4, symbol: 'CL', name: 'Cobre Chile', price: '85.32', change: '+1.23%', positive: true, icon: '🔧' },
+    { id: 5, symbol: 'BTC', name: 'Bitcoin', price: '67,432', change: '+2.34%', positive: true, icon: '₿' },
+    { id: 6, symbol: 'IPF', name: 'Índice FEM', price: '4,523', change: '+0.18%', positive: true, icon: '🏠' },
   ]);
   return (
     <div className="sys-module">
       <div className="sys-module__header">
         <h1 className="sys-module__title">MERCADOS</h1>
-        <p className="sys-module__kicker">Precios de referencia · Actualizado hace 5 min</p>
+        <p className="sys-module__kicker">Precios y cotizaciones en vivo</p>
       </div>
-      <div className="sys-markets">
+      <div className="sys-mkt-grid">
         {markets.map(m => (
-          <div key={m.symbol} className={`sys-market ${m.positive ? 'up' : 'down'}`}>
-            <div className="sys-market__header">
-              <span className="sys-market__symbol">{m.symbol}</span>
-              <span className={`sys-market__trend ${m.trend}`}>{m.trend === 'up' ? '▲' : '▼'}</span>
+          <div key={m.id} className={`sys-mkt-card ${m.positive ? 'up' : 'down'}`}>
+            <div className="sys-mkt-card-icon">{m.icon}</div>
+            <div className="sys-mkt-card-info">
+              <div className="sys-mkt-card-symbol">{m.symbol}</div>
+              <div className="sys-mkt-card-name">{m.name}</div>
             </div>
-            <div className="sys-market__name">{m.name}</div>
-            <div className="sys-market__price">{m.price}</div>
-            <div className={`sys-market__change ${m.positive ? 'positive' : 'negative'}`}>{m.change}</div>
+            <div className="sys-mkt-card-price">{m.price}</div>
+            <div className={`sys-mkt-card-change ${m.positive ? 'up' : 'down'}`}>{m.change}</div>
           </div>
         ))}
       </div>
