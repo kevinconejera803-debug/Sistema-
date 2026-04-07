@@ -329,6 +329,105 @@
     }
     .chat-send:hover { background: var(--accent-dark); }
     
+    /* SYSTEM INTERFACE Styles */
+    .mod-page { min-height: 100vh; padding: 5rem 1rem 1rem; }
+    .mod-page__kicker { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1.5rem; }
+    .mod-toolbar {
+      display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;
+      padding: 0.75rem 1rem; background: var(--surface); border: 1px solid var(--stroke); border-radius: 0.5rem; margin-bottom: 1rem;
+    }
+    .mod-toolbar__label { font-size: 0.7rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; }
+    .mod-toolbar__label--gap { margin-left: auto; }
+    .mod-btn {
+      padding: 0.5rem 1rem; font-size: 0.8rem; background: transparent; border: 1px solid var(--stroke); border-radius: 0.25rem; color: var(--text); cursor: pointer; transition: all 0.2s;
+    }
+    .mod-btn:hover { border-color: var(--accent); }
+    .mod-btn--active { background: var(--accent); border-color: var(--accent); color: var(--bg); }
+    .mod-btn--ghost { background: transparent; }
+    .mod-cal__main { margin-bottom: 2rem; }
+    .mod-cal__kicker { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.5rem; }
+    .mod-cal__month-label { font-size: 1.5rem; font-weight: 600; }
+    .mod-cal__grid-wrap { margin-top: 1rem; }
+    .mod-cal__weekdays { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.25rem; margin-bottom: 0.5rem; }
+    .mod-cal__weekdays span { padding: 0.5rem; font-size: 0.7rem; font-weight: 600; color: var(--text-muted); text-align: center; }
+    .mod-cal__cells, .mod-cal__grid-wrap { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.25rem; }
+    .mod-cal__cell {
+      aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
+      background: var(--surface); border: 1px solid var(--stroke); border-radius: 0.25rem; font-size: 0.9rem;
+    }
+    .mod-cal__cell:hover { border-color: var(--accent); }
+    
+    /* Universidad */
+    .mod-uni-hero { text-align: center; padding: 2rem; margin-bottom: 2rem; }
+    .mod-uni-hero h2 { font-size: 1.5rem; margin-bottom: 0.5rem; }
+    .mod-uni-hero p { color: var(--text-muted); }
+    .mod-uni-hero strong { color: var(--accent); }
+    .tasks-list { display: flex; flex-direction: column; gap: 1rem; }
+    .task-item { background: var(--surface); border: 1px solid var(--stroke); border-radius: 0.5rem; padding: 1rem; }
+    .task-item.completed { opacity: 0.5; }
+    .task-item.completed .task-title { text-decoration: line-through; }
+    .task-checkbox { display: flex; align-items: center; gap: 0.75rem; }
+    .task-checkbox input { width: 1.25rem; height: 1.25rem; accent-color: var(--accent); }
+    .task-title { font-weight: 500; }
+    .task-meta { display: flex; gap: 1rem; margin-top: 0.5rem; font-size: 0.8rem; color: var(--text-muted); }
+    .priority { padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.7rem; font-weight: 600; }
+    .priority-high { background: rgba(248, 113, 113, 0.2); color: #f87171; }
+    .priority-medium { background: rgba(251, 191, 36, 0.2); color: #fbbf24; }
+    .priority-low { background: rgba(74, 222, 128, 0.2); color: #4ade80; }
+    
+    /* Contacts */
+    .contact-filter {
+      padding: 0.5rem 1rem; background: var(--surface); border: 1px solid var(--stroke); border-radius: 0.25rem;
+      color: var(--text); font-size: 0.9rem; min-width: 300px;
+    }
+    .contact-filter:focus { outline: none; border-color: var(--accent); }
+    .contacts-list { display: flex; flex-direction: column; gap: 0.75rem; }
+    .contact-card {
+      display: flex; align-items: center; gap: 1rem;
+      background: var(--surface); border: 1px solid var(--stroke); border-radius: 0.5rem; padding: 1rem;
+    }
+    .contact-avatar {
+      width: 3rem; height: 3rem; display: flex; align-items: center; justify-content: center;
+      background: var(--accent); color: var(--bg); border-radius: 50%; font-size: 1.25rem; font-weight: 600;
+    }
+    .contact-name { font-weight: 600; }
+    .contact-email, .contact-company { font-size: 0.85rem; color: var(--text-muted); }
+    
+    /* Markets */
+    .markets-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+    .market-card {
+      background: var(--surface); border: 1px solid var(--stroke); border-radius: 0.5rem; padding: 1.5rem; text-align: center;
+    }
+    .market-symbol { font-size: 0.85rem; color: var(--text-muted); font-weight: 600; }
+    .market-name { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.5rem; }
+    .market-price { font-size: 1.5rem; font-weight: 600; }
+    .market-change { font-size: 0.9rem; }
+    .market-change.positive { color: #4ade80; }
+    .market-change.negative { color: #f87171; }
+    
+    /* News */
+    .news-list { display: flex; flex-direction: column; gap: 1rem; }
+    .news-item { background: var(--surface); border: 1px solid var(--stroke); border-radius: 0.5rem; padding: 1rem; }
+    .news-title { font-weight: 500; margin-bottom: 0.5rem; }
+    .news-meta { display: flex; gap: 1rem; font-size: 0.8rem; color: var(--text-muted); }
+    
+    /* Oraciones */
+    .prayers-list { display: flex; flex-direction: column; gap: 1rem; }
+    .prayer-item {
+      background: var(--surface); border: 1px solid var(--stroke); border-radius: 0.5rem; padding: 1rem;
+      border-left: 3px solid var(--accent);
+    }
+    .prayer-item.status-answered { border-left-color: #4ade80; }
+    .prayer-item.status-in_progress { border-left-color: #fbbf24; }
+    .prayer-title { font-weight: 600; margin-bottom: 0.25rem; }
+    .prayer-description { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.5rem; }
+    .prayer-meta { display: flex; gap: 1rem; font-size: 0.8rem; }
+    .prayer-status { padding: 0.25rem 0.5rem; border-radius: 0.25rem; }
+    .prayer-status.answered { background: rgba(74, 222, 128, 0.2); color: #4ade80; }
+    .prayer-status.in_progress { background: rgba(251, 191, 36, 0.2); color: #fbbf24; }
+    .prayer-status.pending { background: rgba(248, 113, 113, 0.2); color: #f87171; }
+    .prayer-date { color: var(--text-muted); }
+    
     /* Responsive */
     @media (max-width: 640px) {
       .hero-title { font-size: 2.5rem; }
