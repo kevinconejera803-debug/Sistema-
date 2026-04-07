@@ -236,6 +236,98 @@
     @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(10px); } }
     .animate-bounce { animation: bounce 2s infinite; }
     
+    /* Module Page */
+    .modulo-page { min-height: 100vh; background: var(--bg); }
+    .modulo-hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 6rem 2rem 2rem;
+      text-align: center;
+      background: radial-gradient(ellipse at 50% 30%, #1a1a2e 0%, var(--bg) 70%);
+    }
+    .modulo-icon { font-size: 5rem; margin-bottom: 1.5rem; }
+    .modulo-title {
+      font-size: clamp(2.5rem, 8vw, 5rem);
+      font-family: 'Instrument Serif', serif;
+      font-style: italic;
+      margin-bottom: 0.5rem;
+    }
+    .modulo-lead {
+      font-size: 1.1rem; color: var(--text-muted); max-width: 500px;
+    }
+    .modulo-content {
+      margin-top: 2rem;
+      max-width: 600px;
+      width: 100%;
+    }
+    .module-preview {
+      background: var(--surface);
+      border: 1px solid var(--stroke);
+      border-radius: 1rem;
+      padding: 3rem 2rem;
+    }
+    .modulo-back {
+      margin-top: 2rem;
+      padding: 0.75rem 1.5rem;
+      background: var(--surface);
+      border: 1px solid var(--stroke);
+      border-radius: 9999px;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .modulo-back:hover { color: var(--text); border-color: var(--accent); }
+    
+    /* Chat */
+    .ai-chat { width: 100%; max-width: 500px; }
+    .chat-messages {
+      height: 300px;
+      overflow-y: auto;
+      padding: 1rem;
+      background: var(--surface);
+      border: 1px solid var(--stroke);
+      border-radius: 1rem 1rem 0 0;
+    }
+    .chat-message {
+      display: flex; gap: 0.5rem; margin-bottom: 1rem;
+    }
+    .chat-message.user { flex-direction: row-reverse; }
+    .chat-avatar { font-size: 1.5rem; }
+    .chat-bubble {
+      padding: 0.75rem 1rem;
+      background: var(--surface-hover);
+      border-radius: 1rem;
+      font-size: 0.9rem;
+    }
+    .chat-message.user .chat-bubble {
+      background: var(--accent);
+      color: var(--bg);
+    }
+    .chat-input-wrap {
+      display: flex; gap: 0.5rem;
+    }
+    .chat-input {
+      flex: 1;
+      padding: 0.75rem 1rem;
+      background: var(--surface);
+      border: 1px solid var(--stroke);
+      border-radius: 0 0 0 1rem;
+      color: var(--text);
+      font-size: 0.9rem;
+    }
+    .chat-input:focus { outline: none; border-color: var(--accent); }
+    .chat-send {
+      padding: 0.75rem 1.25rem;
+      background: var(--accent);
+      border: none;
+      border-radius: 0 1rem 1rem 0;
+      color: var(--bg);
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    .chat-send:hover { background: var(--accent-dark); }
+    
     /* Responsive */
     @media (max-width: 640px) {
       .hero-title { font-size: 2.5rem; }
@@ -243,7 +335,8 @@
       .nav-link { padding: 0.5rem 0.75rem; font-size: 0.7rem; }
     }
   </style>
-  <script type="module" crossorigin src="/static/landing/assets/index-Xm3vip8G.js"></script>
+  <script type="module" crossorigin src="/static/landing/assets/index-Bev8hD9W.js"></script>
+  <link rel="stylesheet" crossorigin href="/static/landing/assets/index-Dyy61qjt.css">
 </head>
 <body>
   <div id="root"></div>

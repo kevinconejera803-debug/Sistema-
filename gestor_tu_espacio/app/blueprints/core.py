@@ -109,7 +109,7 @@ def _ctx():
 def index():
     """Landing page React - sirve el build de Vite."""
     import os
-    static_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'static', 'landing', 'index.html')
+    static_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'static', 'landing', 'landing', 'index.html')
     if os.path.exists(static_path):
         with open(static_path, 'r', encoding='utf-8') as f:
             content = f.read()
@@ -146,7 +146,7 @@ def trading_lab_redirect():
 
 @core_bp.route("/<slug>")
 def modulo(slug):
-    """Renderiza módulo por slug."""
+    """Renderiza módulo en modo avanzado."""
     if slug.strip().lower() == _SLUG_REMOVED_CALC:
         abort(404)
 
@@ -162,3 +162,4 @@ def modulo(slug):
 
     template_path = f"modulos/{slug}.html"
     return render_template(template_path, mod=mod, active_nav=slug, **extra)
+    return render_template("modulo_unificado.html", **extra)

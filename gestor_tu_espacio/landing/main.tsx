@@ -1,23 +1,33 @@
 import { createRoot } from 'react-dom/client';
-import { useState, useEffect, useRef } from 'react';
-import gsap from 'gsap';
+import { useState, useEffect, useRef, createContext, useContext } from 'react';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Hls from 'hls.js';
 
-const MODULES = [
-  { slug: '/calendario', icon: '📅', title: 'Calendario', desc: 'Eventos y agenda personal' },
-  { slug: '/universidad', icon: '🎓', title: 'Universidad', desc: 'Tareas, entregas y fechas' },
-  { slug: '/contactos', icon: '👥', title: 'Contactos', desc: 'CRM personal' },
-  { slug: '/mercados', icon: '📊', title: 'Mercados', desc: 'Cotizaciones en tiempo real' },
-  { slug: '/noticias', icon: '📰', title: 'Noticias', desc: 'RSS feeds internacionales' },
-  { slug: '/asistente', icon: '🤖', title: 'Asistente IA', desc: 'Chat inteligente con contexto' },
+gsap.registerPlugin(ScrollTrigger);
+
+interface Module {
+  slug: string;
+  icon: string;
+  title: string;
+  desc: string;
+  lead?: string;
+}
+
+const MODULES: Module[] = [
+  { slug: 'calendario', icon: '📅', title: 'Calendario', desc: 'Eventos y agenda personal', lead: 'Horario 24h: mes, semana y día con eventos en SQLite.' },
+  { slug: 'universidad', icon: '🎓', title: 'Universidad', desc: 'Tareas, entregas y fechas', lead: 'Plan de estudios y vida académica.' },
+  { slug: 'contactos', icon: '👥', title: 'Contactos', desc: 'CRM personal', lead: 'Contacto en vivo, edición y toasts.' },
+  { slug: 'mercados', icon: '📊', title: 'Mercados', desc: 'Cotizaciones en tiempo real', lead: 'Futuros, forex, índices y acciones.' },
+  { slug: 'noticias', icon: '📰', title: 'Noticias', desc: 'RSS feeds internacionales', lead: 'Noticias de economía y mercados.' },
+  { slug: 'asistente', icon: '🤖', title: 'Asistente IA', desc: 'Chat inteligente con contexto', lead: 'IA local con memoria y contexto.' },
 ];
 
-const AI_FEATURES = [
-  { icon: '🧠', title: 'Memoria', desc: 'Recuerda conversaciones' },
-  { icon: '📅', title: 'Contexto', desc: 'Accede a tu calendario' },
-  { icon: '⚡', title: 'Proactivo', desc: 'Sugiere acciones' },
-  { icon: '🔒', title: 'Privado', desc: 'Datos locales only' },
-];
+const AppContext = createContext<{ currentModule: string | null, setCurrentModule: (s: string | null) => void }>({ currentModule: null, setCurrentModule: () => {} });
+
+function useApp() {
+  return useContext(AppContext);
+}
 
 function LoadingScreen({ onComplete }: { onComplete: () => void }) {
   const barRef = useRef<HTMLDivElement>(null);
@@ -55,23 +65,16 @@ function LoadingScreen({ onComplete }: { onComplete: () => void }) {
 }
 
 function Navigation({ scrolled }: { scrolled: boolean }) {
-  useEffect(() => {
-    const handleScroll = () => {
-      const nav = document.querySelector('.nav');
-      if (nav) {
-        nav.classList.toggle('scrolled', window.scrollY > 50);
-      }
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  const { setCurrentModule } = useApp();
 
   return (
     <nav className={`nav ${scrolled ? 'scrolled' : ''}`}>
       <div className="nav-inner">
-        <a href="#home" className="nav-link active">Home</a>
-        <a href="#modules" className="nav-link">Módulos</a>
-        <a href="#ai" className="nav-link">IA</a>
+        <button onClick={() => setCurrentModule(null)} className="nav-link active">Home</button>
+        <button onClick={() => setCurrentModule('calendario')} className="nav-link">Calendario</button>
+        <button onClick={() => setCurrentModule('universidad')} className="nav-link">Universidad</button>
+        <button onClick={() => setCurrentModule('contactos')} className="nav-link">Contactos</button>
+        <button onClick={() => setCurrentModule('asistente')} className="nav-link">IA</button>
         <a href="https://github.com/kevinconejera803-debug/Sistema-" className="nav-link" target="_blank">GitHub ↗</a>
       </div>
     </nav>
@@ -79,13 +82,9 @@ function Navigation({ scrolled }: { scrolled: boolean }) {
 }
 
 function Hero() {
-  const [role, setRole] = useState(0);
-  const roles = ['asistente inteligente', 'gestor personal', 'organizador', 'asistente proactivo'];
   const contentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const interval = setInterval(() => setRole((r) => (r + 1) % roles.length), 2500);
-    
     if (contentRef.current) {
       gsap.from(contentRef.current.children, {
         y: 30,
@@ -96,12 +95,10 @@ function Hero() {
         delay: 0.3,
       });
     }
-    
-    return () => clearInterval(interval);
   }, []);
 
   return (
-    <section className="hero" id="home">
+    <section className="hero">
       <div className="hero-video">
         <video autoPlay muted loop playsInline>
           <source src="https://stream.mux.com/Aa02T7oM1wH5Mk5EEVDYhbZ1ChcdhRsS2m1NYyx4Ua1g.m3u8" type="application/x-mpegURL" />
@@ -111,24 +108,21 @@ function Hero() {
         <div className="hero-eyebrow">ASISTENTE PERSONAL · 2026</div>
         <h1 className="hero-title font-display">Tu Espacio</h1>
         <p className="hero-subtitle">
-          Un <span className="role">{roles[role]}</span> para tu vida daily.
+          Un <span className="role">asistente inteligente</span> para tu vida daily.
         </p>
         <p className="hero-description">
           Combina gestión personal (calendario, estudios, finanzas) con inteligencia artificial local. 
-          Sin APIs pagadas, sin dependencias externalas. Todo corre en tu computadora.
+          Sin APIs pagadas. Todo corre en tu computadora.
         </p>
-        <div className="hero-buttons">
-          <a href="#modules" className="btn btn-primary">Explorar Módulos</a>
-          <a href="/asistente" className="btn btn-outline">Hablar con IA →</a>
-        </div>
       </div>
       <div className="scroll-indicator animate-bounce">SCROLL</div>
     </section>
   );
 }
 
-function Modules() {
+function ModulesGrid() {
   const gridRef = useRef<HTMLDivElement>(null);
+  const { setCurrentModule } = useApp();
 
   useEffect(() => {
     if (gridRef.current) {
@@ -154,32 +148,86 @@ function Modules() {
       </div>
       <div className="modules-grid" ref={gridRef}>
         {MODULES.map((mod) => (
-          <a key={mod.slug} href={mod.slug} className="module-card">
+          <button key={mod.slug} onClick={() => setCurrentModule(mod.slug)} className="module-card">
             <div className="module-card-icon">{mod.icon}</div>
             <h3 className="module-card-title">{mod.title}</h3>
             <p className="module-card-desc">{mod.desc}</p>
-          </a>
+          </button>
         ))}
       </div>
     </section>
   );
 }
 
-function AIFeatures() {
+function ModulePage({ slug }: { slug: string }) {
+  const { setCurrentModule } = useApp();
+  const mod = MODULES.find(m => m.slug === slug);
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (contentRef.current) {
+      gsap.from(contentRef.current, {
+        y: 30,
+        opacity: 0,
+        duration: 0.8,
+        ease: 'power3.out',
+      });
+    }
+  }, [slug]);
+
+  if (!mod) {
+    return (
+      <section className="modulo-page">
+        <div className="modulo-hero">
+          <h1>Módulo no encontrado</h1>
+          <button onClick={() => setCurrentModule(null)} className="btn btn-primary">Volver al Home</button>
+        </div>
+      </section>
+    );
+  }
+
   return (
-    <section className="section ai-section" id="ai">
-      <div className="section-header">
-        <h2 className="font-display">inteligencia <i>local</i></h2>
-        <p>Sin costos de API. Todo corre en tu PC.</p>
-      </div>
-      <div className="ai-grid">
-        {AI_FEATURES.map((feature) => (
-          <div key={feature.title} className="ai-feature">
-            <div className="ai-feature-icon">{feature.icon}</div>
-            <h3>{feature.title}</h3>
-            <p>{feature.desc}</p>
-          </div>
-        ))}
+    <section className="modulo-page">
+      <nav className="nav scrolled">
+        <div className="nav-inner">
+          <button onClick={() => setCurrentModule(null)} className="nav-link">← Home</button>
+          <button className="nav-link active">{mod.title}</button>
+        </div>
+      </nav>
+      
+      <div className="modulo-hero" ref={contentRef}>
+        <div className="modulo-icon">{mod.icon}</div>
+        <h1 className="modulo-title font-display">{mod.title}</h1>
+        <p className="modulo-lead">{mod.lead}</p>
+        
+        <div className="modulo-content">
+          {slug === 'asistente' ? (
+            <div className="ai-chat">
+              <div className="chat-messages" id="chat-messages">
+                <div className="chat-message bot">
+                  <span className="chat-avatar">🤖</span>
+                  <div className="chat-bubble">Hola soy tu asistente IA. ¿En qué puedo ayudarte hoy?</div>
+                </div>
+              </div>
+              <div className="chat-input-wrap">
+                <input type="text" id="chat-input" className="chat-input" placeholder="Escribe tu mensaje..." />
+                <button id="chat-send" className="chat-send">→</button>
+              </div>
+            </div>
+          ) : (
+            <div className="module-preview">
+              <p style={{ color: 'var(--text-muted)', textAlign: 'center' }}>
+                Este módulo requiere datos. Puedes agregar eventos en el calendario, 
+                tareas en universidad, contactos, etc.
+              </p>
+              <a href={`/${slug}`} className="btn btn-primary" style={{ marginTop: '1rem' }}>
+                Abrir en modo avanzado →
+              </a>
+            </div>
+          )}
+        </div>
+        
+        <button onClick={() => setCurrentModule(null)} className="modulo-back">← Volver al Home</button>
       </div>
     </section>
   );
@@ -222,6 +270,7 @@ function Footer() {
 function App() {
   const [loading, setLoading] = useState(true);
   const [scrolled, setScrolled] = useState(false);
+  const [currentModule, setCurrentModule] = useState<string | null>(null);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
@@ -229,27 +278,34 @@ function App() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [currentModule]);
+
   if (loading) {
     return <LoadingScreen onComplete={() => setLoading(false)} />;
   }
 
   return (
-    <>
-      <Navigation scrolled={scrolled} />
-      <Hero />
-      <Modules />
-      <AIFeatures />
-      <Stats />
-      <Footer />
-    </>
+    <AppContext.Provider value={{ currentModule, setCurrentModule }}>
+      {currentModule ? (
+        <ModulePage slug={currentModule} />
+      ) : (
+        <>
+          <Navigation scrolled={scrolled} />
+          <Hero />
+          <ModulesGrid />
+          <Stats />
+          <Footer />
+        </>
+      )}
+    </AppContext.Provider>
   );
 }
 
-// Initialize
 const root = createRoot(document.getElementById('root')!);
 root.render(<App />);
 
-// Initialize HLS video
 const video = document.querySelector('video');
 if (video) {
   if (Hls.isSupported()) {
@@ -260,3 +316,28 @@ if (video) {
     video.src = 'https://stream.mux.com/Aa02T7oM1wH5Mk5EEVDYhbZ1ChcdhRsS2m1NYyx4Ua1g.m3u8';
   }
 }
+
+document.addEventListener('click', (e) => {
+  const target = e.target as HTMLElement;
+  if (target.id === 'chat-send') {
+    const input = document.getElementById('chat-input') as HTMLInputElement;
+    const messages = document.getElementById('chat-messages');
+    if (input.value.trim() && messages) {
+      const userMsg = document.createElement('div');
+      userMsg.className = 'chat-message user';
+      userMsg.innerHTML = `<div class="chat-bubble">${input.value}</div>`;
+      messages.appendChild(userMsg);
+      input.value = '';
+      messages.scrollTop = messages.scrollHeight;
+    }
+  }
+});
+
+document.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') {
+    const input = document.getElementById('chat-input') as HTMLInputElement;
+    if (input && document.activeElement === input) {
+      input.dispatchEvent(new Event('click'));
+    }
+  }
+});
