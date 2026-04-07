@@ -107,7 +107,13 @@ def _ctx():
 
 @core_bp.route("/")
 def index():
-    """Nueva landing page con estilo moderno."""
+    """Landing page React - sirve el build de Vite."""
+    import os
+    static_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'static', 'landing', 'index.html')
+    if os.path.exists(static_path):
+        with open(static_path, 'r', encoding='utf-8') as f:
+            content = f.read()
+        return content, 200, {'Content-Type': 'text/html'}
     return render_template("index.html")
 
 
