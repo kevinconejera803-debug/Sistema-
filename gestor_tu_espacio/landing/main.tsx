@@ -132,20 +132,69 @@ const KeyboardHint = () => {
 function GlobalLayout() {
   const location = useLocation();
   const navigate = useNavigate();
-  const isHome = location.pathname === '/';
+
+  const navItems = [
+    { path: '/', label: 'Inicio', icon: '🏠' },
+    { path: '/calendario', label: 'Calendario', icon: '📅' },
+    { path: '/universidad', label: 'Universidad', icon: '🎓' },
+    { path: '/contactos', label: 'Contactos', icon: '👥' },
+    { path: '/mercados', label: 'Mercados', icon: '📈' },
+    { path: '/noticias', label: 'Noticias', icon: '📰' },
+    { path: '/asistente', label: 'Asistente IA', icon: '🤖' },
+    { path: '/oraciones', label: 'Oraciones', icon: '🙏' },
+  ];
+
+  const isActive = (path: string) => location.pathname === path;
 
   return (
     <AppContext.Provider value={{ navigate: (slug: string) => navigate(`/${slug}`) }}>
-      <nav className="sys-nav">
-        <div className="sys-nav__inner">
-          <Link to="/" className={`sys-nav__link ${isHome ? 'active' : ''}`}>HOME</Link>
-          {MODULES.map(m => (
-            <Link key={m.slug} to={`/${m.slug}`} className={`sys-nav__link ${location.pathname === `/${m.slug}` ? 'active' : ''}`}>{m.title}</Link>
-          ))}
-        </div>
-      </nav>
-      <div className="sys-layout">
-        <AnimatedOutlet />
+      <div className="app">
+        {/* SideNav */}
+        <aside className="sidenav">
+          <div className="sidenav__brand">
+            <div className="sidenav__logo">T</div>
+            <span className="sidenav__title">Tu Espacio</span>
+          </div>
+          <div className="sidenav__divider"></div>
+          
+          <div className="sidenav__section">
+            <div className="sidenav__section-title">Navegación</div>
+            {navItems.map(item => (
+              <Link key={item.path} to={item.path} className={`sidenav__item ${isActive(item.path) ? 'active' : ''}`}>
+                <span className="sidenav__item-icon">{item.icon}</span>
+                <span>{item.label}</span>
+              </Link>
+            ))}
+          </div>
+          
+          <div className="sidenav__footer">
+            <div className="sidenav__item">
+              <span className="sidenav__item-icon">⚙️</span>
+              <span>Configuración</span>
+            </div>
+          </div>
+        </aside>
+
+        {/* Main Content */}
+        <main className="main">
+          {/* TopBar */}
+          <header className="topbar">
+            <div className="topbar__search">
+              <span className="topbar__search-icon">🔍</span>
+              <input type="text" placeholder="Buscar en Tu Espacio..." />
+            </div>
+            <div className="topbar__actions">
+              <button className="topbar__btn" title="Notificaciones">🔔</button>
+              <button className="topbar__btn" title="Ayuda">❓</button>
+              <div className="topbar__avatar">U</div>
+            </div>
+          </header>
+
+          {/* Page Content */}
+          <div className="page">
+            <AnimatedOutlet />
+          </div>
+        </main>
       </div>
     </AppContext.Provider>
   );
