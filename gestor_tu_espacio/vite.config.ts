@@ -11,6 +11,7 @@ export default defineConfig({
     rollupOptions: {
       input: 'landing/index.html',
     },
+    chunkSizeWarningLimit: 600,
   },
   server: {
     port: 5173,
@@ -20,5 +21,8 @@ export default defineConfig({
         changeOrigin: true,
       },
     },
+  },
+  optimizeDeps: {
+    include: ['react', 'react-dom', 'gsap'],
   },
 });

@@ -1,5 +1,5 @@
 import { createRoot } from 'react-dom/client';
-import { useState, useEffect, useRef, useCallback, useMemo, memo } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo, memo, Suspense, startTransition } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Hls from 'hls.js';
@@ -23,27 +23,35 @@ const MODULES: Module[] = [
   { slug: 'asistente', icon: '🤖', title: 'Asistente IA', desc: 'Chat inteligente con contexto', lead: 'IA local con memoria y contexto.' },
 ];
 
-const globalCache = {
+const globalState = {
   chatHistory: [] as { role: 'user' | 'bot'; content: string }[],
-  videoInitialized: false,
-  gsapReady: false,
+  videoReady: false,
+  navRefs: new Map<string, HTMLButtonElement>(),
+  preloadTimer: null as number | null,
 };
 
-function initGSAP() {
-  if (!globalCache.gsapReady) {
-    globalCache.gsapReady = true;
-  }
+function preloadModule(slug: string) {
+  if (globalState.preloadTimer) clearTimeout(globalState.preloadTimer);
+  globalState.preloadTimer = window.setTimeout(() => {
+    const link = document.createElement('link');
+    link.rel = 'prefetch';
+    link.href = `/${slug}`;
+    document.head.appendChild(link);
+  }, 100);
 }
 
-function LoadingScreen({ onComplete }: { onComplete: () => void }) {
+function handleNavHover(slug: string) {
+  preloadModule(slug);
+}
+
+const LoadingScreen = memo(function LoadingScreen({ onComplete }: { onComplete: () => void }) {
   const barRef = useRef<HTMLDivElement>(null);
   const counterRef = useRef<HTMLDivElement>(null);
   const [, setProgress] = useState(0);
 
   useEffect(() => {
-    initGSAP();
     let start = performance.now();
-    const duration = 1500;
+    const duration = 800;
     
     function animate(now: number) {
       const elapsed = now - start;
@@ -56,7 +64,7 @@ function LoadingScreen({ onComplete }: { onComplete: () => void }) {
       if (prog < 100) {
         requestAnimationFrame(animate);
       } else {
-        setTimeout(onComplete, 200);
+        setTimeout(onComplete, 100);
       }
     }
     
@@ -69,35 +77,41 @@ function LoadingScreen({ onComplete }: { onComplete: () => void }) {
       <div className="loading-bar"><div className="loading-bar-fill" ref={barRef}></div></div>
     </div>
   );
-}
+});
 
 const Navigation = memo(function Navigation({ scrolled, onNavigate }: { scrolled: boolean; onNavigate: (slug: string | null) => void }) {
   return (
     <nav className={`nav ${scrolled ? 'scrolled' : ''}`}>
       <div className="nav-inner">
         <button onClick={() => onNavigate(null)} className="nav-link active">Home</button>
-        <button onClick={() => onNavigate('calendario')} className="nav-link">Calendario</button>
-        <button onClick={() => onNavigate('universidad')} className="nav-link">Universidad</button>
-        <button onClick={() => onNavigate('contactos')} className="nav-link">Contactos</button>
-        <button onClick={() => onNavigate('asistente')} className="nav-link">IA</button>
+        {MODULES.slice(0, 5).map((mod) => (
+          <button 
+            key={mod.slug}
+            onClick={() => onNavigate(mod.slug)}
+            onMouseEnter={() => handleNavHover(mod.slug)}
+            className="nav-link"
+          >
+            {mod.title}
+          </button>
+        ))}
         <a href="https://github.com/kevinconejera803-debug/Sistema-" className="nav-link" target="_blank" rel="noopener">GitHub ↗</a>
       </div>
     </nav>
   );
 });
 
-function Hero() {
+const Hero = memo(function Hero() {
   const contentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (contentRef.current) {
       gsap.from(contentRef.current.children, {
-        y: 30,
+        y: 20,
         opacity: 0,
-        duration: 0.8,
-        stagger: 0.1,
-        ease: 'power3.out',
-        delay: 0.2,
+        duration: 0.5,
+        stagger: 0.05,
+        ease: 'power2.out',
+        delay: 0.1,
       });
     }
   }, []);
@@ -116,26 +130,26 @@ function Hero() {
           Un <span className="role">asistente inteligente</span> para tu vida daily.
         </p>
         <p className="hero-description">
-          Combina gestión personal (calendario, estudios, finanzas) con inteligencia artificial local. 
+          Combina gestión personal con inteligencia artificial local. 
           Sin APIs pagadas. Todo corre en tu computadora.
         </p>
       </div>
       <div className="scroll-indicator animate-bounce">SCROLL</div>
     </section>
   );
-}
+});
 
-function ModulesGrid({ onSelect }: { onSelect: (slug: string) => void }) {
+const ModulesGrid = memo(function ModulesGrid({ onSelect }: { onSelect: (slug: string) => void }) {
   const gridRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (gridRef.current) {
       gsap.from(gridRef.current.children, {
-        y: 40,
+        y: 30,
         opacity: 0,
-        duration: 0.6,
-        stagger: 0.08,
-        ease: 'power3.out',
+        duration: 0.4,
+        stagger: 0.05,
+        ease: 'power2.out',
         scrollTrigger: {
           trigger: gridRef.current,
           start: 'top 85%',
@@ -152,7 +166,12 @@ function ModulesGrid({ onSelect }: { onSelect: (slug: string) => void }) {
       </div>
       <div className="modules-grid" ref={gridRef}>
         {MODULES.map((mod) => (
-          <button key={mod.slug} onClick={() => onSelect(mod.slug)} className="module-card">
+          <button 
+            key={mod.slug} 
+            onClick={() => startTransition(() => onSelect(mod.slug))}
+            onMouseEnter={() => handleNavHover(mod.slug)}
+            className="module-card"
+          >
             <div className="module-card-icon">{mod.icon}</div>
             <h3 className="module-card-title">{mod.title}</h3>
             <p className="module-card-desc">{mod.desc}</p>
@@ -161,7 +180,7 @@ function ModulesGrid({ onSelect }: { onSelect: (slug: string) => void }) {
       </div>
     </section>
   );
-}
+});
 
 const ModulePage = memo(function ModulePage({ slug, onBack }: { slug: string; onBack: () => void }) {
   const mod = useMemo(() => MODULES.find(m => m.slug === slug), [slug]);
@@ -169,12 +188,10 @@ const ModulePage = memo(function ModulePage({ slug, onBack }: { slug: string; on
   const chatInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (contentRef.current) {
-      gsap.fromTo(contentRef.current, 
-        { y: 20, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.4, ease: 'power3.out' }
-      );
-    }
+    gsap.fromTo(contentRef.current, 
+      { y: 10, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.25, ease: 'power2.out' }
+    );
   }, [slug]);
 
   const handleSendMessage = useCallback(() => {
@@ -182,7 +199,7 @@ const ModulePage = memo(function ModulePage({ slug, onBack }: { slug: string; on
     if (!input?.value.trim()) return;
     
     const msg = input.value.trim();
-    globalCache.chatHistory.push({ role: 'user', content: msg });
+    globalState.chatHistory.push({ role: 'user', content: msg });
     input.value = '';
     
     const messagesEl = document.getElementById('chat-messages');
@@ -194,21 +211,15 @@ const ModulePage = memo(function ModulePage({ slug, onBack }: { slug: string; on
       messagesEl.scrollTop = messagesEl.scrollHeight;
       
       setTimeout(() => {
-        globalCache.chatHistory.push({ role: 'bot', content: 'Entendido. ¿Hay algo más en lo que pueda ayudarte?' });
+        globalState.chatHistory.push({ role: 'bot', content: 'Entendido. ¿Hay algo más en lo que pueda ayudarte?' });
         const botMsg = document.createElement('div');
         botMsg.className = 'chat-message bot';
         botMsg.innerHTML = '<span class="chat-avatar">🤖</span><div class="chat-bubble">Entendido. ¿Hay algo más en lo que pueda ayudarte?</div>';
         messagesEl.appendChild(botMsg);
         messagesEl.scrollTop = messagesEl.scrollHeight;
-      }, 500);
+      }, 300);
     }
   }, []);
-
-  const handleKeyPress = useCallback((e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      handleSendMessage();
-    }
-  }, [handleSendMessage]);
 
   if (!mod) {
     return (
@@ -239,7 +250,7 @@ const ModulePage = memo(function ModulePage({ slug, onBack }: { slug: string; on
           {slug === 'asistente' ? (
             <div className="ai-chat">
               <div className="chat-messages" id="chat-messages">
-                {globalCache.chatHistory.length === 0 && (
+                {globalState.chatHistory.length === 0 && (
                   <div className="chat-message bot">
                     <span className="chat-avatar">🤖</span>
                     <div className="chat-bubble">Hola soy tu asistente IA. ¿En qué puedo ayudarte hoy?</div>
@@ -253,7 +264,7 @@ const ModulePage = memo(function ModulePage({ slug, onBack }: { slug: string; on
                   id="chat-input" 
                   className="chat-input" 
                   placeholder="Escribe tu mensaje..." 
-                  onKeyPress={handleKeyPress}
+                  onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
                 />
                 <button onClick={handleSendMessage} className="chat-send">→</button>
               </div>
@@ -261,7 +272,7 @@ const ModulePage = memo(function ModulePage({ slug, onBack }: { slug: string; on
           ) : (
             <div className="module-preview">
               <p style={{ color: 'var(--text-muted)', textAlign: 'center' }}>
-                Este módulo te permite gestionar tus {mod.desc.toLowerCase()}.
+                Gestiona tus {mod.desc.toLowerCase()}.
                 <br /><br />
                 Accede al modo completo para todas las funcionalidades.
               </p>
@@ -278,7 +289,7 @@ const ModulePage = memo(function ModulePage({ slug, onBack }: { slug: string; on
   );
 });
 
-function Stats() {
+const Stats = memo(function Stats() {
   return (
     <section className="section stats-section">
       <div className="stats-grid">
@@ -297,9 +308,9 @@ function Stats() {
       </div>
     </section>
   );
-}
+});
 
-function Footer() {
+const Footer = memo(function Footer() {
   return (
     <footer className="footer">
       <p>Tu Espacio — Asistente personal con IA local</p>
@@ -310,7 +321,22 @@ function Footer() {
       </p>
     </footer>
   );
-}
+});
+
+const PageLoader = memo(function PageLoader() {
+  return (
+    <div style={{ 
+      display: 'flex', 
+      alignItems: 'center', 
+      justifyContent: 'center', 
+      minHeight: '100vh',
+      background: 'var(--bg)',
+      color: 'var(--text-muted)'
+    }}>
+      Cargando...
+    </div>
+  );
+});
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -328,11 +354,11 @@ function App() {
   }, [currentModule]);
 
   const handleNavigate = useCallback((slug: string | null) => {
-    setCurrentModule(slug);
+    startTransition(() => setCurrentModule(slug));
   }, []);
 
   const handleModuleSelect = useCallback((slug: string) => {
-    setCurrentModule(slug);
+    startTransition(() => setCurrentModule(slug));
   }, []);
 
   if (loading) {
@@ -340,7 +366,7 @@ function App() {
   }
 
   return (
-    <>
+    <Suspense fallback={<PageLoader />}>
       {!currentModule && <Navigation scrolled={scrolled} onNavigate={handleNavigate} />}
       {currentModule ? (
         <ModulePage slug={currentModule} onBack={() => setCurrentModule(null)} />
@@ -352,19 +378,23 @@ function App() {
           <Footer />
         </>
       )}
-    </>
+    </Suspense>
   );
 }
 
 const root = createRoot(document.getElementById('root')!);
 root.render(<App />);
 
-if (!globalCache.videoInitialized) {
-  globalCache.videoInitialized = true;
+if (!globalState.videoReady) {
+  globalState.videoReady = true;
   const video = document.querySelector('video');
   if (video) {
     if (Hls.isSupported()) {
-      const hls = new Hls({ enableWorker: true, lowLatencyMode: true });
+      const hls = new Hls({ 
+        enableWorker: true, 
+        lowLatencyMode: true,
+        backBufferLength: 90,
+      });
       hls.loadSource('https://stream.mux.com/Aa02T7oM1wH5Mk5EEVDYhbZ1ChcdhRsS2m1NYyx4Ua1g.m3u8');
       hls.attachMedia(video);
     } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
