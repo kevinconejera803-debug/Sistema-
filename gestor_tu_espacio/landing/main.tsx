@@ -325,16 +325,20 @@ const CalendarioView = memo(function CalendarioView() {
 
 const UniversidadView = memo(function UniversidadView() {
   const [tasks, setTasks] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [filter, setFilter] = useState<'all' | 'pending' | 'completed'>('all');
+  const [sort] = useState<'due' | 'priority' | 'course'>('due');
   const [newTask, setNewTask] = useState({ title: '', course: '', due_iso: '', priority: 'medium' });
   const [intranetUrl, setIntranetUrl] = useState('');
   const [aulaUrl, setAulaUrl] = useState('');
 
   useEffect(() => { loadTasks(); }, []);
   const loadTasks = async () => {
+    setLoading(true);
     const data = await fetchAPI('/assignments');
     setTasks(Array.isArray(data) ? data : []);
+    setLoading(false);
   };
   const handleAddTask = async () => {
     if (!newTask.title || !newTask.due_iso) return;
@@ -349,8 +353,21 @@ const UniversidadView = memo(function UniversidadView() {
     await postAPI(`/assignments/${id}`, { completed: !completed });
     loadTasks();
   };
+  const deleteTask = async (id: number) => {
+    if (confirm('¿Eliminar esta tarea?')) {
+      await postAPI(`/assignments/${id}`, { delete: true });
+      loadTasks();
+    }
+  };
   const pendingTasks = tasks.filter(t => !t.completed);
   const completedTasks = tasks.filter(t => t.completed);
+  const filteredTasks = filter === 'all' ? tasks : filter === 'pending' ? pendingTasks : completedTasks;
+  const sortedTasks = [...filteredTasks].sort((a, b) => {
+    if (sort === 'due') return new Date(a.due_iso || '9999').getTime() - new Date(b.due_iso || '9999').getTime();
+    if (sort === 'priority') return ['high', 'medium', 'low'].indexOf(a.priority) - ['high', 'medium', 'low'].indexOf(b.priority);
+    return (a.course || '').localeCompare(b.course || '');
+  });
+  const isOverdue = (due_iso: string) => new Date(due_iso) < new Date() && new Date(due_iso).toDateString() !== new Date().toDateString();
 
   return (
     <div className="sys-module">
@@ -403,36 +420,49 @@ const UniversidadView = memo(function UniversidadView() {
           </div>
         </div>
       </div>
-      <div className="sys-tasks">
-        {tasks.length === 0 && <p className="sys-empty">No hay tareas. Agrega una nueva tarea.</p>}
-        {tasks.map(task => (
-          <div key={task.id} className={`sys-task ${task.completed ? 'completed' : ''}`}>
-            <label className="sys-task__check">
-              <input type="checkbox" checked={task.completed} onChange={() => toggleTask(task.id, task.completed)} />
-              <span className="sys-task__title">{task.title}</span>
-            </label>
-            <div className="sys-task__meta">
-              <span className="sys-task__course">{task.course}</span>
-              <span className="sys-task__due">📅 {task.due_iso}</span>
-              <span className={`sys-task__priority priority-${task.priority}`}>{task.priority}</span>
+      {loading ? (
+        <div className="sys-loading-inline"><div className="sys-spinner"></div>Cargando tareas...</div>
+      ) : sortedTasks.length === 0 ? (
+        <div className="sys-empty">
+          <div className="sys-empty__icon">📚</div>
+          <p>{filter === 'completed' ? 'No hay tareas completadas' : filter === 'pending' ? '¡Excelente! No tienes tareas pendientes' : 'No hay tareas. Crea una nueva tarea.'}</p>
+          {filter === 'all' && <button className="sys-btn sys-btn--primary" onClick={() => setShowForm(true)}>CREAR TAREA</button>}
+        </div>
+      ) : (
+        <div className="sys-tasks">
+          {sortedTasks.map(task => (
+            <div key={task.id} className={`sys-task ${task.completed ? 'completed' : ''} ${!task.completed && isOverdue(task.due_iso) ? 'overdue' : ''}`}>
+              <label className="sys-task__check">
+                <input type="checkbox" checked={task.completed} onChange={() => toggleTask(task.id, task.completed)} />
+                <span className="sys-task__title">{task.title}</span>
+              </label>
+              <div className="sys-task__meta">
+                <span className="sys-task__course">{task.course}</span>
+                <span className={`sys-task__due ${!task.completed && isOverdue(task.due_iso) ? 'overdue' : ''}`}>📅 {task.due_iso}</span>
+                <span className={`sys-task__priority priority-${task.priority}`}>{task.priority}</span>
+                <button className="sys-btn-icon delete" title="Eliminar" onClick={() => deleteTask(task.id)}>🗑️</button>
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 });
 
 const ContactosView = memo(function ContactosView() {
   const [contacts, setContacts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('');
   const [showForm, setShowForm] = useState(false);
   const [newContact, setNewContact] = useState({ name: '', email: '', phone: '', company: '' });
 
   useEffect(() => { loadContacts(); }, []);
   const loadContacts = async () => {
+    setLoading(true);
     const data = await fetchAPI('/contacts');
     setContacts(Array.isArray(data) ? data : []);
+    setLoading(false);
   };
   const handleAddContact = async () => {
     if (!newContact.name) return;
@@ -449,11 +479,11 @@ const ContactosView = memo(function ContactosView() {
     <div className="sys-module">
       <div className="sys-module__header">
         <h1 className="sys-module__title">CONTACTOS</h1>
-        <p className="sys-module__kicker">Agenda local en SQLite: busca sin recargar.</p>
+        <p className="sys-module__kicker">{contacts.length} contactos en tu agenda</p>
       </div>
       <div className="sys-toolbar">
         <input type="search" className="sys-search" placeholder="Buscar por nombre, email..." value={filter} onChange={(e) => setFilter(e.target.value)} />
-        <span className="sys-search__count">{filtered.length} contactos</span>
+        <span className="sys-search__count">{filtered.length} resultados</span>
         <div className="sys-toolbar__spacer"></div>
         <button className="sys-btn sys-btn--primary" onClick={() => setShowForm(!showForm)}>+ NUEVO</button>
       </div>
@@ -473,19 +503,33 @@ const ContactosView = memo(function ContactosView() {
           <button className="sys-btn sys-btn--primary" onClick={handleAddContact}>GUARDAR</button>
         </div>
       )}
-      <div className="sys-contacts">
-        {filtered.map(c => (
-          <div key={c.id} className="sys-contact">
-            <div className="sys-contact__avatar">{c.name?.charAt(0) || '?'}</div>
-            <div className="sys-contact__info">
-              <div className="sys-contact__name">{c.name}</div>
-              <div className="sys-contact__email">{c.email}</div>
-              <div className="sys-contact__phone">{c.phone}</div>
-              <div className="sys-contact__company">{c.company}</div>
+      {loading ? (
+        <div className="sys-loading-inline"><div className="sys-spinner"></div>Cargando contactos...</div>
+      ) : filtered.length === 0 ? (
+        <div className="sys-empty">
+          <div className="sys-empty__icon">📇</div>
+          <p>{filter ? 'No se encontraron contactos' : 'No tienes contactos aún'}</p>
+          <button className="sys-btn sys-btn--primary" onClick={() => setShowForm(true)}>AGREGAR CONTACTO</button>
+        </div>
+      ) : (
+        <div className="sys-contacts">
+          {filtered.map(c => (
+            <div key={c.id} className="sys-contact">
+              <div className="sys-contact__avatar" style={{ background: `hsl(${c.name?.charCodeAt(0) * 10 % 360}, 60%, 40%)` }}>{c.name?.charAt(0) || '?'}</div>
+              <div className="sys-contact__info">
+                <div className="sys-contact__name">{c.name}</div>
+                <div className="sys-contact__email">{c.email}</div>
+                <div className="sys-contact__phone">{c.phone}</div>
+                <div className="sys-contact__company">{c.company}</div>
+              </div>
+              <div className="sys-contact__actions">
+                {c.phone && <button className="sys-btn-icon" title="Llamar" onClick={() => window.location.href = `tel:${c.phone}`}>📞</button>}
+                {c.email && <button className="sys-btn-icon" title="Email" onClick={() => window.location.href = `mailto:${c.email}`}>✉️</button>}
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 });

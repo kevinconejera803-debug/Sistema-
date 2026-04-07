@@ -162,7 +162,20 @@
     .sys-prayer__status.in_progress { background: rgba(245,158,11,0.2); color: #f59e0b; }
     .sys-prayer__status.pending { background: rgba(239,68,68,0.2); color: #ef4444; }
     .sys-prayer__date { color: var(--text-muted); }
-    .sys-empty { color: var(--text-muted); padding: 2rem; text-align: center; }
+    .sys-empty { color: var(--text-muted); padding: 3rem 2rem; text-align: center; }
+    .sys-empty__icon { font-size: 3rem; margin-bottom: 1rem; }
+    .sys-empty p { margin-bottom: 1rem; }
+    .sys-loading-inline { display: flex; align-items: center; justify-content: center; gap: 0.75rem; padding: 2rem; color: var(--text-muted); }
+    .sys-spinner { width: 1.25rem; height: 1.25rem; border: 2px solid var(--stroke); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .sys-contact { display: flex; align-items: center; gap: 1rem; background: var(--surface); border: 1px solid var(--stroke); border-radius: 0.5rem; padding: 1rem; transition: all 0.2s; }
+    .sys-contact:hover { border-color: var(--accent); }
+    .sys-contact__actions { display: flex; gap: 0.5rem; margin-left: auto; }
+    .sys-btn-icon { background: none; border: none; cursor: pointer; font-size: 1.1rem; padding: 0.25rem; border-radius: 0.25rem; transition: all 0.2s; }
+    .sys-btn-icon:hover { background: var(--surface-hover); }
+    .sys-btn-icon.delete:hover { background: rgba(239,68,68,0.2); }
+    .sys-task.overdue { border-left: 3px solid var(--error); }
+    .sys-task__due.overdue { color: var(--error); }
     @media (max-width: 640px) {
       .sys-hero__title { font-size: 2.5rem; }
       .sys-nav__inner { gap: 0.125rem; }
