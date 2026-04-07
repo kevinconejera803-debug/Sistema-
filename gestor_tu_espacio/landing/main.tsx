@@ -279,6 +279,7 @@ const CalendarioView = memo(function CalendarioView() {
   const prevMonth = () => setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1));
   const nextMonth = () => setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1));
   const todayEvents = events.filter(e => e.start_iso?.startsWith(currentDate.toISOString().split('T')[0]));
+  const goToToday = () => setCurrentDate(new Date());
 
   return (
     <div className="sys-module">
@@ -291,10 +292,14 @@ const CalendarioView = memo(function CalendarioView() {
         <button className={`sys-btn ${view === 'week' ? 'sys-btn--primary' : 'sys-btn--ghost'}`} onClick={() => setView('week')}>SEMANA</button>
         <button className={`sys-btn ${view === 'day' ? 'sys-btn--primary' : 'sys-btn--ghost'}`} onClick={() => setView('day')}>DIA</button>
         <div className="sys-toolbar__spacer"></div>
-        <button className="sys-btn sys-btn--ghost" onClick={prevMonth}>&lt; ANTERIOR</button>
-        <button className="sys-btn sys-btn--ghost" onClick={() => setCurrentDate(new Date())}>HOY</button>
-        <button className="sys-btn sys-btn--ghost" onClick={nextMonth}>SIGUIENTE &gt;</button>
+        <button className="sys-btn sys-btn--ghost" onClick={prevMonth}>◀</button>
+        <button className="sys-btn sys-btn--ghost" onClick={goToToday}>HOY</button>
+        <button className="sys-btn sys-btn--ghost" onClick={nextMonth}>▶</button>
         <button className="sys-btn sys-btn--primary" onClick={() => setShowForm(!showForm)}>+ NUEVO</button>
+      </div>
+      <div className="sys-quick-stats">
+        <div className="sys-quick-stat"><span className="sys-quick-stat__value">{events.length}</span><span className="sys-quick-stat__label">eventos</span></div>
+        <div className="sys-quick-stat highlight"><span className="sys-quick-stat__value">{todayEvents.length}</span><span className="sys-quick-stat__label">hoy</span></div>
       </div>
       {showForm && (
         <div className="sys-form">
@@ -399,11 +404,18 @@ const UniversidadView = memo(function UniversidadView() {
   });
   const isOverdue = (due_iso: string) => new Date(due_iso) < new Date() && new Date(due_iso).toDateString() !== new Date().toDateString();
 
+  const completedCount = tasks.filter(t => t.completed).length;
+  const progress = tasks.length > 0 ? Math.round((completedCount / tasks.length) * 100) : 0;
+
   return (
     <div className="sys-module">
       <div className="sys-module__header">
         <h1 className="sys-module__title">UNIVERSIDAD</h1>
-        <p className="sys-module__kicker">Plan de estudios y vida academica</p>
+        <p className="sys-module__kicker">Plan de estudios y vida académica</p>
+      </div>
+      <div className="sys-progress-bar">
+        <div className="sys-progress-bar__fill" style={{ width: `${progress}%` }}></div>
+        <span className="sys-progress-bar__label">{progress}% completado</span>
       </div>
       <div className="sys-stats-row">
         <div className="sys-stat-badge"><span className="sys-stat-badge__value">{tasks.length}</span><span className="sys-stat-badge__label">Total</span></div>
@@ -484,6 +496,7 @@ const ContactosView = memo(function ContactosView() {
   const [contacts, setContacts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('');
+  const [selectedLetter, setSelectedLetter] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [newContact, setNewContact] = useState({ name: '', email: '', phone: '', company: '' });
 
@@ -504,6 +517,11 @@ const ContactosView = memo(function ContactosView() {
     }
   };
   const filtered = contacts.filter(c => c.name?.toLowerCase().includes(filter.toLowerCase()) || c.email?.toLowerCase().includes(filter.toLowerCase()));
+  const letterIndex = Array.from(new Set(contacts.map(c => c.name?.charAt(0).toUpperCase()).filter(Boolean))).sort();
+
+  const filteredByLetter = selectedLetter 
+    ? filtered.filter(c => c.name?.charAt(0).toUpperCase() === selectedLetter)
+    : filtered;
 
   return (
     <div className="sys-module">
@@ -512,11 +530,19 @@ const ContactosView = memo(function ContactosView() {
         <p className="sys-module__kicker">{contacts.length} contactos en tu agenda</p>
       </div>
       <div className="sys-toolbar">
-        <input type="search" className="sys-search" placeholder="Buscar por nombre, email..." value={filter} onChange={(e) => setFilter(e.target.value)} />
+        <input type="search" className="sys-search" placeholder="Buscar por nombre, email..." value={filter} onChange={(e) => { setFilter(e.target.value); setSelectedLetter(null); }} />
         <span className="sys-search__count">{filtered.length} resultados</span>
         <div className="sys-toolbar__spacer"></div>
         <button className="sys-btn sys-btn--primary" onClick={() => setShowForm(!showForm)}>+ NUEVO</button>
       </div>
+      {letterIndex.length > 0 && (
+        <div className="sys-letter-index">
+          <button className={`sys-letter ${!selectedLetter ? 'active' : ''}`} onClick={() => setSelectedLetter(null)}>TODO</button>
+          {letterIndex.map(l => (
+            <button key={l} className={`sys-letter ${selectedLetter === l ? 'active' : ''}`} onClick={() => setSelectedLetter(l)}>{l}</button>
+          ))}
+        </div>
+      )}
       {showForm && (
         <div className="sys-form">
           <div className="sys-form__head"><span className="sys-form__badge">Nuevo Contacto</span></div>
@@ -543,7 +569,7 @@ const ContactosView = memo(function ContactosView() {
         </div>
       ) : (
         <div className="sys-contacts">
-          {filtered.map(c => (
+          {filteredByLetter.map(c => (
             <div key={c.id} className="sys-contact">
               <div className="sys-contact__avatar" style={{ background: `hsl(${c.name?.charCodeAt(0) * 10 % 360}, 60%, 40%)` }}>{c.name?.charAt(0) || '?'}</div>
               <div className="sys-contact__info">

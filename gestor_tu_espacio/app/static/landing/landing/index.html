@@ -48,6 +48,14 @@
     .sys-stat__value { font-size: 3rem; font-family: 'Instrument Serif', serif; color: var(--accent); }
     .sys-stat__label { font-size: 0.8rem; color: var(--text-muted); }
     .sys-stats-row { display: flex; gap: 1rem; margin-bottom: 1.5rem; }
+    .sys-quick-stats { display: flex; gap: 1.5rem; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--stroke); }
+    .sys-quick-stat { display: flex; align-items: baseline; gap: 0.5rem; }
+    .sys-quick-stat__value { font-size: 1.5rem; font-weight: 600; color: var(--accent); }
+    .sys-quick-stat__label { font-size: 0.85rem; color: var(--text-muted); }
+    .sys-quick-stat.highlight .sys-quick-stat__value { color: var(--warning); }
+    .sys-progress-bar { position: relative; height: 2rem; background: var(--surface); border: 1px solid var(--stroke); border-radius: 0.5rem; overflow: hidden; margin-bottom: 1.5rem; }
+    .sys-progress-bar__fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent-dark)); transition: width 0.3s ease; }
+    .sys-progress-bar__label { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; font-weight: 500; color: var(--text); mix-blend-mode: difference; }
     .sys-stat-badge { display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; background: var(--surface); border: 1px solid var(--stroke); border-radius: 0.5rem; }
     .sys-stat-badge__value { font-size: 1.25rem; font-weight: 600; color: var(--accent); }
     .sys-stat-badge__label { font-size: 0.75rem; color: var(--text-muted); }
@@ -191,6 +199,10 @@
     .sys-btn-icon.delete:hover { background: rgba(239,68,68,0.2); }
     .sys-task.overdue { border-left: 3px solid var(--error); }
     .sys-task__due.overdue { color: var(--error); }
+    .sys-letter-index { display: flex; flex-wrap: wrap; gap: 0.25rem; margin-bottom: 1rem; padding: 0.5rem; background: var(--surface); border-radius: 0.5rem; }
+    .sys-letter { width: 1.75rem; height: 1.75rem; display: flex; align-items: center; justify-content: center; background: none; border: 1px solid var(--stroke); border-radius: 0.25rem; color: var(--text-muted); font-size: 0.75rem; cursor: pointer; transition: all 0.2s; }
+    .sys-letter:hover { border-color: var(--accent); color: var(--text); }
+    .sys-letter.active { background: var(--accent); border-color: var(--accent); color: var(--bg); }
     @media (max-width: 640px) {
       .sys-hero__title { font-size: 2.5rem; }
       .sys-nav__inner { gap: 0.125rem; }
@@ -199,7 +211,7 @@
       .sys-markets { grid-template-columns: 1fr; }
     }
   </style>
-  <script type="module" crossorigin src="/static/landing/assets/index-CxqRni9W.js"></script>
+  <script type="module" crossorigin src="/static/landing/assets/index-Bx1xSgIM.js"></script>
   <link rel="stylesheet" crossorigin href="/static/landing/assets/index-r849xsAl.css">
 </head>
 <body>
