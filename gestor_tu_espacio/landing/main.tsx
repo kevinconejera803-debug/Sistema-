@@ -1,5 +1,6 @@
 import { createRoot } from 'react-dom/client';
-import { useState, useEffect, useRef, useCallback, memo, startTransition, Fragment } from 'react';
+import { useState, useEffect, useRef, useCallback, memo, createContext, useContext } from 'react';
+import { createBrowserRouter, RouterProvider, Link, useLocation, useNavigate, Outlet } from 'react-router-dom';
 import { gsap } from 'gsap';
 import Hls from 'hls.js';
 
@@ -24,6 +25,12 @@ const globalState = {
   prayers: [] as any[],
   chatHistory: [] as { role: 'user' | 'bot'; content: string }[],
 };
+
+interface AppContextType {
+  navigate: (slug: string) => void;
+}
+
+const AppContext = createContext<AppContextType>({ navigate: () => {} });
 
 async function fetchAPI(endpoint: string) {
   try {
@@ -76,23 +83,52 @@ const LoadingScreen = memo(function LoadingScreen({ onComplete }: { onComplete: 
   );
 });
 
-const Navigation = memo(function Navigation({ currentModule, onNavigate }: { currentModule: string | null; onNavigate: (slug: string | null) => void }) {
-  return (
-    <nav className="sys-nav">
-      <div className="sys-nav__inner">
-        <a href="#" onClick={(e) => { e.preventDefault(); onNavigate(null); }} className={`sys-nav__link ${!currentModule ? 'active' : ''}`}>HOME</a>
-        {MODULES.map(m => (
-          <a key={m.slug} href="#" onClick={(e) => { e.preventDefault(); onNavigate(m.slug); }} className={`sys-nav__link ${currentModule === m.slug ? 'active' : ''}`}>{m.title}</a>
-        ))}
-      </div>
-    </nav>
-  );
-});
+function AnimatedOutlet() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const location = useLocation();
+  const prevRef = useRef(location.pathname);
 
-const Hero = memo(function Hero() {
+  useEffect(() => {
+    if (containerRef.current && location.pathname !== prevRef.current) {
+      gsap.fromTo(containerRef.current, 
+        { y: 20, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.35, ease: 'power2.out' }
+      );
+      prevRef.current = location.pathname;
+    }
+  }, [location.pathname]);
+
+  return <div ref={containerRef}><Outlet /></div>;
+}
+
+function GlobalLayout() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const isHome = location.pathname === '/';
+
+  return (
+    <AppContext.Provider value={{ navigate: (slug: string) => navigate(`/${slug}`) }}>
+      <nav className="sys-nav">
+        <div className="sys-nav__inner">
+          <Link to="/" className={`sys-nav__link ${isHome ? 'active' : ''}`}>HOME</Link>
+          {MODULES.map(m => (
+            <Link key={m.slug} to={`/${m.slug}`} className={`sys-nav__link ${location.pathname === `/${m.slug}` ? 'active' : ''}`}>{m.title}</Link>
+          ))}
+        </div>
+      </nav>
+      <div className="sys-layout">
+        <AnimatedOutlet />
+      </div>
+    </AppContext.Provider>
+  );
+}
+
+function Hero() {
   const contentRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    if (contentRef.current) gsap.from(contentRef.current.children, { y: 30, opacity: 0, duration: 0.8, stagger: 0.1, ease: 'power3.out', delay: 0.2 });
+    if (contentRef.current) {
+      gsap.from(contentRef.current.children, { y: 30, opacity: 0, duration: 0.8, stagger: 0.1, ease: 'power3.out', delay: 0.2 });
+    }
   }, []);
   return (
     <section className="sys-hero">
@@ -110,12 +146,15 @@ const Hero = memo(function Hero() {
       </div>
     </section>
   );
-});
+}
 
-const ModulesGrid = memo(function ModulesGrid({ onSelect }: { onSelect: (slug: string) => void }) {
+function ModulesGrid() {
   const gridRef = useRef<HTMLDivElement>(null);
+  const { navigate } = useContext(AppContext);
   useEffect(() => {
-    if (gridRef.current) gsap.from(gridRef.current.children, { y: 40, opacity: 0, duration: 0.6, stagger: 0.1, ease: 'power3.out', scrollTrigger: { trigger: gridRef.current, start: 'top 80%' } });
+    if (gridRef.current) {
+      gsap.from(gridRef.current.children, { y: 40, opacity: 0, duration: 0.6, stagger: 0.1, ease: 'power3.out' });
+    }
   }, []);
   return (
     <section className="sys-section">
@@ -125,7 +164,7 @@ const ModulesGrid = memo(function ModulesGrid({ onSelect }: { onSelect: (slug: s
       </div>
       <div className="sys-grid" ref={gridRef}>
         {MODULES.map(m => (
-          <button key={m.slug} onClick={() => onSelect(m.slug)} className="sys-card" style={{ '--card-accent': m.accent } as React.CSSProperties}>
+          <button key={m.slug} onClick={() => navigate(m.slug)} className="sys-card" style={{ '--card-accent': m.accent } as React.CSSProperties}>
             <div className="sys-card__icon">{m.icon}</div>
             <h3 className="sys-card__title">{m.title}</h3>
             <p className="sys-card__desc">{m.desc}</p>
@@ -134,19 +173,52 @@ const ModulesGrid = memo(function ModulesGrid({ onSelect }: { onSelect: (slug: s
       </div>
     </section>
   );
-});
+}
+
+function Stats() {
+  return (
+    <div className="sys-stats">
+      <div className="sys-stat"><div className="sys-stat__value">7</div><div className="sys-stat__label">MODULOS</div></div>
+      <div className="sys-stat"><div className="sys-stat__value">∞</div><div className="sys-stat__label">CONVERSACIONES</div></div>
+      <div className="sys-stat"><div className="sys-stat__value">0</div><div className="sys-stat__label">COSTO API</div></div>
+    </div>
+  );
+}
+
+function Footer() {
+  return (
+    <footer className="sys-footer">
+      <p>Tu Espacio - Asistente personal con IA local</p>
+      <div className="sys-footer__links">
+        <a href="https://github.com/kevinconejera803-debug/Sistema-">GitHub</a>
+        <span>|</span>
+        <a href="/asistente">Asistente</a>
+        <span>|</span>
+        <a href="/calendario">Calendario</a>
+      </div>
+    </footer>
+  );
+}
+
+function HomeView() {
+  return (
+    <>
+      <Hero />
+      <ModulesGrid />
+      <Stats />
+      <Footer />
+    </>
+  );
+}
 
 const CalendarioView = memo(function CalendarioView() {
-  const containerRef = useRef<HTMLDivElement>(null);
   const [events, setEvents] = useState<any[]>([]);
   const [view, setView] = useState<'month' | 'week' | 'day'>('month');
   const [currentDate, setCurrentDate] = useState(new Date());
   const [showForm, setShowForm] = useState(false);
   const [newEvent, setNewEvent] = useState({ title: '', date: '', time: '12:00', color: '#ef4444' });
-  useEffect(() => {
-    loadEvents();
-    if (containerRef.current) gsap.from(containerRef.current, { y: 20, opacity: 0, duration: 0.4, ease: 'power2.out' });
-  }, []);
+
+  useEffect(() => { loadEvents(); }, []);
   const loadEvents = async () => {
     const data = await fetchAPI('/calendar/events');
     setEvents(Array.isArray(data) ? data : []);
@@ -171,8 +243,9 @@ const CalendarioView = memo(function CalendarioView() {
   const prevMonth = () => setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1));
   const nextMonth = () => setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1));
   const todayEvents = events.filter(e => e.start_iso?.startsWith(currentDate.toISOString().split('T')[0]));
+
   return (
-    <div className="sys-module" ref={containerRef}>
+    <div className="sys-module">
       <div className="sys-module__header">
         <h1 className="sys-module__title">CALENDARIO</h1>
         <p className="sys-module__kicker">Horario en hora local · evento o dia completo</p>
@@ -235,16 +308,13 @@ const CalendarioView = memo(function CalendarioView() {
 });
 
 const UniversidadView = memo(function UniversidadView() {
-  const containerRef = useRef<HTMLDivElement>(null);
   const [tasks, setTasks] = useState<any[]>([]);
   const [showForm, setShowForm] = useState(false);
   const [newTask, setNewTask] = useState({ title: '', course: '', due_iso: '', priority: 'medium' });
   const [intranetUrl, setIntranetUrl] = useState('');
   const [aulaUrl, setAulaUrl] = useState('');
-  useEffect(() => {
-    loadTasks();
-    if (containerRef.current) gsap.from(containerRef.current, { y: 20, opacity: 0, duration: 0.4, ease: 'power2.out' });
-  }, []);
+
+  useEffect(() => { loadTasks(); }, []);
   const loadTasks = async () => {
     const data = await fetchAPI('/assignments');
     setTasks(Array.isArray(data) ? data : []);
@@ -262,8 +332,9 @@ const UniversidadView = memo(function UniversidadView() {
     await postAPI(`/assignments/${id}`, { completed: !completed });
     loadTasks();
   };
+
   return (
-    <div className="sys-module" ref={containerRef}>
+    <div className="sys-module">
       <div className="sys-module__header">
         <h1 className="sys-module__title">UNIVERSIDAD</h1>
         <p className="sys-module__kicker">Plan de estudios y vida academica</p>
@@ -326,15 +397,12 @@ const UniversidadView = memo(function UniversidadView() {
 });
 
 const ContactosView = memo(function ContactosView() {
-  const containerRef = useRef<HTMLDivElement>(null);
   const [contacts, setContacts] = useState<any[]>([]);
   const [filter, setFilter] = useState('');
   const [showForm, setShowForm] = useState(false);
   const [newContact, setNewContact] = useState({ name: '', email: '', phone: '', company: '' });
-  useEffect(() => {
-    loadContacts();
-    if (containerRef.current) gsap.from(containerRef.current, { y: 20, opacity: 0, duration: 0.4, ease: 'power2.out' });
-  }, []);
+
+  useEffect(() => { loadContacts(); }, []);
   const loadContacts = async () => {
     const data = await fetchAPI('/contacts');
     setContacts(Array.isArray(data) ? data : []);
@@ -349,8 +417,9 @@ const ContactosView = memo(function ContactosView() {
     }
   };
   const filtered = contacts.filter(c => c.name?.toLowerCase().includes(filter.toLowerCase()) || c.email?.toLowerCase().includes(filter.toLowerCase()));
+
   return (
-    <div className="sys-module" ref={containerRef}>
+    <div className="sys-module">
       <div className="sys-module__header">
         <h1 className="sys-module__title">CONTACTOS</h1>
         <p className="sys-module__kicker">Agenda local en SQLite: busca sin recargar.</p>
@@ -395,16 +464,14 @@ const ContactosView = memo(function ContactosView() {
 });
 
 const MercadosView = memo(function MercadosView() {
-  const containerRef = useRef<HTMLDivElement>(null);
   const [markets] = useState([
     { symbol: 'SPX', name: 'S&P 500', price: '5,234.18', change: '+0.45%', positive: true },
     { symbol: 'NDX', name: 'Nasdaq', price: '18,432.90', change: '+0.72%', positive: true },
     { symbol: 'EUR/USD', name: 'Euro/Dolar', price: '1.0842', change: '-0.12%', positive: false },
     { symbol: 'CL', name: 'Cobre Chile', price: '85.32', change: '+1.23%', positive: true },
   ]);
-  useEffect(() => { if (containerRef.current) gsap.from(containerRef.current, { y: 20, opacity: 0, duration: 0.4, ease: 'power2.out' }); }, []);
   return (
-    <div className="sys-module" ref={containerRef}>
+    <div className="sys-module">
       <div className="sys-module__header">
         <h1 className="sys-module__title">MERCADOS</h1>
         <p className="sys-module__kicker">Precios de referencia.</p>
@@ -424,15 +491,13 @@ const MercadosView = memo(function MercadosView() {
 });
 
 const NoticiasView = memo(function NoticiasView() {
-  const containerRef = useRef<HTMLDivElement>(null);
   const [news] = useState([
     { title: 'Fed mantiene tasas sin cambios', source: 'Bloomberg', time: 'hace 2h' },
     { title: 'Tech giants reportan ganancias', source: 'Reuters', time: 'hace 4h' },
     { title: 'Mercados asiaticos mixtos', source: 'CNBC', time: 'hace 6h' },
   ]);
-  useEffect(() => { if (containerRef.current) gsap.from(containerRef.current, { y: 20, opacity: 0, duration: 0.4, ease: 'power2.out' }); }, []);
   return (
-    <div className="sys-module" ref={containerRef}>
+    <div className="sys-module">
       <div className="sys-module__header">
         <h1 className="sys-module__title">NOTICIAS</h1>
         <p className="sys-module__kicker">Ultimas Noticias.</p>
@@ -451,8 +516,6 @@ const NoticiasView = memo(function NoticiasView() {
 
 const AsistenteView = memo(function AsistenteView() {
   const inputRef = useRef<HTMLInputElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
-  useEffect(() => { if (containerRef.current) gsap.from(containerRef.current, { y: 20, opacity: 0, duration: 0.4, ease: 'power2.out' }); }, []);
   const sendMessage = useCallback(() => {
     const input = inputRef.current;
     if (!input?.value.trim()) return;
@@ -470,8 +533,9 @@ const AsistenteView = memo(function AsistenteView() {
       }, 500);
     }
   }, []);
+
   return (
-    <div className="sys-module" ref={containerRef}>
+    <div className="sys-module">
       <div className="sys-module__header">
         <h1 className="sys-module__title">ASISTENTE IA</h1>
         <p className="sys-module__kicker">Tu asistente personal.</p>
@@ -492,15 +556,13 @@ const AsistenteView = memo(function AsistenteView() {
 });
 
 const OracionesView = memo(function OracionesView() {
-  const containerRef = useRef<HTMLDivElement>(null);
   const [prayers] = useState([
     { id: 1, title: 'Por mi familia', description: 'Salud y unidad', status: 'answered', date: '2026-03-15' },
     { id: 2, title: 'Por mi trabajo', description: 'Nuevas oportunidades', status: 'in_progress', date: '2026-04-01' },
     { id: 3, title: 'Por salud', description: 'Recuperacion', status: 'pending', date: '2026-04-06' },
   ]);
-  useEffect(() => { if (containerRef.current) gsap.from(containerRef.current, { y: 20, opacity: 0, duration: 0.4, ease: 'power2.out' }); }, []);
   return (
-    <div className="sys-module" ref={containerRef}>
+    <div className="sys-module">
       <div className="sys-module__header">
         <h1 className="sys-module__title">ORACIONES</h1>
         <p className="sys-module__kicker">Registro de oraciones y peticiones.</p>
@@ -521,59 +583,28 @@ const OracionesView = memo(function OracionesView() {
   );
 });
 
-const Footer = memo(function Footer() {
-  return (
-    <footer className="sys-footer">
-      <p>Tu Espacio - Asistente personal con IA local</p>
-      <div className="sys-footer__links">
-        <a href="https://github.com/kevinconejera803-debug/Sistema-">GitHub</a>
-        <span>|</span>
-        <a href="/asistente">Asistente</a>
-        <span>|</span>
-        <a href="/calendario">Calendario</a>
-      </div>
-    </footer>
-  );
-});
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <GlobalLayout />,
+    children: [
+      { index: true, element: <HomeView /> },
+      { path: 'calendario', element: <CalendarioView /> },
+      { path: 'universidad', element: <UniversidadView /> },
+      { path: 'contactos', element: <ContactosView /> },
+      { path: 'mercados', element: <MercadosView /> },
+      { path: 'noticias', element: <NoticiasView /> },
+      { path: 'asistente', element: <AsistenteView /> },
+      { path: 'oraciones', element: <OracionesView /> },
+    ],
+  },
+]);
 
 function App() {
   const [loading, setLoading] = useState(true);
-  const [currentModule, setCurrentModule] = useState<string | null>(null);
   useEffect(() => { initVideo(); }, []);
-  useEffect(() => { window.scrollTo(0, 0); }, [currentModule]);
-  const navigate = useCallback((slug: string | null) => startTransition(() => setCurrentModule(slug)), []);
-  const select = useCallback((slug: string) => startTransition(() => setCurrentModule(slug)), []);
   if (loading) return <LoadingScreen onComplete={() => setLoading(false)} />;
-  let ModuleComponent: any = null;
-  if (currentModule === 'calendario') ModuleComponent = CalendarioView;
-  else if (currentModule === 'universidad') ModuleComponent = UniversidadView;
-  else if (currentModule === 'contactos') ModuleComponent = ContactosView;
-  else if (currentModule === 'mercados') ModuleComponent = MercadosView;
-  else if (currentModule === 'noticias') ModuleComponent = NoticiasView;
-  else if (currentModule === 'asistente') ModuleComponent = AsistenteView;
-  else if (currentModule === 'oraciones') ModuleComponent = OracionesView;
-  return (
-    <Fragment>
-      <Navigation currentModule={currentModule} onNavigate={navigate} />
-      {currentModule && ModuleComponent ? (
-        <div className="sys-module-page">
-          <button onClick={() => navigate(null)} className="sys-back">&lt; VOLVER</button>
-          <ModuleComponent />
-        </div>
-      ) : (
-        <Fragment>
-          <Hero />
-          <ModulesGrid onSelect={select} />
-          <div className="sys-stats">
-            <div className="sys-stat"><div className="sys-stat__value">7</div><div className="sys-stat__label">MODULOS</div></div>
-            <div className="sys-stat"><div className="sys-stat__value">∞</div><div className="sys-stat__label">CONVERSACIONES</div></div>
-            <div className="sys-stat"><div className="sys-stat__value">0</div><div className="sys-stat__label">COSTO API</div></div>
-          </div>
-          <Footer />
-        </Fragment>
-      )}
-    </Fragment>
-  );
+  return <RouterProvider router={router} />;
 }
 
 const root = createRoot(document.getElementById('root')!);
