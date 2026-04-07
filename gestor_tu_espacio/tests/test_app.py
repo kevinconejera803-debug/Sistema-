@@ -328,10 +328,10 @@ class TestRoutes:
     """Tests de rutas principales."""
     
     def test_index_redirect(self, client):
-        """GET / redirige a /tu-espacio."""
-        response = client.get("/", follow_redirects=False)
-        assert response.status_code in [301, 302]
-        assert "/tu-espacio" in response.location
+        """GET / retorna landing page."""
+        response = client.get("/")
+        assert response.status_code == 200
+        assert b"Tu Espacio" in response.data
     
     def test_tu_espacio(self, client):
         """GET /tu-espacio retorna página."""

@@ -107,8 +107,8 @@ def _ctx():
 
 @core_bp.route("/")
 def index():
-    """Redirige a tu-espacio."""
-    return redirect(url_for("core.tu_espacio"))
+    """Nueva landing page con estilo moderno."""
+    return render_template("index.html")
 
 
 @core_bp.route("/tu-espacio")
