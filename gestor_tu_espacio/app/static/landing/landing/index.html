@@ -260,6 +260,40 @@
     .sys-upcoming { margin-top: 1.5rem; }
     .sys-upcoming h3 { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.75rem; }
     .sys-agenda__date { font-size: 0.8rem; color: var(--text-muted); min-width: 80px; }
+    .sys-cal-nav { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1.5rem; }
+    .sys-cal-nav-btn { width: 2.5rem; height: 2.5rem; display: flex; align-items: center; justify-content: center; background: var(--surface); border: 1px solid var(--stroke); border-radius: 0.5rem; color: var(--text); cursor: pointer; transition: all 0.2s; }
+    .sys-cal-nav-btn:hover { background: var(--accent); border-color: var(--accent); color: var(--bg); }
+    .sys-cal-current { flex: 1; text-align: center; font-size: 1.1rem; font-weight: 600; }
+    .sys-cal-tabs { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; align-items: center; }
+    .sys-cal-tab { display: flex; align-items: center; gap: 0.5rem; padding: 0.6rem 1rem; background: var(--surface); border: 1px solid var(--stroke); border-radius: 0.5rem; color: var(--text-muted); font-size: 0.8rem; cursor: pointer; transition: all 0.2s; }
+    .sys-cal-tab:hover { border-color: var(--accent); }
+    .sys-cal-tab.active { background: var(--accent); border-color: var(--accent); color: var(--bg); }
+    .sys-cal-tab-icon { font-size: 1rem; }
+    .sys-cal-add { margin-left: auto; }
+    .sys-cal-timeline { overflow-x: auto; }
+    .sys-cal-week { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.5rem; min-width: 800px; }
+    .sys-cal-day { background: var(--surface); border: 1px solid var(--stroke); border-radius: 0.75rem; overflow: hidden; }
+    .sys-cal-day.today { border-color: var(--accent); box-shadow: 0 0 20px rgba(56, 189, 248, 0.2); }
+    .sys-cal-day-header { display: flex; flex-direction: column; align-items: center; padding: 0.75rem; background: var(--surface-hover); border-bottom: 1px solid var(--stroke); }
+    .sys-cal-day-name { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; }
+    .sys-cal-day-num { font-size: 1.5rem; font-weight: 700; }
+    .sys-cal-day.today .sys-cal-day-num { color: var(--accent); }
+    .sys-cal-hours { padding: 0.5rem; min-height: 300px; }
+    .sys-cal-hour { height: 1.5rem; border-bottom: 1px solid var(--stroke); position: relative; }
+    .sys-cal-hour-empty { height: 100%; }
+    .sys-cal-event { position: absolute; left: 2px; right: 2px; background: var(--surface-hover); border-radius: 0.25rem; border-left: 3px solid var(--accent); padding: 0.125rem 0.375rem; font-size: 0.7rem; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+    .sys-cal-event-time { font-size: 0.65rem; color: var(--text-muted); margin-right: 0.25rem; }
+    .sys-cal-event-title { font-weight: 500; }
+    .sys-cal-list { display: flex; flex-direction: column; gap: 1.5rem; }
+    .sys-cal-section { background: var(--surface); border: 1px solid var(--stroke); border-radius: 0.75rem; padding: 1rem; }
+    .sys-cal-section-title { display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; font-weight: 600; margin-bottom: 1rem; color: var(--text); }
+    .sys-cal-section-icon { font-size: 1rem; }
+    .sys-cal-section-count { margin-left: auto; background: var(--accent); color: var(--bg); padding: 0.125rem 0.5rem; border-radius: 1rem; font-size: 0.75rem; }
+    .sys-cal-empty { text-align: center; color: var(--text-muted); padding: 2rem; font-size: 0.9rem; }
+    .sys-cal-list-item { display: flex; gap: 1rem; padding: 0.75rem; border-left: 3px solid var(--accent); background: var(--surface-hover); border-radius: 0 0.5rem 0.5rem 0; margin-bottom: 0.5rem; }
+    .sys-cal-list-item-time { font-size: 0.85rem; font-weight: 600; color: var(--accent); min-width: 50px; }
+    .sys-cal-list-item-date { font-size: 0.8rem; color: var(--text-muted); min-width: 80px; }
+    .sys-cal-list-item-title { font-weight: 500; }
     @media (max-width: 640px) {
       .sys-hero__title { font-size: 2.5rem; }
       .sys-nav__inner { gap: 0.125rem; }
@@ -268,7 +302,7 @@
       .sys-markets { grid-template-columns: 1fr; }
     }
   </style>
-  <script type="module" crossorigin src="/static/landing/assets/index-Cl-mAYLy.js"></script>
+  <script type="module" crossorigin src="/static/landing/assets/index-CpNXfarb.js"></script>
   <link rel="stylesheet" crossorigin href="/static/landing/assets/index-r849xsAl.css">
 </head>
 <body>

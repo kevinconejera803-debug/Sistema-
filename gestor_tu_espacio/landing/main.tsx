@@ -241,7 +241,7 @@ function HomeView() {
 
 const CalendarioView = memo(function CalendarioView() {
   const [events, setEvents] = useState<any[]>([]);
-  const [view, setView] = useState<'month' | 'week' | 'day'>('week');
+  const [view, setView] = useState<'timeline' | 'list'>('timeline');
   const [currentDate, setCurrentDate] = useState(new Date());
   const [showForm, setShowForm] = useState(false);
   const [newEvent, setNewEvent] = useState({ title: '', date: '', time: '12:00', color: '#38bdf8' });
@@ -271,45 +271,53 @@ const CalendarioView = memo(function CalendarioView() {
     });
   };
   const weekDays = getWeekDays();
-  const eventsByDay = events.reduce((acc, e) => {
-    const dateKey = e.start_iso?.split('T')[0];
-    if (dateKey) acc[dateKey] = (acc[dateKey] || []).concat(e);
-    return acc;
-  }, {} as Record<string, any[]>);
-  const getDayEvents = (date: Date) => {
-    const key = date.toISOString().split('T')[0];
-    return eventsByDay[key] || [];
-  };
-  const monthLabel = currentDate.toLocaleDateString('es-CL', { month: 'long', year: 'numeric' }).toUpperCase();
-  const weekLabel = `${weekDays[0].toLocaleDateString('es-CL', { day: 'numeric' })} - ${weekDays[6].toLocaleDateString('es-CL', { day: 'numeric', month: 'short' })}`.toUpperCase();
+  const todayStr = new Date().toISOString().split('T')[0];
+  const todayEvents = events.filter(e => e.start_iso?.startsWith(todayStr));
+  const upcomingEvents = events.filter(e => e.start_iso >= new Date().toISOString()).sort((a, b) => a.start_iso.localeCompare(b.start_iso));
+  const isToday = (d: Date) => d.toISOString().split('T')[0] === todayStr;
   const prevWeek = () => setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() - 7));
   const nextWeek = () => setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 7));
   const goToToday = () => setCurrentDate(new Date());
-  const today = new Date().toISOString().split('T')[0];
-  const isToday = (d: Date) => d.toISOString().split('T')[0] === today;
-
-  const weekDayNames = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
+  const weekLabel = `${weekDays[0].toLocaleDateString('es-CL', { day: 'numeric', month: 'short' })} - ${weekDays[6].toLocaleDateString('es-CL', { day: 'numeric', month: 'short' })}`.toUpperCase();
+  const monthLabel = currentDate.toLocaleDateString('es-CL', { month: 'long', year: 'numeric' }).toUpperCase();
+  
+  const hourSlots = ['07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00'];
+  const weekDayNames = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
+  
+  const getEventsForHour = (day: Date, hour: string) => {
+    const dayKey = day.toISOString().split('T')[0];
+    return events.filter(e => e.start_iso?.startsWith(dayKey) && e.start_iso?.includes(hour));
+  };
 
   return (
     <div className="sys-module">
       <div className="sys-module__header">
         <h1 className="sys-module__title">CALENDARIO</h1>
-        <p className="sys-module__kicker">{weekLabel} · {events.length} eventos</p>
+        <p className="sys-module__kicker">{monthLabel}</p>
       </div>
-      <div className="sys-toolbar">
-        <button className={`sys-btn ${view === 'month' ? 'sys-btn--primary' : 'sys-btn--ghost'}`} onClick={() => setView('month')}>MES</button>
-        <button className={`sys-btn ${view === 'week' ? 'sys-btn--primary' : 'sys-btn--ghost'}`} onClick={() => setView('week')}>SEMANA</button>
-        <div className="sys-toolbar__spacer"></div>
-        <button className="sys-btn sys-btn--ghost" onClick={prevWeek}>◀</button>
-        <button className="sys-btn sys-btn--ghost" onClick={goToToday}>HOY</button>
-        <button className="sys-btn sys-btn--ghost" onClick={nextWeek}>▶</button>
-        <button className="sys-btn sys-btn--primary" onClick={() => setShowForm(!showForm)}>+ EVENTO</button>
+      
+      <div className="sys-cal-nav">
+        <button className="sys-cal-nav-btn" onClick={prevWeek}>◀</button>
+        <div className="sys-cal-current">{weekLabel}</div>
+        <button className="sys-cal-nav-btn" onClick={goToToday}>HOY</button>
+        <button className="sys-cal-nav-btn" onClick={nextWeek}>▶</button>
       </div>
+
+      <div className="sys-cal-tabs">
+        <button className={`sys-cal-tab ${view === 'timeline' ? 'active' : ''}`} onClick={() => setView('timeline')}>
+          <span className="sys-cal-tab-icon">📅</span> LÍNEA DE TIEMPO
+        </button>
+        <button className={`sys-cal-tab ${view === 'list' ? 'active' : ''}`} onClick={() => setView('list')}>
+          <span className="sys-cal-tab-icon">📋</span> LISTADO
+        </button>
+        <button className="sys-btn sys-btn--primary sys-cal-add" onClick={() => setShowForm(!showForm)}>+ NUEVO</button>
+      </div>
+
       {showForm && (
         <div className="sys-form">
           <div className="sys-form__head"><span className="sys-form__badge">Nuevo Evento</span></div>
           <div className="sys-form__row">
-            <input type="text" placeholder="Titulo del evento *" className="sys-input" value={newEvent.title} onChange={(e) => setNewEvent({ ...newEvent, title: e.target.value })} />
+            <input type="text" placeholder="¿Qué tienes planificado?" className="sys-input" value={newEvent.title} onChange={(e) => setNewEvent({ ...newEvent, title: e.target.value })} />
           </div>
           <div className="sys-form__row">
             <input type="date" className="sys-input" value={newEvent.date} onChange={(e) => setNewEvent({ ...newEvent, date: e.target.value })} />
@@ -322,56 +330,78 @@ const CalendarioView = memo(function CalendarioView() {
               <option value="#8b5cf6">Morado</option>
             </select>
           </div>
-          <button className="sys-btn sys-btn--primary" onClick={handleAddEvent}>GUARDAR EVENTO</button>
-        </div>
-      )}
-      {view === 'week' ? (
-        <div className="sys-week-view">
-          <div className="sys-week-header">
-            {weekDays.map((d, i) => (
-              <div key={i} className={`sys-week-day ${isToday(d) ? 'today' : ''}`}>
-                <span className="sys-week-day-name">{weekDayNames[i]}</span>
-                <span className="sys-week-day-num">{d.getDate()}</span>
-              </div>
-            ))}
-          </div>
-          <div className="sys-week-grid">
-            {weekDays.map((d, dayIdx) => {
-              const dayEvents = getDayEvents(d);
-              return (
-                <div key={dayIdx} className={`sys-week-column ${isToday(d) ? 'today' : ''}`}>
-                  {dayEvents.length === 0 && <div className="sys-week-empty">Sin eventos</div>}
-                  {dayEvents.map((ev: any) => (
-                    <div key={ev.id} className="sys-week-event" style={{ borderLeftColor: ev.color }}>
-                      <span className="sys-week-event-time">{ev.start_iso?.split('T')[1]?.substring(0,5) || ''}</span>
-                      <span className="sys-week-event-title">{ev.title}</span>
-                    </div>
-                  ))}
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      ) : (
-        <div className="sys-calendar-month">
-          <div className="sys-calendar__header"><span>{monthLabel}</span></div>
-          <div className="sys-calendar__weekdays">
-            <span>LUN</span><span>MAR</span><span>MIE</span><span>JUE</span><span>VIE</span><span>SAB</span><span>DOM</span>
-          </div>
+          <button className="sys-btn sys-btn--primary" onClick={handleAddEvent}>CREAR EVENTO</button>
         </div>
       )}
 
-      <div className="sys-upcoming">
-        <h3>PRÓXIMOS EVENTOS</h3>
-        <ul className="sys-agenda__list">
-          {events.slice(0, 5).map((e: any) => (
-            <li key={e.id} className="sys-agenda__item" style={{ borderLeftColor: e.color }}>
-              <span className="sys-agenda__date">{e.start_iso?.split('T')[0]}</span>
-              <span className="sys-agenda__title">{e.title}</span>
-            </li>
-          ))}
-        </ul>
-      </div>
+      {view === 'timeline' ? (
+        <div className="sys-cal-timeline">
+          <div className="sys-cal-week">
+            {weekDays.map((d, i) => (
+              <div key={i} className={`sys-cal-day ${isToday(d) ? 'today' : ''}`}>
+                <div className="sys-cal-day-header">
+                  <span className="sys-cal-day-name">{weekDayNames[i]}</span>
+                  <span className="sys-cal-day-num">{d.getDate()}</span>
+                </div>
+                <div className="sys-cal-hours">
+                  {hourSlots.slice(0, 10).map(h => {
+                    const evs = getEventsForHour(d, h);
+                    return (
+                      <div key={h} className="sys-cal-hour">
+                        {evs.length > 0 ? evs.map((ev: any) => (
+                          <div key={ev.id} className="sys-cal-event" style={{ borderLeftColor: ev.color }}>
+                            <span className="sys-cal-event-time">{ev.start_iso?.split('T')[1]?.substring(0,5)}</span>
+                            <span className="sys-cal-event-title">{ev.title}</span>
+                          </div>
+                        )) : <span className="sys-cal-hour-empty"></span>}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      ) : (
+        <div className="sys-cal-list">
+          <div className="sys-cal-section">
+            <div className="sys-cal-section-title">
+              <span className="sys-cal-section-icon">⚡</span> HOY
+              <span className="sys-cal-section-count">{todayEvents.length}</span>
+            </div>
+            {todayEvents.length === 0 ? (
+              <div className="sys-cal-empty">Sin eventos programados para hoy</div>
+            ) : (
+              todayEvents.map((ev: any) => (
+                <div key={ev.id} className="sys-cal-list-item" style={{ borderLeftColor: ev.color }}>
+                  <div className="sys-cal-list-item-time">{ev.start_iso?.split('T')[1]?.substring(0,5) || '--:--'}</div>
+                  <div className="sys-cal-list-item-content">
+                    <div className="sys-cal-list-item-title">{ev.title}</div>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+          <div className="sys-cal-section">
+            <div className="sys-cal-section-title">
+              <span className="sys-cal-section-icon">📆</span> PRÓXIMOS
+              <span className="sys-cal-section-count">{upcomingEvents.length}</span>
+            </div>
+            {upcomingEvents.length === 0 ? (
+              <div className="sys-cal-empty">No hay eventos próximos</div>
+            ) : (
+              upcomingEvents.slice(0, 10).map((ev: any) => (
+                <div key={ev.id} className="sys-cal-list-item" style={{ borderLeftColor: ev.color }}>
+                  <div className="sys-cal-list-item-date">{ev.start_iso?.split('T')[0]}</div>
+                  <div className="sys-cal-list-item-content">
+                    <div className="sys-cal-list-item-title">{ev.title}</div>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+)}
     </div>
   );
 });
