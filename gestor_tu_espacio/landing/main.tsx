@@ -132,6 +132,7 @@ const KeyboardHint = () => {
 function GlobalLayout() {
   const location = useLocation();
   const navigate = useNavigate();
+  const isHome = location.pathname === '/';
 
   const navItems = [
     { path: '/', label: 'Inicio', icon: '🏠' },
@@ -146,10 +147,19 @@ function GlobalLayout() {
 
   const isActive = (path: string) => location.pathname === path;
 
+  if (isHome) {
+    return (
+      <AppContext.Provider value={{ navigate: (slug: string) => navigate(`/${slug}`) }}>
+        <div className="landing">
+          <AnimatedOutlet />
+        </div>
+      </AppContext.Provider>
+    );
+  }
+
   return (
     <AppContext.Provider value={{ navigate: (slug: string) => navigate(`/${slug}`) }}>
       <div className="app">
-        {/* SideNav */}
         <aside className="sidenav">
           <div className="sidenav__brand">
             <div className="sidenav__logo">T</div>
@@ -175,9 +185,7 @@ function GlobalLayout() {
           </div>
         </aside>
 
-        {/* Main Content */}
         <main className="main">
-          {/* TopBar */}
           <header className="topbar">
             <div className="topbar__search">
               <span className="topbar__search-icon">🔍</span>
@@ -190,7 +198,6 @@ function GlobalLayout() {
             </div>
           </header>
 
-          {/* Page Content */}
           <div className="page">
             <AnimatedOutlet />
           </div>
