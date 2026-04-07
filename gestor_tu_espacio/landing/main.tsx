@@ -241,7 +241,7 @@ function HomeView() {
 
 const CalendarioView = memo(function CalendarioView() {
   const [events, setEvents] = useState<any[]>([]);
-  const [view, setView] = useState<'month' | 'week' | 'day'>('month');
+  const [view, setView] = useState<'month' | 'week' | 'day'>('week');
   const [currentDate, setCurrentDate] = useState(new Date());
   const [showForm, setShowForm] = useState(false);
   const [newEvent, setNewEvent] = useState({ title: '', date: '', time: '12:00', color: '#38bdf8' });
@@ -261,45 +261,49 @@ const CalendarioView = memo(function CalendarioView() {
       loadEvents();
     }
   };
-  const daysInMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
-  const firstDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getDay();
-  const monthKey = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}`;
+  const getWeekDays = () => {
+    const start = new Date(currentDate);
+    start.setDate(start.getDate() - start.getDay() + 1);
+    return Array.from({ length: 7 }, (_, i) => {
+      const d = new Date(start);
+      d.setDate(d.getDate() + i);
+      return d;
+    });
+  };
+  const weekDays = getWeekDays();
   const eventsByDay = events.reduce((acc, e) => {
     const dateKey = e.start_iso?.split('T')[0];
     if (dateKey) acc[dateKey] = (acc[dateKey] || []).concat(e);
     return acc;
   }, {} as Record<string, any[]>);
-  const days = Array.from({ length: 42 }, (_, i) => {
-    const day = i - firstDay + 1;
-    const dateStr = day > 0 && day <= daysInMonth ? `${monthKey}-${String(day).padStart(2, '0')}` : '';
-    const dayEvents = dateStr ? (eventsByDay[`${currentDate.getFullYear()}-${dateStr}`] || []) : [];
-    return { day: day > 0 && day <= daysInMonth ? day : '', current: day === currentDate.getDate(), events: dayEvents };
-  });
+  const getDayEvents = (date: Date) => {
+    const key = date.toISOString().split('T')[0];
+    return eventsByDay[key] || [];
+  };
   const monthLabel = currentDate.toLocaleDateString('es-CL', { month: 'long', year: 'numeric' }).toUpperCase();
-  const prevMonth = () => setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1));
-  const nextMonth = () => setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1));
-  const todayEvents = events.filter(e => e.start_iso?.startsWith(currentDate.toISOString().split('T')[0]));
+  const weekLabel = `${weekDays[0].toLocaleDateString('es-CL', { day: 'numeric' })} - ${weekDays[6].toLocaleDateString('es-CL', { day: 'numeric', month: 'short' })}`.toUpperCase();
+  const prevWeek = () => setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() - 7));
+  const nextWeek = () => setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 7));
   const goToToday = () => setCurrentDate(new Date());
+  const today = new Date().toISOString().split('T')[0];
+  const isToday = (d: Date) => d.toISOString().split('T')[0] === today;
+
+  const weekDayNames = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
 
   return (
     <div className="sys-module">
       <div className="sys-module__header">
         <h1 className="sys-module__title">CALENDARIO</h1>
-        <p className="sys-module__kicker">Horario en hora local · evento o dia completo</p>
+        <p className="sys-module__kicker">{weekLabel} · {events.length} eventos</p>
       </div>
       <div className="sys-toolbar">
         <button className={`sys-btn ${view === 'month' ? 'sys-btn--primary' : 'sys-btn--ghost'}`} onClick={() => setView('month')}>MES</button>
         <button className={`sys-btn ${view === 'week' ? 'sys-btn--primary' : 'sys-btn--ghost'}`} onClick={() => setView('week')}>SEMANA</button>
-        <button className={`sys-btn ${view === 'day' ? 'sys-btn--primary' : 'sys-btn--ghost'}`} onClick={() => setView('day')}>DIA</button>
         <div className="sys-toolbar__spacer"></div>
-        <button className="sys-btn sys-btn--ghost" onClick={prevMonth}>◀</button>
+        <button className="sys-btn sys-btn--ghost" onClick={prevWeek}>◀</button>
         <button className="sys-btn sys-btn--ghost" onClick={goToToday}>HOY</button>
-        <button className="sys-btn sys-btn--ghost" onClick={nextMonth}>▶</button>
-        <button className="sys-btn sys-btn--primary" onClick={() => setShowForm(!showForm)}>+ NUEVO</button>
-      </div>
-      <div className="sys-quick-stats">
-        <div className="sys-quick-stat"><span className="sys-quick-stat__value">{events.length}</span><span className="sys-quick-stat__label">eventos</span></div>
-        <div className="sys-quick-stat highlight"><span className="sys-quick-stat__value">{todayEvents.length}</span><span className="sys-quick-stat__label">hoy</span></div>
+        <button className="sys-btn sys-btn--ghost" onClick={nextWeek}>▶</button>
+        <button className="sys-btn sys-btn--primary" onClick={() => setShowForm(!showForm)}>+ EVENTO</button>
       </div>
       {showForm && (
         <div className="sys-form">
@@ -321,34 +325,48 @@ const CalendarioView = memo(function CalendarioView() {
           <button className="sys-btn sys-btn--primary" onClick={handleAddEvent}>GUARDAR EVENTO</button>
         </div>
       )}
-      <div className="sys-calendar">
-        <div className="sys-calendar__header"><span>{monthLabel}</span></div>
-        <div className="sys-calendar__weekdays">
-          <span>LUN</span><span>MAR</span><span>MIE</span><span>JUE</span><span>VIE</span><span>SAB</span><span>DOM</span>
-        </div>
-        <div className="sys-calendar__grid">
-          {days.map((d, i) => (
-            <div key={i} className={`sys-calendar__cell ${d.current ? 'today' : ''} ${!d.day ? 'empty' : ''}`}>
-              <span className="sys-calendar__day-num">{d.day}</span>
-              {d.events.length > 0 && (
-                <div className="sys-calendar__dots">
-                  {d.events.slice(0, 3).map((ev: any, j: number) => (
-                    <span key={j} className="sys-calendar__dot" style={{ background: ev.color }}></span>
+      {view === 'week' ? (
+        <div className="sys-week-view">
+          <div className="sys-week-header">
+            {weekDays.map((d, i) => (
+              <div key={i} className={`sys-week-day ${isToday(d) ? 'today' : ''}`}>
+                <span className="sys-week-day-name">{weekDayNames[i]}</span>
+                <span className="sys-week-day-num">{d.getDate()}</span>
+              </div>
+            ))}
+          </div>
+          <div className="sys-week-grid">
+            {weekDays.map((d, dayIdx) => {
+              const dayEvents = getDayEvents(d);
+              return (
+                <div key={dayIdx} className={`sys-week-column ${isToday(d) ? 'today' : ''}`}>
+                  {dayEvents.length === 0 && <div className="sys-week-empty">Sin eventos</div>}
+                  {dayEvents.map((ev: any) => (
+                    <div key={ev.id} className="sys-week-event" style={{ borderLeftColor: ev.color }}>
+                      <span className="sys-week-event-time">{ev.start_iso?.split('T')[1]?.substring(0,5) || ''}</span>
+                      <span className="sys-week-event-title">{ev.title}</span>
+                    </div>
                   ))}
-                  {d.events.length > 3 && <span className="sys-calendar__more">+{d.events.length - 3}</span>}
                 </div>
-              )}
-            </div>
-          ))}
+              );
+            })}
+          </div>
         </div>
-      </div>
-      <div className="sys-agenda">
-        <h3>EVENTOS DE HOY ({todayEvents.length})</h3>
+      ) : (
+        <div className="sys-calendar-month">
+          <div className="sys-calendar__header"><span>{monthLabel}</span></div>
+          <div className="sys-calendar__weekdays">
+            <span>LUN</span><span>MAR</span><span>MIE</span><span>JUE</span><span>VIE</span><span>SAB</span><span>DOM</span>
+          </div>
+        </div>
+      )}
+
+      <div className="sys-upcoming">
+        <h3>PRÓXIMOS EVENTOS</h3>
         <ul className="sys-agenda__list">
-          {todayEvents.length === 0 && <li className="sys-agenda__empty">No hay eventos para hoy</li>}
-          {todayEvents.map(e => (
+          {events.slice(0, 5).map((e: any) => (
             <li key={e.id} className="sys-agenda__item" style={{ borderLeftColor: e.color }}>
-              <span className="sys-agenda__time">{e.start_iso?.split('T')[1]?.substring(0,5) || '00:00'}</span>
+              <span className="sys-agenda__date">{e.start_iso?.split('T')[0]}</span>
               <span className="sys-agenda__title">{e.title}</span>
             </li>
           ))}
@@ -411,7 +429,52 @@ const UniversidadView = memo(function UniversidadView() {
     <div className="sys-module">
       <div className="sys-module__header">
         <h1 className="sys-module__title">UNIVERSIDAD</h1>
-        <p className="sys-module__kicker">Plan de estudios y vida académica</p>
+        <p className="sys-module__kicker">Gestor de tareas académicas · {pendingTasks.length} pendientes</p>
+      </div>
+      <div className="sys-kanban">
+        <div className="sys-kanban-column">
+          <div className="sys-kanban-header">
+            <span>PENDIENTES</span>
+            <span className="sys-kanban-count">{pendingTasks.length}</span>
+          </div>
+          <div className="sys-kanban-tasks">
+            {pendingTasks.length === 0 && <div className="sys-kanban-empty">¡Sin tareas pendientes!</div>}
+            {pendingTasks.map(task => (
+              <div key={task.id} className={`sys-kanban-card ${isOverdue(task.due_iso) ? 'overdue' : ''}`}>
+                <div className="sys-kanban-card-header">
+                  <span className="sys-kanban-course">{task.course || 'General'}</span>
+                  <span className={`sys-kanban-priority ${task.priority}`}>{task.priority}</span>
+                </div>
+                <div className="sys-kanban-title">{task.title}</div>
+                <div className="sys-kanban-meta">
+                  <span className={`sys-kanban-due ${isOverdue(task.due_iso) ? 'overdue' : ''}`}>📅 {task.due_iso}</span>
+                </div>
+                <div className="sys-kanban-actions">
+                  <button onClick={() => toggleTask(task.id, task.completed)}>✓</button>
+                  <button onClick={() => deleteTask(task.id)}>🗑️</button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="sys-kanban-column done">
+          <div className="sys-kanban-header">
+            <span>COMPLETADAS</span>
+            <span className="sys-kanban-count">{completedTasks.length}</span>
+          </div>
+          <div className="sys-kanban-tasks">
+            {completedTasks.length === 0 && <div className="sys-kanban-empty">Sin completar</div>}
+            {completedTasks.slice(0, 10).map(task => (
+              <div key={task.id} className="sys-kanban-card completed">
+                <div className="sys-kanban-title">{task.title}</div>
+                <div className="sys-kanban-actions">
+                  <button onClick={() => toggleTask(task.id, task.completed)}>↩</button>
+                  <button onClick={() => deleteTask(task.id)}>🗑️</button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
       <div className="sys-progress-bar">
         <div className="sys-progress-bar__fill" style={{ width: `${progress}%` }}></div>
@@ -497,7 +560,9 @@ const ContactosView = memo(function ContactosView() {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('');
   const [selectedLetter, setSelectedLetter] = useState<string | null>(null);
+  const [tab, setTab] = useState<'all' | 'favorites'>('all');
   const [showForm, setShowForm] = useState(false);
+  const [favorites, setFavorites] = useState<number[]>([]);
   const [newContact, setNewContact] = useState({ name: '', email: '', phone: '', company: '' });
 
   useEffect(() => { loadContacts(); }, []);
@@ -516,26 +581,31 @@ const ContactosView = memo(function ContactosView() {
       loadContacts();
     }
   };
+  const toggleFavorite = (id: number) => {
+    setFavorites(prev => prev.includes(id) ? prev.filter(f => f !== id) : [...prev, id]);
+  };
   const filtered = contacts.filter(c => c.name?.toLowerCase().includes(filter.toLowerCase()) || c.email?.toLowerCase().includes(filter.toLowerCase()));
   const letterIndex = Array.from(new Set(contacts.map(c => c.name?.charAt(0).toUpperCase()).filter(Boolean))).sort();
-
-  const filteredByLetter = selectedLetter 
-    ? filtered.filter(c => c.name?.charAt(0).toUpperCase() === selectedLetter)
-    : filtered;
+  const favoriteContacts = contacts.filter(c => favorites.includes(c.id));
+  
+  const displayContacts = tab === 'favorites' ? favoriteContacts : (selectedLetter ? filtered.filter(c => c.name?.charAt(0).toUpperCase() === selectedLetter) : filtered);
 
   return (
     <div className="sys-module">
       <div className="sys-module__header">
         <h1 className="sys-module__title">CONTACTOS</h1>
-        <p className="sys-module__kicker">{contacts.length} contactos en tu agenda</p>
+        <p className="sys-module__kicker">{contacts.length} contactos · {favorites.length} favoritos</p>
+      </div>
+      <div className="sys-tabs">
+        <button className={`sys-tab ${tab === 'all' ? 'active' : ''}`} onClick={() => setTab('all')}>TODOS</button>
+        <button className={`sys-tab ${tab === 'favorites' ? 'active' : ''}`} onClick={() => setTab('favorites')}>⭐ FAVORITOS</button>
       </div>
       <div className="sys-toolbar">
-        <input type="search" className="sys-search" placeholder="Buscar por nombre, email..." value={filter} onChange={(e) => { setFilter(e.target.value); setSelectedLetter(null); }} />
-        <span className="sys-search__count">{filtered.length} resultados</span>
+        {tab === 'all' && <input type="search" className="sys-search" placeholder="Buscar por nombre, email..." value={filter} onChange={(e) => { setFilter(e.target.value); setSelectedLetter(null); }} />}
         <div className="sys-toolbar__spacer"></div>
         <button className="sys-btn sys-btn--primary" onClick={() => setShowForm(!showForm)}>+ NUEVO</button>
       </div>
-      {letterIndex.length > 0 && (
+      {tab === 'all' && letterIndex.length > 0 && (
         <div className="sys-letter-index">
           <button className={`sys-letter ${!selectedLetter ? 'active' : ''}`} onClick={() => setSelectedLetter(null)}>TODO</button>
           {letterIndex.map(l => (
@@ -561,15 +631,15 @@ const ContactosView = memo(function ContactosView() {
       )}
       {loading ? (
         <div className="sys-loading-inline"><div className="sys-spinner"></div>Cargando contactos...</div>
-      ) : filtered.length === 0 ? (
+      ) : displayContacts.length === 0 ? (
         <div className="sys-empty">
           <div className="sys-empty__icon">📇</div>
-          <p>{filter ? 'No se encontraron contactos' : 'No tienes contactos aún'}</p>
-          <button className="sys-btn sys-btn--primary" onClick={() => setShowForm(true)}>AGREGAR CONTACTO</button>
+          <p>{tab === 'favorites' ? 'No tienes favoritos' : filter ? 'No se encontraron contactos' : 'No tienes contactos aún'}</p>
+          {tab === 'all' && <button className="sys-btn sys-btn--primary" onClick={() => setShowForm(true)}>AGREGAR CONTACTO</button>}
         </div>
       ) : (
         <div className="sys-contacts">
-          {filteredByLetter.map(c => (
+          {displayContacts.map(c => (
             <div key={c.id} className="sys-contact">
               <div className="sys-contact__avatar" style={{ background: `hsl(${c.name?.charCodeAt(0) * 10 % 360}, 60%, 40%)` }}>{c.name?.charAt(0) || '?'}</div>
               <div className="sys-contact__info">
@@ -579,6 +649,7 @@ const ContactosView = memo(function ContactosView() {
                 <div className="sys-contact__company">{c.company}</div>
               </div>
               <div className="sys-contact__actions">
+                <button className={`sys-btn-icon star ${favorites.includes(c.id) ? 'active' : ''}`} onClick={() => toggleFavorite(c.id)}>{favorites.includes(c.id) ? '⭐' : '☆'}</button>
                 {c.phone && <button className="sys-btn-icon" title="Llamar" onClick={() => window.location.href = `tel:${c.phone}`}>📞</button>}
                 {c.email && <button className="sys-btn-icon" title="Email" onClick={() => window.location.href = `mailto:${c.email}`}>✉️</button>}
               </div>
@@ -622,21 +693,29 @@ const MercadosView = memo(function MercadosView() {
 
 const NoticiasView = memo(function NoticiasView() {
   const [news] = useState([
-    { title: 'Fed mantiene tasas sin cambios', source: 'Bloomberg', time: 'hace 2h' },
-    { title: 'Tech giants reportan ganancias', source: 'Reuters', time: 'hace 4h' },
-    { title: 'Mercados asiaticos mixtos', source: 'CNBC', time: 'hace 6h' },
+    { id: 1, title: 'Fed mantiene tasas sin cambios en reunión de abril', source: 'Bloomberg', time: 'hace 2h', category: 'Economía', image: '📈' },
+    { id: 2, title: 'Tech giants reportan ganancias trimestrales', source: 'Reuters', time: 'hace 4h', category: 'Tecnología', image: '💻' },
+    { id: 3, title: 'Mercados asiáticos mixtos tras decisiones de bancos centrales', source: 'CNBC', time: 'hace 6h', category: 'Mercados', image: '🌏' },
+    { id: 4, title: 'Nueva ley de startup friendly aprobada', source: 'El Mercurio', time: 'hace 8h', category: 'Negocios', image: '🚀' },
   ]);
   return (
     <div className="sys-module">
       <div className="sys-module__header">
         <h1 className="sys-module__title">NOTICIAS</h1>
-        <p className="sys-module__kicker">Ultimas Noticias.</p>
+        <p className="sys-module__kicker">{news.length}headlines · Actualizado en tiempo real</p>
       </div>
-      <div className="sys-news">
-        {news.map((n, i) => (
-          <div key={i} className="sys-news__item">
-            <div className="sys-news__title">{n.title}</div>
-            <div className="sys-news__meta"><span>{n.source}</span><span>{n.time}</span></div>
+      <div className="sys-news-grid">
+        {news.map(n => (
+          <div key={n.id} className="sys-news-card">
+            <div className="sys-news-card-image">{n.image}</div>
+            <div className="sys-news-card-content">
+              <div className="sys-news-card-category">{n.category}</div>
+              <div className="sys-news-card-title">{n.title}</div>
+              <div className="sys-news-card-meta">
+                <span className="sys-news-card-source">{n.source}</span>
+                <span className="sys-news-card-time">{n.time}</span>
+              </div>
+            </div>
           </div>
         ))}
       </div>
