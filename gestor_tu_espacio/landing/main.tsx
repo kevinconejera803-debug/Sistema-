@@ -1,5 +1,5 @@
 import { createRoot } from 'react-dom/client';
-import { useState, useEffect, useRef, createContext, useContext } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo, memo } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Hls from 'hls.js';
@@ -23,10 +23,16 @@ const MODULES: Module[] = [
   { slug: 'asistente', icon: '🤖', title: 'Asistente IA', desc: 'Chat inteligente con contexto', lead: 'IA local con memoria y contexto.' },
 ];
 
-const AppContext = createContext<{ currentModule: string | null, setCurrentModule: (s: string | null) => void }>({ currentModule: null, setCurrentModule: () => {} });
+const globalCache = {
+  chatHistory: [] as { role: 'user' | 'bot'; content: string }[],
+  videoInitialized: false,
+  gsapReady: false,
+};
 
-function useApp() {
-  return useContext(AppContext);
+function initGSAP() {
+  if (!globalCache.gsapReady) {
+    globalCache.gsapReady = true;
+  }
 }
 
 function LoadingScreen({ onComplete }: { onComplete: () => void }) {
@@ -35,8 +41,9 @@ function LoadingScreen({ onComplete }: { onComplete: () => void }) {
   const [, setProgress] = useState(0);
 
   useEffect(() => {
+    initGSAP();
     let start = performance.now();
-    const duration = 2500;
+    const duration = 1500;
     
     function animate(now: number) {
       const elapsed = now - start;
@@ -49,7 +56,7 @@ function LoadingScreen({ onComplete }: { onComplete: () => void }) {
       if (prog < 100) {
         requestAnimationFrame(animate);
       } else {
-        setTimeout(onComplete, 400);
+        setTimeout(onComplete, 200);
       }
     }
     
@@ -64,22 +71,20 @@ function LoadingScreen({ onComplete }: { onComplete: () => void }) {
   );
 }
 
-function Navigation({ scrolled }: { scrolled: boolean }) {
-  const { setCurrentModule } = useApp();
-
+const Navigation = memo(function Navigation({ scrolled, onNavigate }: { scrolled: boolean; onNavigate: (slug: string | null) => void }) {
   return (
     <nav className={`nav ${scrolled ? 'scrolled' : ''}`}>
       <div className="nav-inner">
-        <button onClick={() => setCurrentModule(null)} className="nav-link active">Home</button>
-        <button onClick={() => setCurrentModule('calendario')} className="nav-link">Calendario</button>
-        <button onClick={() => setCurrentModule('universidad')} className="nav-link">Universidad</button>
-        <button onClick={() => setCurrentModule('contactos')} className="nav-link">Contactos</button>
-        <button onClick={() => setCurrentModule('asistente')} className="nav-link">IA</button>
-        <a href="https://github.com/kevinconejera803-debug/Sistema-" className="nav-link" target="_blank">GitHub ↗</a>
+        <button onClick={() => onNavigate(null)} className="nav-link active">Home</button>
+        <button onClick={() => onNavigate('calendario')} className="nav-link">Calendario</button>
+        <button onClick={() => onNavigate('universidad')} className="nav-link">Universidad</button>
+        <button onClick={() => onNavigate('contactos')} className="nav-link">Contactos</button>
+        <button onClick={() => onNavigate('asistente')} className="nav-link">IA</button>
+        <a href="https://github.com/kevinconejera803-debug/Sistema-" className="nav-link" target="_blank" rel="noopener">GitHub ↗</a>
       </div>
     </nav>
   );
-}
+});
 
 function Hero() {
   const contentRef = useRef<HTMLDivElement>(null);
@@ -89,10 +94,10 @@ function Hero() {
       gsap.from(contentRef.current.children, {
         y: 30,
         opacity: 0,
-        duration: 1,
-        stagger: 0.15,
+        duration: 0.8,
+        stagger: 0.1,
         ease: 'power3.out',
-        delay: 0.3,
+        delay: 0.2,
       });
     }
   }, []);
@@ -120,22 +125,21 @@ function Hero() {
   );
 }
 
-function ModulesGrid() {
+function ModulesGrid({ onSelect }: { onSelect: (slug: string) => void }) {
   const gridRef = useRef<HTMLDivElement>(null);
-  const { setCurrentModule } = useApp();
 
   useEffect(() => {
     if (gridRef.current) {
       gsap.from(gridRef.current.children, {
+        y: 40,
+        opacity: 0,
+        duration: 0.6,
+        stagger: 0.08,
+        ease: 'power3.out',
         scrollTrigger: {
           trigger: gridRef.current,
-          start: 'top 80%',
+          start: 'top 85%',
         },
-        y: 50,
-        opacity: 0,
-        duration: 0.8,
-        stagger: 0.1,
-        ease: 'power3.out',
       });
     }
   }, []);
@@ -148,7 +152,7 @@ function ModulesGrid() {
       </div>
       <div className="modules-grid" ref={gridRef}>
         {MODULES.map((mod) => (
-          <button key={mod.slug} onClick={() => setCurrentModule(mod.slug)} className="module-card">
+          <button key={mod.slug} onClick={() => onSelect(mod.slug)} className="module-card">
             <div className="module-card-icon">{mod.icon}</div>
             <h3 className="module-card-title">{mod.title}</h3>
             <p className="module-card-desc">{mod.desc}</p>
@@ -159,28 +163,59 @@ function ModulesGrid() {
   );
 }
 
-function ModulePage({ slug }: { slug: string }) {
-  const { setCurrentModule } = useApp();
-  const mod = MODULES.find(m => m.slug === slug);
+const ModulePage = memo(function ModulePage({ slug, onBack }: { slug: string; onBack: () => void }) {
+  const mod = useMemo(() => MODULES.find(m => m.slug === slug), [slug]);
   const contentRef = useRef<HTMLDivElement>(null);
+  const chatInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (contentRef.current) {
-      gsap.from(contentRef.current, {
-        y: 30,
-        opacity: 0,
-        duration: 0.8,
-        ease: 'power3.out',
-      });
+      gsap.fromTo(contentRef.current, 
+        { y: 20, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.4, ease: 'power3.out' }
+      );
     }
   }, [slug]);
+
+  const handleSendMessage = useCallback(() => {
+    const input = chatInputRef.current;
+    if (!input?.value.trim()) return;
+    
+    const msg = input.value.trim();
+    globalCache.chatHistory.push({ role: 'user', content: msg });
+    input.value = '';
+    
+    const messagesEl = document.getElementById('chat-messages');
+    if (messagesEl) {
+      const userMsg = document.createElement('div');
+      userMsg.className = 'chat-message user';
+      userMsg.innerHTML = `<div class="chat-bubble">${msg}</div>`;
+      messagesEl.appendChild(userMsg);
+      messagesEl.scrollTop = messagesEl.scrollHeight;
+      
+      setTimeout(() => {
+        globalCache.chatHistory.push({ role: 'bot', content: 'Entendido. ¿Hay algo más en lo que pueda ayudarte?' });
+        const botMsg = document.createElement('div');
+        botMsg.className = 'chat-message bot';
+        botMsg.innerHTML = '<span class="chat-avatar">🤖</span><div class="chat-bubble">Entendido. ¿Hay algo más en lo que pueda ayudarte?</div>';
+        messagesEl.appendChild(botMsg);
+        messagesEl.scrollTop = messagesEl.scrollHeight;
+      }, 500);
+    }
+  }, []);
+
+  const handleKeyPress = useCallback((e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleSendMessage();
+    }
+  }, [handleSendMessage]);
 
   if (!mod) {
     return (
       <section className="modulo-page">
         <div className="modulo-hero">
           <h1>Módulo no encontrado</h1>
-          <button onClick={() => setCurrentModule(null)} className="btn btn-primary">Volver al Home</button>
+          <button onClick={onBack} className="btn btn-primary">Volver al Home</button>
         </div>
       </section>
     );
@@ -190,7 +225,7 @@ function ModulePage({ slug }: { slug: string }) {
     <section className="modulo-page">
       <nav className="nav scrolled">
         <div className="nav-inner">
-          <button onClick={() => setCurrentModule(null)} className="nav-link">← Home</button>
+          <button onClick={onBack} className="nav-link">← Home</button>
           <button className="nav-link active">{mod.title}</button>
         </div>
       </nav>
@@ -204,21 +239,31 @@ function ModulePage({ slug }: { slug: string }) {
           {slug === 'asistente' ? (
             <div className="ai-chat">
               <div className="chat-messages" id="chat-messages">
-                <div className="chat-message bot">
-                  <span className="chat-avatar">🤖</span>
-                  <div className="chat-bubble">Hola soy tu asistente IA. ¿En qué puedo ayudarte hoy?</div>
-                </div>
+                {globalCache.chatHistory.length === 0 && (
+                  <div className="chat-message bot">
+                    <span className="chat-avatar">🤖</span>
+                    <div className="chat-bubble">Hola soy tu asistente IA. ¿En qué puedo ayudarte hoy?</div>
+                  </div>
+                )}
               </div>
               <div className="chat-input-wrap">
-                <input type="text" id="chat-input" className="chat-input" placeholder="Escribe tu mensaje..." />
-                <button id="chat-send" className="chat-send">→</button>
+                <input 
+                  ref={chatInputRef}
+                  type="text" 
+                  id="chat-input" 
+                  className="chat-input" 
+                  placeholder="Escribe tu mensaje..." 
+                  onKeyPress={handleKeyPress}
+                />
+                <button onClick={handleSendMessage} className="chat-send">→</button>
               </div>
             </div>
           ) : (
             <div className="module-preview">
               <p style={{ color: 'var(--text-muted)', textAlign: 'center' }}>
-                Este módulo requiere datos. Puedes agregar eventos en el calendario, 
-                tareas en universidad, contactos, etc.
+                Este módulo te permite gestionar tus {mod.desc.toLowerCase()}.
+                <br /><br />
+                Accede al modo completo para todas las funcionalidades.
               </p>
               <a href={`/${slug}`} className="btn btn-primary" style={{ marginTop: '1rem' }}>
                 Abrir en modo avanzado →
@@ -227,11 +272,11 @@ function ModulePage({ slug }: { slug: string }) {
           )}
         </div>
         
-        <button onClick={() => setCurrentModule(null)} className="modulo-back">← Volver al Home</button>
+        <button onClick={onBack} className="modulo-back">← Volver al Home</button>
       </div>
     </section>
   );
-}
+});
 
 function Stats() {
   return (
@@ -274,7 +319,7 @@ function App() {
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -282,62 +327,48 @@ function App() {
     window.scrollTo(0, 0);
   }, [currentModule]);
 
+  const handleNavigate = useCallback((slug: string | null) => {
+    setCurrentModule(slug);
+  }, []);
+
+  const handleModuleSelect = useCallback((slug: string) => {
+    setCurrentModule(slug);
+  }, []);
+
   if (loading) {
     return <LoadingScreen onComplete={() => setLoading(false)} />;
   }
 
   return (
-    <AppContext.Provider value={{ currentModule, setCurrentModule }}>
+    <>
+      {!currentModule && <Navigation scrolled={scrolled} onNavigate={handleNavigate} />}
       {currentModule ? (
-        <ModulePage slug={currentModule} />
+        <ModulePage slug={currentModule} onBack={() => setCurrentModule(null)} />
       ) : (
         <>
-          <Navigation scrolled={scrolled} />
           <Hero />
-          <ModulesGrid />
+          <ModulesGrid onSelect={handleModuleSelect} />
           <Stats />
           <Footer />
         </>
       )}
-    </AppContext.Provider>
+    </>
   );
 }
 
 const root = createRoot(document.getElementById('root')!);
 root.render(<App />);
 
-const video = document.querySelector('video');
-if (video) {
-  if (Hls.isSupported()) {
-    const hls = new Hls();
-    hls.loadSource('https://stream.mux.com/Aa02T7oM1wH5Mk5EEVDYhbZ1ChcdhRsS2m1NYyx4Ua1g.m3u8');
-    hls.attachMedia(video);
-  } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-    video.src = 'https://stream.mux.com/Aa02T7oM1wH5Mk5EEVDYhbZ1ChcdhRsS2m1NYyx4Ua1g.m3u8';
+if (!globalCache.videoInitialized) {
+  globalCache.videoInitialized = true;
+  const video = document.querySelector('video');
+  if (video) {
+    if (Hls.isSupported()) {
+      const hls = new Hls({ enableWorker: true, lowLatencyMode: true });
+      hls.loadSource('https://stream.mux.com/Aa02T7oM1wH5Mk5EEVDYhbZ1ChcdhRsS2m1NYyx4Ua1g.m3u8');
+      hls.attachMedia(video);
+    } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+      video.src = 'https://stream.mux.com/Aa02T7oM1wH5Mk5EEVDYhbZ1ChcdhRsS2m1NYyx4Ua1g.m3u8';
+    }
   }
 }
-
-document.addEventListener('click', (e) => {
-  const target = e.target as HTMLElement;
-  if (target.id === 'chat-send') {
-    const input = document.getElementById('chat-input') as HTMLInputElement;
-    const messages = document.getElementById('chat-messages');
-    if (input.value.trim() && messages) {
-      const userMsg = document.createElement('div');
-      userMsg.className = 'chat-message user';
-      userMsg.innerHTML = `<div class="chat-bubble">${input.value}</div>`;
-      messages.appendChild(userMsg);
-      input.value = '';
-      messages.scrollTop = messages.scrollHeight;
-    }
-  }
-});
-
-document.addEventListener('keypress', (e) => {
-  if (e.key === 'Enter') {
-    const input = document.getElementById('chat-input') as HTMLInputElement;
-    if (input && document.activeElement === input) {
-      input.dispatchEvent(new Event('click'));
-    }
-  }
-});
