@@ -86,19 +86,17 @@ const LoadingScreen = memo(function LoadingScreen({ onComplete }: { onComplete: 
 function AnimatedOutlet() {
   const containerRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
-  const prevRef = useRef(location.pathname);
 
   useEffect(() => {
-    if (containerRef.current && location.pathname !== prevRef.current) {
+    if (containerRef.current) {
       gsap.fromTo(containerRef.current, 
-        { y: 20, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.35, ease: 'power2.out' }
+        { y: 24, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.3, ease: 'power2.out' }
       );
-      prevRef.current = location.pathname;
     }
   }, [location.pathname]);
 
-  return <div ref={containerRef}><Outlet /></div>;
+  return <div ref={containerRef} className="sys-view"><Outlet /></div>;
 }
 
 function GlobalLayout() {
