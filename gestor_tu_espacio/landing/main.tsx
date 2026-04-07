@@ -1,5 +1,5 @@
 import { createRoot } from 'react-dom/client';
-import { useState, useEffect, useRef, useCallback, useMemo, memo, Suspense, startTransition } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo, memo, Suspense } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Hls from 'hls.js';
@@ -79,20 +79,20 @@ const LoadingScreen = memo(function LoadingScreen({ onComplete }: { onComplete: 
   );
 });
 
-const Navigation = memo(function Navigation({ scrolled, onNavigate }: { scrolled: boolean; onNavigate: (slug: string | null) => void }) {
+const Navigation = memo(function Navigation({ scrolled }: { scrolled: boolean }) {
   return (
     <nav className={`nav ${scrolled ? 'scrolled' : ''}`}>
       <div className="nav-inner">
-        <button onClick={() => onNavigate(null)} className="nav-link active">Home</button>
+        <a href="/" className="nav-link active">Home</a>
         {MODULES.slice(0, 5).map((mod) => (
-          <button 
+          <a 
             key={mod.slug}
-            onClick={() => onNavigate(mod.slug)}
+            href={`/${mod.slug}`}
             onMouseEnter={() => handleNavHover(mod.slug)}
             className="nav-link"
           >
             {mod.title}
-          </button>
+          </a>
         ))}
         <a href="https://github.com/kevinconejera803-debug/Sistema-" className="nav-link" target="_blank" rel="noopener">GitHub ↗</a>
       </div>
@@ -139,7 +139,7 @@ const Hero = memo(function Hero() {
   );
 });
 
-const ModulesGrid = memo(function ModulesGrid({ onSelect }: { onSelect: (slug: string) => void }) {
+const ModulesGrid = memo(function ModulesGrid() {
   const gridRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -166,16 +166,16 @@ const ModulesGrid = memo(function ModulesGrid({ onSelect }: { onSelect: (slug: s
       </div>
       <div className="modules-grid" ref={gridRef}>
         {MODULES.map((mod) => (
-          <button 
+          <a 
             key={mod.slug} 
-            onClick={() => startTransition(() => onSelect(mod.slug))}
+            href={`/${mod.slug}`}
             onMouseEnter={() => handleNavHover(mod.slug)}
             className="module-card"
           >
             <div className="module-card-icon">{mod.icon}</div>
             <h3 className="module-card-title">{mod.title}</h3>
             <p className="module-card-desc">{mod.desc}</p>
-          </button>
+          </a>
         ))}
       </div>
     </section>
@@ -353,27 +353,19 @@ function App() {
     window.scrollTo(0, 0);
   }, [currentModule]);
 
-  const handleNavigate = useCallback((slug: string | null) => {
-    startTransition(() => setCurrentModule(slug));
-  }, []);
-
-  const handleModuleSelect = useCallback((slug: string) => {
-    startTransition(() => setCurrentModule(slug));
-  }, []);
-
   if (loading) {
     return <LoadingScreen onComplete={() => setLoading(false)} />;
   }
 
   return (
     <Suspense fallback={<PageLoader />}>
-      {!currentModule && <Navigation scrolled={scrolled} onNavigate={handleNavigate} />}
+      {!currentModule && <Navigation scrolled={scrolled} />}
       {currentModule ? (
         <ModulePage slug={currentModule} onBack={() => setCurrentModule(null)} />
       ) : (
         <>
           <Hero />
-          <ModulesGrid onSelect={handleModuleSelect} />
+          <ModulesGrid />
           <Stats />
           <Footer />
         </>
