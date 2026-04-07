@@ -45,7 +45,7 @@ async function postAPI(endpoint: string, data: any) {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
-    });
+});
     return await res.json();
   } catch (e: unknown) { return { error: (e as Error).message }; }
 }
@@ -98,6 +98,36 @@ function AnimatedOutlet() {
 
   return <div ref={containerRef} className="sys-view"><Outlet /></div>;
 }
+
+const KeyboardHint = () => {
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === '?' && document.activeElement?.tagName !== 'INPUT') {
+        e.preventDefault();
+        const el = document.getElementById('keyboard-help');
+        if (el) el.style.display = 'flex';
+      }
+      if (e.key === 'Escape') {
+        const el = document.getElementById('keyboard-help');
+        if (el) el.style.display = 'none';
+      }
+    };
+    window.addEventListener('keydown', handleKey);
+    return () => window.removeEventListener('keydown', handleKey);
+  }, []);
+  return (
+    <div id="keyboard-help" className="sys-shortcuts-overlay" style={{ display: 'none' }} onClick={(e: any) => { if (e.target.id === 'keyboard-help') e.target.style.display = 'none'; }}>
+      <div className="sys-shortcuts">
+        <h3>Atajos de Teclado</h3>
+        <div className="sys-shortcuts__grid">
+          <div className="sys-shortcuts__item"><kbd>?</kbd><span>Mostrar ayuda</span></div>
+          <div className="sys-shortcuts__item"><kbd>Esc</kbd><span>Cerrar</span></div>
+        </div>
+        <button className="sys-btn sys-btn--ghost" onClick={() => (document.getElementById('keyboard-help') as any).style.display = 'none'}>Cerrar</button>
+      </div>
+    </div>
+  );
+};
 
 function GlobalLayout() {
   const location = useLocation();
@@ -678,7 +708,7 @@ function App() {
   const [loading, setLoading] = useState(true);
   useEffect(() => { initVideo(); }, []);
   if (loading) return <LoadingScreen onComplete={() => setLoading(false)} />;
-  return <RouterProvider router={router} />;
+  return <><KeyboardHint /><RouterProvider router={router} /></>;
 }
 
 const root = createRoot(document.getElementById('root')!);
