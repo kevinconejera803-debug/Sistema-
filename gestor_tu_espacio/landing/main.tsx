@@ -214,7 +214,7 @@ const CalendarioView = memo(function CalendarioView() {
   const [view, setView] = useState<'month' | 'week' | 'day'>('month');
   const [currentDate, setCurrentDate] = useState(new Date());
   const [showForm, setShowForm] = useState(false);
-  const [newEvent, setNewEvent] = useState({ title: '', date: '', time: '12:00', color: '#ef4444' });
+  const [newEvent, setNewEvent] = useState({ title: '', date: '', time: '12:00', color: '#38bdf8' });
 
   useEffect(() => { loadEvents(); }, []);
   const loadEvents = async () => {
@@ -226,16 +226,24 @@ const CalendarioView = memo(function CalendarioView() {
     const start_iso = `${newEvent.date}T${newEvent.time}:00`;
     const result = await postAPI('/calendar/events', { title: newEvent.title, start_iso, end_iso: start_iso, color: newEvent.color });
     if (!result.error) {
-      setNewEvent({ title: '', date: '', time: '12:00', color: '#ef4444' });
+      setNewEvent({ title: '', date: '', time: '12:00', color: '#38bdf8' });
       setShowForm(false);
       loadEvents();
     }
   };
   const daysInMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
   const firstDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getDay();
+  const monthKey = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}`;
+  const eventsByDay = events.reduce((acc, e) => {
+    const dateKey = e.start_iso?.split('T')[0];
+    if (dateKey) acc[dateKey] = (acc[dateKey] || []).concat(e);
+    return acc;
+  }, {} as Record<string, any[]>);
   const days = Array.from({ length: 42 }, (_, i) => {
     const day = i - firstDay + 1;
-    return { day: day > 0 && day <= daysInMonth ? day : '', current: day === currentDate.getDate() };
+    const dateStr = day > 0 && day <= daysInMonth ? `${monthKey}-${String(day).padStart(2, '0')}` : '';
+    const dayEvents = dateStr ? (eventsByDay[`${currentDate.getFullYear()}-${dateStr}`] || []) : [];
+    return { day: day > 0 && day <= daysInMonth ? day : '', current: day === currentDate.getDate(), events: dayEvents };
   });
   const monthLabel = currentDate.toLocaleDateString('es-CL', { month: 'long', year: 'numeric' }).toUpperCase();
   const prevMonth = () => setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1));
@@ -285,7 +293,17 @@ const CalendarioView = memo(function CalendarioView() {
         </div>
         <div className="sys-calendar__grid">
           {days.map((d, i) => (
-            <div key={i} className={`sys-calendar__cell ${d.current ? 'today' : ''} ${!d.day ? 'empty' : ''}`}>{d.day}</div>
+            <div key={i} className={`sys-calendar__cell ${d.current ? 'today' : ''} ${!d.day ? 'empty' : ''}`}>
+              <span className="sys-calendar__day-num">{d.day}</span>
+              {d.events.length > 0 && (
+                <div className="sys-calendar__dots">
+                  {d.events.slice(0, 3).map((ev: any, j: number) => (
+                    <span key={j} className="sys-calendar__dot" style={{ background: ev.color }}></span>
+                  ))}
+                  {d.events.length > 3 && <span className="sys-calendar__more">+{d.events.length - 3}</span>}
+                </div>
+              )}
+            </div>
           ))}
         </div>
       </div>
@@ -308,6 +326,7 @@ const CalendarioView = memo(function CalendarioView() {
 const UniversidadView = memo(function UniversidadView() {
   const [tasks, setTasks] = useState<any[]>([]);
   const [showForm, setShowForm] = useState(false);
+  const [filter, setFilter] = useState<'all' | 'pending' | 'completed'>('all');
   const [newTask, setNewTask] = useState({ title: '', course: '', due_iso: '', priority: 'medium' });
   const [intranetUrl, setIntranetUrl] = useState('');
   const [aulaUrl, setAulaUrl] = useState('');
@@ -330,6 +349,8 @@ const UniversidadView = memo(function UniversidadView() {
     await postAPI(`/assignments/${id}`, { completed: !completed });
     loadTasks();
   };
+  const pendingTasks = tasks.filter(t => !t.completed);
+  const completedTasks = tasks.filter(t => t.completed);
 
   return (
     <div className="sys-module">
@@ -337,10 +358,18 @@ const UniversidadView = memo(function UniversidadView() {
         <h1 className="sys-module__title">UNIVERSIDAD</h1>
         <p className="sys-module__kicker">Plan de estudios y vida academica</p>
       </div>
+      <div className="sys-stats-row">
+        <div className="sys-stat-badge"><span className="sys-stat-badge__value">{tasks.length}</span><span className="sys-stat-badge__label">Total</span></div>
+        <div className="sys-stat-badge pending"><span className="sys-stat-badge__value">{pendingTasks.length}</span><span className="sys-stat-badge__label">Pendientes</span></div>
+        <div className="sys-stat-badge done"><span className="sys-stat-badge__value">{completedTasks.length}</span><span className="sys-stat-badge__label">Completadas</span></div>
+      </div>
       <div className="sys-toolbar">
+        <button className={`sys-btn ${filter === 'all' ? 'sys-btn--primary' : 'sys-btn--ghost'}`} onClick={() => setFilter('all')}>TODAS</button>
+        <button className={`sys-btn ${filter === 'pending' ? 'sys-btn--primary' : 'sys-btn--ghost'}`} onClick={() => setFilter('pending')}>PENDIENTES</button>
+        <button className={`sys-btn ${filter === 'completed' ? 'sys-btn--primary' : 'sys-btn--ghost'}`} onClick={() => setFilter('completed')}>COMPLETADAS</button>
+        <div className="sys-toolbar__spacer"></div>
         <button className="sys-btn sys-btn--ghost" onClick={() => window.open(intranetUrl, '_blank')}>INTRANET</button>
         <button className="sys-btn sys-btn--ghost" onClick={() => window.open(aulaUrl, '_blank')}>AULA VIRTUAL</button>
-        <div className="sys-toolbar__spacer"></div>
         <button className="sys-btn sys-btn--primary" onClick={() => setShowForm(!showForm)}>+ NUEVA TAREA</button>
       </div>
       {showForm && (
@@ -463,21 +492,24 @@ const ContactosView = memo(function ContactosView() {
 
 const MercadosView = memo(function MercadosView() {
   const [markets] = useState([
-    { symbol: 'SPX', name: 'S&P 500', price: '5,234.18', change: '+0.45%', positive: true },
-    { symbol: 'NDX', name: 'Nasdaq', price: '18,432.90', change: '+0.72%', positive: true },
-    { symbol: 'EUR/USD', name: 'Euro/Dolar', price: '1.0842', change: '-0.12%', positive: false },
-    { symbol: 'CL', name: 'Cobre Chile', price: '85.32', change: '+1.23%', positive: true },
+    { symbol: 'SPX', name: 'S&P 500', price: '5,234.18', change: '+0.45%', positive: true, trend: 'up' },
+    { symbol: 'NDX', name: 'Nasdaq', price: '18,432.90', change: '+0.72%', positive: true, trend: 'up' },
+    { symbol: 'EUR/USD', name: 'Euro/Dolar', price: '1.0842', change: '-0.12%', positive: false, trend: 'down' },
+    { symbol: 'CL', name: 'Cobre Chile', price: '85.32', change: '+1.23%', positive: true, trend: 'up' },
   ]);
   return (
     <div className="sys-module">
       <div className="sys-module__header">
         <h1 className="sys-module__title">MERCADOS</h1>
-        <p className="sys-module__kicker">Precios de referencia.</p>
+        <p className="sys-module__kicker">Precios de referencia · Actualizado hace 5 min</p>
       </div>
       <div className="sys-markets">
         {markets.map(m => (
-          <div key={m.symbol} className="sys-market">
-            <div className="sys-market__symbol">{m.symbol}</div>
+          <div key={m.symbol} className={`sys-market ${m.positive ? 'up' : 'down'}`}>
+            <div className="sys-market__header">
+              <span className="sys-market__symbol">{m.symbol}</span>
+              <span className={`sys-market__trend ${m.trend}`}>{m.trend === 'up' ? '▲' : '▼'}</span>
+            </div>
             <div className="sys-market__name">{m.name}</div>
             <div className="sys-market__price">{m.price}</div>
             <div className={`sys-market__change ${m.positive ? 'positive' : 'negative'}`}>{m.change}</div>
