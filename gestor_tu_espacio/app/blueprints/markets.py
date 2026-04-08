@@ -16,7 +16,7 @@ markets_bp = Blueprint("markets", __name__, url_prefix="/api")
 
 @markets_bp.route("/mercados")
 @markets_bp.route("/trading")
-@limiter.limit("10 per minute")
+@limiter.limit("12 per minute")
 @log_endpoint
 def api_mercados():
     """API: Cotizaciones de mercados."""
