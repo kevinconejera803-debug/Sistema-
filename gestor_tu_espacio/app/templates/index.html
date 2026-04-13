@@ -1,300 +1,237 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Tu Espacio — Asistente Personal Inteligente</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --bg: #0a0a0a;
-      --surface: #141414;
-      --surface-hover: #1a1a1a;
-      --text: #f2f2f2;
-      --text-muted: #888;
-      --stroke: #222;
-      --accent: #89AACC;
-      --accent-dark: #4E85BF;
-    }
-    
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    
-    html { scroll-behavior: smooth; }
-    
-    body {
-      font-family: 'Inter', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.6;
-      overflow-x: hidden;
-    }
-    
-    .font-display { font-family: 'Instrument Serif', serif; }
-    
-    /* Loading Screen */
-    .loading-screen {
-      position: fixed; inset: 0; z-index: 9999;
-      background: var(--bg);
-      display: flex; align-items: center; justify-content: center;
-      flex-direction: column; gap: 2rem;
-    }
-    .loading-screen.hidden { display: none; }
-    .loading-counter { font-size: 6rem; font-family: 'Instrument Serif', serif; }
-    .loading-bar {
-      width: 200px; height: 3px; background: var(--stroke);
-      border-radius: 2px; overflow: hidden;
-    }
-    .loading-bar-fill {
-      height: 100%;
-      background: linear-gradient(90deg, var(--accent), var(--accent-dark));
-      width: 0%; transition: width 0.1s;
-    }
-    
-    /* Hero Section */
-    .hero {
-      min-height: 100vh;
-      display: flex; align-items: center; justify-content: center;
-      flex-direction: column;
-      position: relative;
-      background: radial-gradient(ellipse at 50% 0%, #1a1a2e 0%, var(--bg) 70%);
-    }
-    
-    .hero-content { text-align: center; max-width: 800px; padding: 2rem; z-index: 10; }
-    
-    .hero-eyebrow {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.3em;
-      margin-bottom: 1.5rem;
-    }
-    
-    .hero-title {
-      font-size: clamp(3rem, 8vw, 6rem);
-      font-family: 'Instrument Serif', serif;
-      font-style: italic;
-      line-height: 1;
-      margin-bottom: 1rem;
-      background: linear-gradient(135deg, var(--text) 0%, var(--accent) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    
-    .hero-subtitle {
-      font-size: 1.25rem;
-      color: var(--text-muted);
-      margin-bottom: 2rem;
-    }
-    
-    .hero-subtitle .role {
-      font-family: 'Instrument Serif', serif;
-      font-style: italic;
-      color: var(--accent);
-    }
-    
-    .hero-description {
-      font-size: 0.9rem;
-      color: var(--text-muted);
-      max-width: 500px;
-      margin: 0 auto 2rem;
-    }
-    
-    .hero-buttons {
-      display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;
-    }
-    
-    .btn {
-      padding: 0.875rem 2rem;
-      border-radius: 9999px;
-      font-size: 0.875rem;
-      font-weight: 500;
-      text-decoration: none;
-      transition: all 0.3s ease;
-      cursor: pointer;
-    }
-    
-    .btn-primary {
-      background: var(--text);
-      color: var(--bg);
-    }
-    .btn-primary:hover {
-      background: var(--accent);
-      color: var(--bg);
-      transform: scale(1.05);
-    }
-    
-    .btn-outline {
-      border: 1px solid var(--stroke);
-      color: var(--text);
-    }
-    .btn-outline:hover {
-      border-color: var(--accent);
-      color: var(--accent);
-    }
-    
-    /* Scroll Indicator */
-    .scroll-indicator {
-      position: absolute; bottom: 2rem;
-      display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
-      color: var(--text-muted); font-size: 0.7rem;
-      letter-spacing: 0.2em;
-      animation: bounce 2s infinite;
-    }
-    .scroll-indicator::after {
-      content: ''; width: 1px; height: 40px;
-      background: linear-gradient(to bottom, var(--stroke), transparent);
-    }
-    @keyframes bounce {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(8px); }
-    }
-    
-    /* Nav */
-    .nav {
-      position: fixed; top: 0; left: 0; right: 0;
-      z-index: 100;
-      padding: 1rem;
-      display: flex; justify-content: center;
-    }
-    .nav-inner {
-      display: flex; align-items: center; gap: 0.5rem;
-      padding: 0.5rem 1rem;
-      background: rgba(10,10,10,0.8);
-      backdrop-filter: blur(10px);
-      border: 1px solid var(--stroke);
-      border-radius: 9999px;
-    }
-    .nav-link {
-      padding: 0.5rem 1rem;
-      color: var(--text-muted);
-      text-decoration: none;
-      font-size: 0.8rem;
-      border-radius: 9999px;
-      transition: all 0.2s;
-    }
-    .nav-link:hover { color: var(--text); background: var(--surface); }
-    .nav-link.active { color: var(--text); background: var(--stroke); }
-    
-    /* Modules Grid */
-    .modules-section {
-      padding: 4rem 2rem;
-      background: var(--bg);
-    }
-    .modules-header {
-      text-align: center; margin-bottom: 3rem;
-    }
-    .modules-header h2 {
-      font-size: 2rem; font-family: 'Instrument Serif', serif;
-      font-style: italic; margin-bottom: 0.5rem;
-    }
-    .modules-header p { color: var(--text-muted); }
-    
-    .modules-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 1.5rem;
-      max-width: 1000px;
-      margin: 0 auto;
-    }
-    
-    .module-card {
-      background: var(--surface);
-      border: 1px solid var(--stroke);
-      border-radius: 1rem;
-      padding: 1.5rem;
-      text-decoration: none;
-      transition: all 0.3s ease;
-    }
-    .module-card:hover {
-      border-color: var(--accent);
-      transform: translateY(-4px);
-    }
-    .module-card-icon { font-size: 2rem; margin-bottom: 1rem; }
-    .module-card-title {
-      font-weight: 600; margin-bottom: 0.5rem;
-      color: var(--text);
-    }
-    .module-card-desc {
-      font-size: 0.8rem; color: var(--text-muted);
-    }
-    
-    /* AI Features */
-    .ai-section {
-      padding: 4rem 2rem;
-      background: var(--surface);
-    }
-    .ai-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1.5rem;
-      max-width: 800px;
-      margin: 0 auto;
-    }
-    .ai-feature {
-      text-align: center; padding: 1.5rem;
-    }
-    .ai-feature-icon { font-size: 2rem; margin-bottom: 0.5rem; }
-    .ai-feature h3 { font-size: 1rem; margin-bottom: 0.25rem; }
-    .ai-feature p { font-size: 0.8rem; color: var(--text-muted); }
-    
-    /* Stats */
-    .stats-section {
-      padding: 4rem 2rem;
-      background: var(--bg);
-    }
-    .stats-grid {
-      display: flex; justify-content: center; gap: 4rem; flex-wrap: wrap;
-    }
-    .stat-item { text-align: center; }
-    .stat-value {
-      font-size: 2.5rem;
-      font-family: 'Instrument Serif', serif;
-      color: var(--accent);
-    }
-    .stat-label { font-size: 0.8rem; color: var(--text-muted); }
-    
-    /* Footer */
-    .footer {
-      padding: 2rem;
-      text-align: center;
-      background: var(--bg);
-      border-top: 1px solid var(--stroke);
-    }
-    .footer a { color: var(--accent); text-decoration: none; }
-    .footer a:hover { text-decoration: underline; }
-    
-    /* Animations */
-    .fade-in { animation: fadeIn 1s ease forwards; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-    
-    /* Responsive */
-    @media (max-width: 640px) {
-      .hero-title { font-size: 2.5rem; }
-      .modules-grid { grid-template-columns: 1fr; }
-      .nav-inner { gap: 0.25rem; }
-      .nav-link { padding: 0.5rem 0.75rem; font-size: 0.7rem; }
-    }
-  </style>
-</head>
-<body>
+{% extends "base.html" %}
+{% block title %}Inicio — Tu Espacio{% endblock %}
+
+{% block extra_head %}
+<style>
+  /* Loading Screen */
+  .loading-screen {
+    position: fixed; inset: 0; z-index: 9999;
+    background: var(--bg);
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column; gap: 2rem;
+  }
+  .loading-screen.hidden { display: none; }
+  .loading-counter { font-size: 6rem; font-family: 'Outfit', sans-serif; }
+  .loading-bar {
+    width: 200px; height: 3px; background: var(--stroke);
+    border-radius: 2px; overflow: hidden;
+  }
+  .loading-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--secondary));
+    width: 0%; transition: width 0.1s;
+  }
+  
+  /* Hero Section */
+  .hero {
+    min-height: 80vh;
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column;
+    position: relative;
+    background: radial-gradient(ellipse at 50% 0%, rgba(20,20,30,0.5) 0%, transparent 70%);
+  }
+  
+  .hero-content { text-align: center; max-width: 800px; padding: 2rem; z-index: 10; }
+  
+  .hero-eyebrow {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    margin-bottom: 1.5rem;
+  }
+  
+  .hero-title {
+    font-size: clamp(3rem, 6vw, 5rem);
+    font-family: 'Outfit', sans-serif;
+    line-height: 1.1;
+    margin-bottom: 1rem;
+    background: linear-gradient(135deg, var(--text) 0%, var(--primary) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  
+  .hero-subtitle {
+    font-size: 1.25rem;
+    color: var(--text-muted);
+    margin-bottom: 2rem;
+  }
+  
+  .hero-subtitle .role {
+    font-family: 'Outfit', sans-serif;
+    color: var(--accent);
+  }
+  
+  .hero-description {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    max-width: 500px;
+    margin: 0 auto 2rem;
+  }
+  
+  .hero-buttons {
+    display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;
+  }
+  
+  .btn-landing {
+    padding: 0.875rem 2rem;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+  
+  .btn-landing-primary {
+    background: var(--text);
+    color: #000;
+  }
+  .btn-landing-primary:hover {
+    background: var(--accent);
+    color: #000;
+    transform: scale(1.05);
+  }
+  
+  .btn-landing-outline {
+    border: 1px solid var(--stroke);
+    color: var(--text);
+  }
+  .btn-landing-outline:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+  }
+  
+  /* Scroll Indicator */
+  .scroll-indicator {
+    position: absolute; bottom: 0;
+    display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+    color: var(--text-muted); font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    animation: bounce 2s infinite;
+  }
+  .scroll-indicator::after {
+    content: ''; width: 1px; height: 40px;
+    background: linear-gradient(to bottom, var(--stroke), transparent);
+  }
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(8px); }
+  }
+  
+  /* Modules Grid */
+  .modules-section {
+    padding: 4rem 2rem;
+  }
+  .modules-header {
+    text-align: center; margin-bottom: 3rem;
+  }
+  .modules-header h2 {
+    font-size: 2rem; font-family: 'Outfit', sans-serif;
+    margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.05em;
+  }
+  .modules-header p { color: var(--text-muted); }
+  
+  .modules-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.5rem;
+    margin: 0 auto;
+  }
+  
+  /* AI Features */
+  .ai-section {
+    padding: 4rem 2rem;
+  }
+  .ai-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1.5rem;
+    margin: 0 auto;
+  }
+  .ai-feature {
+    text-align: center; padding: 1.5rem;
+  }
+  .ai-feature-icon { font-size: 2rem; margin-bottom: 0.5rem; }
+  .ai-feature h3 { font-size: 1rem; margin-bottom: 0.25rem; }
+  .ai-feature p { font-size: 0.8rem; color: var(--text-muted); }
+  
+  /* Stats */
+  .stats-section {
+    padding: 4rem 2rem;
+  }
+  .stats-grid {
+    display: flex; justify-content: center; gap: 4rem; flex-wrap: wrap;
+  }
+  .stat-item { text-align: center; }
+  .stat-value {
+    font-size: 2.5rem;
+    font-family: 'Outfit', sans-serif;
+    color: var(--primary);
+  }
+  .stat-label { font-size: 0.8rem; color: var(--text-muted); }
+  
+  /* Animations */
+  .fade-in { animation: fadeIn 1s ease forwards; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+  
+  .stagger-up {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  .stagger-up.in-view {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  .module-abbr {
+    font-size: 2.2rem;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.75rem;
+    color: var(--text);
+  }
+  .module-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: 1rem;
+    padding: 2rem 1.5rem;
+    text-align: center;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-sm);
+  }
+  .module-card h3 {
+    font-weight: 400;
+    margin-bottom: 0.5rem;
+    color: var(--text);
+    font-size: 1.25rem;
+  }
+  .module-card:hover {
+    border-color: var(--primary);
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-hover);
+  }
+  
+  @media (max-width: 640px) {
+    .hero-title { font-size: 2.5rem; }
+    .modules-grid { grid-template-columns: 1fr; }
+  }
+</style>
+{% endblock %}
+
+{% block main_area %}
   <!-- Loading Screen -->
   <div class="loading-screen" id="loading">
-    <div class="font-display loading-counter" id="counter">000</div>
+    <div class="loading-counter" id="counter">000</div>
     <div class="loading-bar"><div class="loading-bar-fill" id="bar"></div></div>
   </div>
-
-  <!-- Nav -->
-  <nav class="nav">
-    <div class="nav-inner">
-      <a href="#home" class="nav-link active">Home</a>
-      <a href="#modules" class="nav-link">Módulos</a>
-      <a href="#ai" class="nav-link">IA</a>
-      <a href="https://github.com/kevinconejera803-debug/Sistema-" class="nav-link" target="_blank">GitHub ↗</a>
-    </div>
-  </nav>
 
   <!-- Hero -->
   <section class="hero" id="home">
@@ -306,11 +243,11 @@
       </p>
       <p class="hero-description">
         Combina gestión personal (calendario, estudios, finanzas) con inteligencia artificial local. 
-        Sin APIs pagadas, sin dependencias externalas. Todo funciona en tu computadora.
+        Sin APIs pagadas, sin dependencias externas. Todo adaptado al diseño premium.
       </p>
       <div class="hero-buttons">
-        <a href="#modules" class="btn btn-primary">Explorar Módulos</a>
-        <a href="/asistente" class="btn btn-outline">Hablar con IA →</a>
+        <a href="#modules" class="btn-landing btn-landing-primary">Explorar Módulos</a>
+        <a href="/asistente" class="btn-landing btn-landing-outline">Hablar con IA →</a>
       </div>
     </div>
     <div class="scroll-indicator">SCROLL</div>
@@ -319,39 +256,44 @@
   <!-- Modules -->
   <section class="modules-section" id="modules">
     <div class="modules-header">
-      <h2 class="font-display"> tus <i>módulos</i></h2>
+      <h2>TUS MÓDULOS</h2>
       <p>Todo lo que necesitas para organizar tu vida.</p>
     </div>
     <div class="modules-grid">
-      <a href="/calendario" class="module-card">
-        <div class="module-card-icon">📅</div>
-        <h3 class="module-card-title">Calendario</h3>
+      <a href="{{ url_for('core.modulo', slug='calendario') }}" class="module-card stagger-up" style="transition-delay: 0.1s;">
+        <div class="module-abbr">CAL</div>
+        <h3 style="font-style: italic;">Calendario</h3>
         <p class="module-card-desc">Eventos y agenda personal</p>
       </a>
-      <a href="/universidad" class="module-card">
-        <div class="module-card-icon">🎓</div>
-        <h3 class="module-card-title">Universidad</h3>
-        <p class="module-card-desc">Tareas, entregas y fechas importantes</p>
+      <a href="{{ url_for('core.modulo', slug='universidad') }}" class="module-card stagger-up" style="transition-delay: 0.2s;">
+        <div class="module-abbr">UNI</div>
+        <h3 style="font-style: italic;">Universidad</h3>
+        <p class="module-card-desc">Tareas y entregas</p>
       </a>
-      <a href="/contactos" class="module-card">
-        <div class="module-card-icon">👥</div>
-        <h3 class="module-card-title">Contactos</h3>
-        <p class="module-card-desc">CRM personal</p>
+      <a href="{{ url_for('core.modulo', slug='contactos') }}" class="module-card stagger-up" style="transition-delay: 0.3s;">
+        <div class="module-abbr">CTO</div>
+        <h3 style="font-style: italic;">Contactos</h3>
+        <p class="module-card-desc">Agenda personal</p>
       </a>
-      <a href="/mercados" class="module-card">
-        <div class="module-card-icon">📊</div>
-        <h3 class="module-card-title">Mercados</h3>
+      <a href="{{ url_for('core.modulo', slug='mercados') }}" class="module-card stagger-up" style="transition-delay: 0.1s;">
+        <div class="module-abbr">MER</div>
+        <h3 style="font-style: italic;">Mercados</h3>
         <p class="module-card-desc">Cotizaciones en tiempo real</p>
       </a>
-      <a href="/noticias" class="module-card">
-        <div class="module-card-icon">📰</div>
-        <h3 class="module-card-title">Noticias</h3>
+      <a href="{{ url_for('core.modulo', slug='noticias') }}" class="module-card stagger-up" style="transition-delay: 0.2s;">
+        <div class="module-abbr">NOT</div>
+        <h3 style="font-style: italic;">Noticias</h3>
         <p class="module-card-desc">RSS feeds internacionales</p>
       </a>
-      <a href="/asistente" class="module-card">
-        <div class="module-card-icon">🤖</div>
-        <h3 class="module-card-title">Asistente IA</h3>
-        <p class="module-card-desc">Chat inteligente con contexto</p>
+      <a href="/asistente" class="module-card stagger-up" style="transition-delay: 0.3s;">
+        <div class="module-abbr">AIA</div>
+        <h3 style="font-style: italic;">Asistente IA</h3>
+        <p class="module-card-desc">Chat con contexto intel</p>
+      </a>
+      <a href="#" class="module-card stagger-up" style="transition-delay: 0.4s;">
+        <div class="module-abbr">ORA</div>
+        <h3 style="font-style: italic;">Oraciones</h3>
+        <p class="module-card-desc">Inspiración y fe diaria</p>
       </a>
     </div>
   </section>
@@ -359,8 +301,8 @@
   <!-- AI Features -->
   <section class="ai-section" id="ai">
     <div class="modules-header">
-      <h2 class="font-display">inteligencia <i>local</i></h2>
-      <p>Sin costos de API. Todo corre en tu PC.</p>
+      <h2>INTELIGENCIA LOCAL</h2>
+      <p>Sin costos de API. Todo corre en tu ecosistema.</p>
     </div>
     <div class="ai-grid">
       <div class="ai-feature">
@@ -391,7 +333,7 @@
     <div class="stats-grid">
       <div class="stat-item">
         <div class="stat-value">7</div>
-        <div class="stat-label">Módulos</div>
+        <div class="stat-label">Módulos Activos</div>
       </div>
       <div class="stat-item">
         <div class="stat-value">∞</div>
@@ -403,61 +345,77 @@
       </div>
     </div>
   </section>
+{% endblock %}
 
-  <!-- Footer -->
-  <footer class="footer">
-    <p>Tu Espacio — Asistente personal con IA local</p>
-    <p style="margin-top: 0.5rem; font-size: 0.8rem; color: var(--text-muted);">
-      <a href="https://github.com/kevinconejera803-debug/Sistema-">GitHub</a> · 
-      <a href="/asistente">Asistente</a> ·
-      <a href="/calendario">Calendario</a>
-    </p>
-  </footer>
+{% block extra_scripts %}
+<script>
+  // Loading animation
+  const loading = document.getElementById('loading');
+  const counter = document.getElementById('counter');
+  const bar = document.getElementById('bar');
+  
+  let count = 0;
+  const target = 100;
+  const duration = 1500;
+  const interval = duration / target;
+  
+  const timer = setInterval(() => {
+    count++;
+    counter.textContent = String(count).padStart(3, '0');
+    if (bar) bar.style.width = count + '%';
+    
+    if (count >= target) {
+      clearInterval(timer);
+      setTimeout(() => {
+        if(loading) loading.classList.add('hidden');
+      }, 300);
+    }
+  }, interval);
 
-  <script>
-    // Loading animation
-    const loading = document.getElementById('loading');
-    const counter = document.getElementById('counter');
-    const bar = document.getElementById('bar');
-    
-    let count = 0;
-    const target = 100;
-    const duration = 2000;
-    const interval = duration / target;
-    
-    const timer = setInterval(() => {
-      count++;
-      counter.textContent = String(count).padStart(3, '0');
-      bar.style.width = count + '%';
-      
-      if (count >= target) {
-        clearInterval(timer);
-        setTimeout(() => {
-          loading.classList.add('hidden');
-        }, 300);
-      }
-    }, interval);
-
-    // Role cycling
-    const roles = ['asistente inteligente', 'gestor personal', 'organizador', 'asistente proactivo'];
-    let roleIndex = 0;
-    const roleEl = document.getElementById('role');
-    
+  // Role cycling
+  const roles = ['asistente inteligente', 'gestor personal', 'organizador', 'asistente proactivo'];
+  let roleIndex = 0;
+  const roleEl = document.getElementById('role');
+  
+  if (roleEl) {
     setInterval(() => {
       roleIndex = (roleIndex + 1) % roles.length;
       roleEl.textContent = roles[roleIndex];
     }, 2500);
+  }
 
-    // Smooth scroll
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', function(e) {
-        e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
+  // Smooth scroll using anchor links
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+      e.preventDefault();
+      const href = this.getAttribute('href');
+      if (href !== "#") {
+        const target = document.querySelector(href);
         if (target) {
           target.scrollIntoView({ behavior: 'smooth' });
         }
-      });
+      }
     });
-  </script>
-</body>
-</html>
+  });
+
+  // Intersection Observer for scroll animations
+  const observerOptions = {
+    root: null,
+    rootMargin: '0px',
+    threshold: 0.15
+  };
+  
+  const observer = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in-view');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, observerOptions);
+  
+  document.querySelectorAll('.stagger-up').forEach((el) => {
+    observer.observe(el);
+  });
+</script>
+{% endblock %}

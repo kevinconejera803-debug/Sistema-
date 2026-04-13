@@ -7,8 +7,8 @@
   <title>{% block title %}SYSTEM INTERFACE{% endblock %}</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+JP:wght@400;500&family=Orbitron:wght@500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/tu_espacio.css') }}?v=23">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/tu_espacio.css') }}?v=24">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/modules.css') }}?v=31">
   {% block extra_head %}{% endblock %}
 </head>
@@ -26,7 +26,15 @@
           <p class="operator-sub">Analista de datos · Programación · Estrategia y excelencia analítica</p>
         </div>
         <nav class="nav-main" aria-label="Inicio">
-          <a href="{{ url_for('core.tu_espacio') }}" class="nav-item {% if active_nav == 'home' %}nav-item--active{% endif %}">TU ESPACIO</a>
+          <div class="nav-label" style="font-size: 0.65rem; letter-spacing: 0.1em; color: var(--text-muted); margin-bottom: 0.5rem; text-transform: uppercase;">Navegación</div>
+          <a href="{{ url_for('core.index') }}" class="nav-item {% if active_nav == 'home' %}nav-item--active{% endif %}">🏠 Inicio</a>
+          <a href="{{ url_for('core.modulo', slug='calendario') }}" class="nav-item {% if active_nav == 'calendario' %}nav-item--active{% endif %}">📅 Calendario</a>
+          <a href="{{ url_for('core.modulo', slug='universidad') }}" class="nav-item {% if active_nav == 'universidad' %}nav-item--active{% endif %}">🎓 Universidad</a>
+          <a href="{{ url_for('core.modulo', slug='contactos') }}" class="nav-item {% if active_nav == 'contactos' %}nav-item--active{% endif %}">👥 Contactos</a>
+          <a href="{{ url_for('core.modulo', slug='mercados') }}" class="nav-item {% if active_nav == 'mercados' %}nav-item--active{% endif %}">📈 Mercados</a>
+          <a href="{{ url_for('core.modulo', slug='noticias') }}" class="nav-item {% if active_nav == 'noticias' %}nav-item--active{% endif %}">📰 Noticias</a>
+          <a href="/asistente" class="nav-item {% if active_nav == 'asistente' %}nav-item--active{% endif %}">🤖 Asistente IA</a>
+          <a href="#" class="nav-item {% if active_nav == 'oraciones' %}nav-item--active{% endif %}">🙏 Oraciones</a>
         </nav>
       </div>
       <div class="sidebar-footer">

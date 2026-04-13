@@ -6,16 +6,9 @@
     });
   }
 
-  /** Solo debe quedar TU ESPACIO en la barra izquierda; el resto de módulos va por las tarjetas. */
+  /** Los módulos están activados de nuevo globalmente. Función desactivada. */
   function stripSidebarModuleLinks() {
-    var nav = document.querySelector(".sidebar-left nav.nav-main");
-    if (!nav) return;
-    nav.querySelectorAll("a").forEach(function (a) {
-      var t = (a.textContent || "").replace(/\s+/g, " ").trim();
-      if (t !== "TU ESPACIO") {
-        a.remove();
-      }
-    });
+    // Ya no limpiamos los módulos para permitir NAVEGACIÓN completa.
   }
 
   function stripLegacyInvestigationPanel() {
