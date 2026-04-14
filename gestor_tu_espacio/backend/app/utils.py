@@ -1,4 +1,4 @@
-"""Shim y helpers compartidos para codigo heredado."""
+"""Shim y helpers compartidos."""
 
 from __future__ import annotations
 
@@ -7,16 +7,6 @@ from functools import wraps
 from typing import Any, Callable
 
 from app.config import API_TIMEOUT, MAX_RETRIES, logger
-from app.validation import (
-    validate_assignment_data,
-    validate_contact_data,
-    validate_event_data,
-    validate_iso_date,
-    validate_partial_assignment_data,
-    validate_partial_contact_data,
-    validate_partial_event_data,
-    validate_string,
-)
 
 
 def retry_with_backoff(
@@ -69,12 +59,4 @@ def log_endpoint(func: Callable) -> Callable:
 __all__ = [
     "log_endpoint",
     "retry_with_backoff",
-    "validate_assignment_data",
-    "validate_contact_data",
-    "validate_event_data",
-    "validate_iso_date",
-    "validate_partial_assignment_data",
-    "validate_partial_contact_data",
-    "validate_partial_event_data",
-    "validate_string",
 ]
