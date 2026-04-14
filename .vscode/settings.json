@@ -1,4 +1,0 @@
-{
-  "http.proxySupport": "fallback",
-  "http.noProxy": ["github.com", ".github.com", "*.github.com"]
-}

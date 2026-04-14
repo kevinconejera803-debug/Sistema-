@@ -2,42 +2,42 @@
   "$schema": "https://kilo.ai/schemas/kilo.json",
   "commands": {
     "run": {
-      "description": "Iniciar servidor Flask",
-      "prompt": "Ejecuta python run.py para iniciar el servidor Flask en el directorio gestor_tu_espacio"
+      "description": "Iniciar backend Flask",
+      "prompt": "Ejecuta python run.py dentro del directorio backend para iniciar el servidor Flask"
     },
     "test": {
-      "description": "Ejecutar tests",
-      "prompt": "Ejecuta pytest en tests/ para verificar que todo funcione"
+      "description": "Ejecutar tests del backend",
+      "prompt": "Ejecuta pytest tests/ -v dentro de backend para verificar que todo funcione"
     },
-    "commit": {
-      "description": "Hacer commit de cambios",
-      "prompt": "Hace git add -A y git commit con un mensaje descriptivo, luego git push"
+    "frontend": {
+      "description": "Levantar frontend React",
+      "prompt": "Ejecuta npm run dev dentro de frontend para iniciar Vite"
+    },
+    "build": {
+      "description": "Generar build del frontend",
+      "prompt": "Ejecuta npm run build dentro de frontend para publicar el build en backend/app/static/landing"
     },
     "status": {
       "description": "Ver estado de git",
       "prompt": "Muestra git status y git log --oneline -5"
     },
-    "migrate": {
-      "description": "Crear migración de base de datos",
-      "prompt": "Ejecuta flask db migrate -m 'descripcion' y luego flask db upgrade"
-    },
     "lint": {
-      "description": "Verificar código",
-      "prompt": "Ejecuta ruff check app/ para verificar linting"
+      "description": "Verificar codigo backend",
+      "prompt": "Ejecuta ruff check backend/app/ para verificar linting"
     }
   },
   "agents": {
     "fullstack": {
-      "description": "Desarrollador fullstack para Flask + frontend",
-      "prompt": "Eres un desarrollador fullstack especializado en Flask, SQLAlchemy, Jinja2 templates, JavaScript vanilla. Puedes crear, modificar y debuguear cualquier parte de la aplicación."
+      "description": "Desarrollador full stack Flask + React",
+      "prompt": "Eres un desarrollador full stack especializado en Flask, SQLAlchemy, React, TypeScript y arquitectura limpia."
     },
     "debug": {
       "description": "Agente de debugging",
       "prompt": "Eres un experto en debugging. Analiza errores, propone soluciones y verifica que funcionen con tests."
     },
     "improve": {
-      "description": "Mejora y optimiza código existente",
-      "prompt": "Analiza el código existente y propone mejoras de performance, seguridad, legibilidad y mejores prácticas."
+      "description": "Mejora y optimiza codigo existente",
+      "prompt": "Analiza el codigo existente y propone mejoras de performance, seguridad, legibilidad y mantenibilidad."
     }
   },
   "auto-launch": {

@@ -1,156 +1,146 @@
-# 🚀 Tu Espacio  
-> Asistente personal inteligente con IA local
+# Tu Espacio
 
----
+Aplicacion full stack con backend Flask, frontend React + Vite y persistencia SQLite via SQLAlchemy.
 
-## 🧠 Descripción
+## Stack
 
-**Tu Espacio** es una aplicación web que combina gestión personal (calendario, estudios, noticias y mercados) con un asistente de inteligencia artificial contextual.
+- Backend: Flask, Flask-SQLAlchemy, Flask-Migrate, Flask-Limiter
+- Frontend: React 19, React Router, Vite, TypeScript
+- Base de datos: SQLite por defecto, con ruta configurable y opcion de `DATABASE_URL`
+- Asistente: respuestas locales basadas en calendario, tareas, noticias, mercados e historial
 
-El sistema utiliza IA local mediante Ollama, evitando dependencias de APIs externas y permitiendo mayor privacidad, control y escalabilidad.
-
----
-
-## ✨ Características
-
-- 🤖 IA local (Ollama - llama3.1)
-- 🧠 Memoria conversacional persistente (SQLite)
-- 🎯 Detección de intención del usuario
-- 📅 Contexto dinámico desde calendario
-- ⚡ Recomendaciones proactivas
-- 📰 Resumen inteligente de noticias
-- 📊 Análisis de mercados
-- 🎓 Gestión académica inteligente
-- 💬 Interfaz de chat integrada
-
----
-
-## 💡 Ejemplo
-
-**Usuario:**
-```bash
-¿Qué debería hacer hoy?
-```
-
-**Respuesta:**
-```bash
-Tienes un examen mañana. Te recomiendo estudiar al menos 2 horas hoy.
-```
-
----
-
-## 🏗️ Arquitectura
+## Estructura
 
 ```text
-Frontend (HTML/JS)
-        ↓
-Flask (Blueprints)
-        ↓
-Services (lógica)
-        ↓
-AIManager
-        ↓
-Ollama (llama3.1)
+gestor_tu_espacio/
+|-- backend/
+|   |-- app/
+|   |   |-- config/
+|   |   |-- models/
+|   |   |-- routes/
+|   |   |-- services/
+|   |   |-- static/
+|   |   |-- validation/
+|   |   |-- errors.py
+|   |   |-- extensions.py
+|   |   |-- factory.py
+|   |   `-- http.py
+|   |-- instance/
+|   |-- tests/
+|   |-- requirements.txt
+|   `-- run.py
+|-- frontend/
+|   |-- src/
+|   |   |-- components/
+|   |   |-- pages/
+|   |   |-- services/
+|   |   |-- styles/
+|   |   |-- App.tsx
+|   |   |-- main.tsx
+|   |   |-- navigation.ts
+|   |   `-- types.ts
+|   |-- index.html
+|   |-- package.json
+|   |-- tsconfig.json
+|   `-- vite.config.ts
+|-- .github/
+|-- AGENTS.md
+|-- Dockerfile
+`-- README.md
 ```
 
----
+## Backend
 
-## 🛠️ Tecnologías
-
-**Backend**
-- Python
-- Flask
-- SQLAlchemy
-- SQLite
-
-**IA**
-- Ollama
-- llama3.1
-
-**Frontend**
-- HTML
-- CSS
-- JavaScript
-
-**Otros**
-- dotenv
-- requests
-- asyncio
-
----
-
-## ⚙️ Instalación
+1. Crear entorno virtual e instalar dependencias:
 
 ```bash
-git clone <repo>
-cd Sistema
-python -m venv venv
-venv\Scripts\activate
+cd backend
+python -m venv .venv
+.venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-Instalar Ollama:
-https://ollama.ai
-
-```bash
-ollama serve
-ollama pull llama3.1
-```
-
-Crear `.env`:
-
-```env
-AI_PROVIDER=ollama
-OLLAMA_MODEL=llama3.1:latest
-```
-
-Ejecutar:
+2. Ejecutar el servidor:
 
 ```bash
 python run.py
 ```
 
----
+Backend por defecto:
 
-## 🔌 Endpoints
+- URL: `http://localhost:5000`
+- Base de datos: `backend/instance/tu_espacio.db`
 
-| Endpoint | Método | Descripción |
-|--------|--------|------------|
-| /api/research/ask | POST | Chat IA |
-| /api/assistant/insights | GET | Sugerencias |
-| /api/research/notifications | GET | Eventos |
-| /api/news/summary | GET | Noticias |
-| /api/markets/analysis | GET | Mercados |
+Variables utiles:
 
----
+- `TU_ESPACIO_DB_PATH`
+- `DATABASE_URL`
+- `TU_ESPACIO_SEED_DEMO`
 
-## 🧠 IA
+## Frontend
 
-El sistema combina:
+1. Instalar dependencias:
 
-- historial conversacional
-- contexto del usuario
-- detección de intención
+```bash
+cd frontend
+npm install
+```
 
-Generando respuestas personalizadas y accionables.
+2. Levantar Vite en desarrollo:
 
----
+```bash
+npm run dev
+```
 
-## 📈 Roadmap
+3. Generar build integrado con Flask:
 
-- Multiusuario
-- Notificaciones automáticas
-- Mejor UI tipo chat
-- Optimización de IA
+```bash
+npm run build
+```
 
----
+El build se publica en `backend/app/static/landing/`, que es el directorio que Flask sirve para las rutas SPA.
 
-## 🤝 Contribución
+## Tests
 
-Fork → cambios → Pull Request
+Backend:
 
----
+```bash
+cd backend
+pytest tests/test_app.py -q
+```
 
-## ⚡ Visión
+Frontend:
 
-Crear un asistente que anticipe necesidades y ayude a tomar decisiones.
+```bash
+cd frontend
+npm run ci
+```
+
+## Endpoints principales
+
+- `GET /api/health`
+- `GET /api/stats`
+- `GET /api/calendar/events`
+- `POST /api/calendar/events`
+- `GET /api/contacts`
+- `POST /api/contacts`
+- `GET /api/assignments`
+- `POST /api/assignments`
+- `GET /api/news`
+- `GET /api/mercados`
+- `POST /api/research/ask`
+
+## Decisiones de arquitectura
+
+- Flask usa app factory (`backend/app/factory.py`) para facilitar testing y despliegue.
+- La configuracion se centraliza en `backend/app/config/`.
+- SQLAlchemy se mantiene como ORM y punto de evolucion natural si mas adelante se migra a PostgreSQL.
+- Las rutas HTTP delegan a servicios de dominio para evitar logica de negocio en los endpoints.
+- El asistente ahora usa reglas locales y datos existentes del sistema en lugar de proveedores IA externos.
+- React se organiza en `components/`, `pages/` y `services/` para separar UI, navegacion y llamadas API.
+
+## Estado actual
+
+- Backend cubierto por pruebas de endpoints y validaciones.
+- Frontend compilando con Vite hacia el directorio servido por Flask.
+- CI ejecuta tests de backend y checks completos de frontend.
