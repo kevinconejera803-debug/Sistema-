@@ -390,6 +390,32 @@ class TestRoutes:
         assert data["provider"] == "system"
         assert "Respuesta local" in data["answer"]
 
+    def test_api_research_history_returns_persisted_timeline(self, client, flask_app):
+        from app.models import ChatHistory
+
+        with flask_app.app_context():
+            db.session.add(
+                ChatHistory(
+                    user_message="Que deberia hacer hoy?",
+                    ai_response="Prioriza el bloque de estudio.",
+                    intent="university",
+                )
+            )
+            db.session.commit()
+
+        response = client.get("/api/research/history?limit=5")
+        assert response.status_code == 200
+        data = response.get_json()
+        assert len(data["messages"]) == 2
+        assert data["messages"][0]["role"] == "user"
+        assert data["messages"][1]["role"] == "assistant"
+        assert "Prioriza el bloque de estudio" in data["messages"][1]["content"]
+
+    def test_api_research_history_rejects_invalid_limit(self, client):
+        response = client.get("/api/research/history?limit=nope")
+        assert response.status_code == 400
+        assert "limit" in response.get_json()["error"]
+
     def test_get_context_by_intent_university_uses_due_dates(self, flask_app):
         from app.models import Assignment
         from app.services.chat_service import get_context_by_intent
@@ -410,6 +436,77 @@ class TestRoutes:
             context = get_context_by_intent("university")
             assert "Parcial" in context
             assert "2026-05-10 09:00" in context
+
+    def test_answer_question_reuses_prefetched_news(self, flask_app, monkeypatch):
+        import app.services.assistant_service as assistant_service
+
+        news_items = [
+            {
+                "title": "Mercados atentos a la inflacion",
+                "source": "Fuente demo",
+                "summary": "Resumen",
+                "url": "https://example.com/news",
+            }
+        ]
+
+        monkeypatch.setattr(assistant_service, "detect_intent", lambda _: "news")
+        monkeypatch.setattr(assistant_service, "fetch_external_data", lambda _: (news_items, "noticias"))
+        monkeypatch.setattr(assistant_service, "fetch_news", lambda: pytest.fail("No deberia refetch news"))
+
+        with flask_app.app_context():
+            result = assistant_service.answer_question("Dame noticias")
+
+        assert "Mercados atentos a la inflacion" in result["answer"]
+        assert result["data_type"] == "noticias"
+
+    def test_answer_question_reuses_prefetched_market_data(self, flask_app, monkeypatch):
+        import app.services.assistant_service as assistant_service
+
+        market_rows = [
+            {
+                "symbol": "BTC-USD",
+                "price": 64000.0,
+                "chg_pct": 2.4,
+                "price_fmt": "64,000.00",
+                "chg_fmt": "+2.40%",
+                "change": "+2.40%",
+            },
+            {
+                "symbol": "QQQ",
+                "price": 420.0,
+                "chg_pct": -0.6,
+                "price_fmt": "420.00",
+                "chg_fmt": "-0.60%",
+                "change": "-0.60%",
+            },
+        ]
+
+        monkeypatch.setattr(assistant_service, "detect_intent", lambda _: "markets")
+        monkeypatch.setattr(assistant_service, "fetch_external_data", lambda _: (market_rows, "economia"))
+        monkeypatch.setattr(assistant_service, "fetch_markets", lambda: pytest.fail("No deberia refetch markets"))
+
+        with flask_app.app_context():
+            result = assistant_service.answer_question("Como va el mercado?")
+
+        assert "BTC-USD" in result["answer"]
+        assert result["data_type"] == "economia"
+
+    def test_save_message_rolls_back_session_on_commit_error(self, flask_app, monkeypatch):
+        from app.database import db
+
+        rollback_calls: list[str] = []
+        
+        def bad_commit():
+            raise RuntimeError("boom")
+        
+        monkeypatch.setattr(db.session, "commit", bad_commit)
+        monkeypatch.setattr(db.session, "rollback", lambda: rollback_calls.append("rollback"))
+
+        with flask_app.app_context():
+            from app.services.chat_service import save_message
+            save_message("hola", "respuesta", "general")
+
+        assert rollback_calls == ["rollback"]
 
 
 class TestHealth:

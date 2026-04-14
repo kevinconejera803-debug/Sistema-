@@ -2,8 +2,17 @@
 
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 from app.config import logger
 from app.database import ChatHistory, db
+
+if TYPE_CHECKING:
+    from app.services.calendar_service import get_user_context as calendar_context
+    from app.services.university_service import (
+        format_assignments_as_text,
+        get_upcoming_assignments,
+    )
 
 
 def save_message(user_message: str, ai_response: str, intent: str = "general") -> None:
@@ -17,6 +26,7 @@ def save_message(user_message: str, ai_response: str, intent: str = "general") -
         db.session.add(entry)
         db.session.commit()
     except Exception as error:
+        db.session.rollback()
         logger.error("Error guardando mensaje: %s", error)
 
 
@@ -26,6 +36,7 @@ def get_last_messages(limit: int = 5) -> list[dict]:
         messages = ChatHistory.query.order_by(ChatHistory.timestamp.desc()).limit(limit).all()
         return list(reversed([message.to_dict() for message in messages]))
     except Exception as error:
+        db.session.rollback()
         logger.error("Error obteniendo mensajes: %s", error)
         return []
 
@@ -44,7 +55,34 @@ def format_conversation_as_text(messages: list[dict]) -> str:
     return "\n".join(lines)
 
 
-INTENT_KEYWORDS = {
+def get_chat_timeline(limit: int = 5) -> list[dict]:
+    """Convierte el historial persistido en una linea de tiempo de chat."""
+    timeline: list[dict] = []
+
+    for message in get_last_messages(limit=limit):
+        timeline.append(
+            {
+                "id": f"user-{message['id']}",
+                "role": "user",
+                "content": message["user_message"],
+                "intent": message["intent"],
+                "timestamp": message["timestamp"],
+            }
+        )
+        timeline.append(
+            {
+                "id": f"assistant-{message['id']}",
+                "role": "assistant",
+                "content": message["ai_response"],
+                "intent": message["intent"],
+                "timestamp": message["timestamp"],
+            }
+        )
+
+    return timeline
+
+
+INTENT_KEYWORDS: dict[str, list[str]] = {
     "calendar": ["hoy", "manana", "agenda", "evento", "eventos", "calendario", "reunion", "cita", "fecha"],
     "university": ["estudiar", "tarea", "examen", "entrega", "curso", "asignatura", "universidad", "deber", "prueba"],
     "markets": ["mercado", "bolsa", "accion", "acciones", "inversion", "cripto", "bitcoin", "trading"],

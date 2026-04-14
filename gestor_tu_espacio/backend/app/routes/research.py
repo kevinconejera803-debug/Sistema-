@@ -2,11 +2,13 @@
 
 from __future__ import annotations
 
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, request
 
+from app.extensions import limiter
 from app.http import get_json_payload
 from app.services.assistant_service import answer_question
 from app.services.calendar_service import check_upcoming_24h, format_urgent_notifications
+from app.services.chat_service import get_chat_timeline
 from app.services.proactive_service import generate_proactive_insights
 from app.utils import log_endpoint
 
@@ -53,6 +55,7 @@ def api_research_deprecated():
 
 @research_bp.route("/research/ask", methods=["POST"])
 @log_endpoint
+@limiter.limit("10 per minute")
 def api_research_ask():
     payload = get_json_payload()
     question = str(payload.get("question", "")).strip()
@@ -65,6 +68,20 @@ def api_research_ask():
         "question": question,
         **result,
     })
+
+
+@research_bp.route("/research/history", methods=["GET"])
+@log_endpoint
+def api_research_history():
+    raw_limit = request.args.get("limit", "10").strip()
+
+    try:
+        limit = int(raw_limit)
+    except ValueError:
+        return jsonify({"error": "El parametro limit debe ser un entero entre 1 y 50."}), 400
+
+    limit = max(1, min(limit, 50))
+    return jsonify({"messages": get_chat_timeline(limit=limit)})
 
 
 @research_bp.route("/research/suggestions", methods=["GET"])
