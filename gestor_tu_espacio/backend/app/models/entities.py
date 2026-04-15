@@ -9,6 +9,9 @@ from app.extensions import db
 
 class Event(db.Model):
     __tablename__ = "events"
+    __table_args__ = (
+        db.Index("idx_event_start", "start_iso"),
+    )
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     title = db.Column(db.String(500), nullable=False)
@@ -32,12 +35,16 @@ class Event(db.Model):
 
 class Contact(db.Model):
     __tablename__ = "contacts"
+    __table_args__ = (
+        db.Index("idx_contact_name", "name"),
+        db.Index("idx_contact_company", "company"),
+    )
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(500), nullable=False, index=True)
     email = db.Column(db.String(500), default="")
     phone = db.Column(db.String(500), default="")
-    company = db.Column(db.String(500), default="")
+    company = db.Column(db.String(500), default="", index=True)
     notes = db.Column(db.Text, default="")
 
     def to_dict(self) -> dict:
@@ -53,6 +60,11 @@ class Contact(db.Model):
 
 class Assignment(db.Model):
     __tablename__ = "assignments"
+    __table_args__ = (
+        db.Index("idx_assignment_due", "due_iso"),
+        db.Index("idx_assignment_status", "status"),
+        db.Index("idx_assignment_course", "course"),
+    )
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     course = db.Column(db.String(500), nullable=False)
@@ -76,6 +88,10 @@ class Assignment(db.Model):
 
 class ChatHistory(db.Model):
     __tablename__ = "chat_history"
+    __table_args__ = (
+        db.Index("idx_chat_timestamp", "timestamp"),
+        db.Index("idx_chat_intent", "intent"),
+    )
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     user_message = db.Column(db.Text, nullable=False)
@@ -84,6 +100,7 @@ class ChatHistory(db.Model):
     timestamp = db.Column(
         db.String(50),
         default=lambda: datetime.now(timezone.utc).isoformat(),
+        index=True,
     )
 
     def to_dict(self) -> dict:
