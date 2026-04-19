@@ -1,0 +1,1 @@
+import{t as s}from"./jsx-runtime-DStIMwxT.js";var t=s();function m({title:r,description:e}){return(0,t.jsxs)("div",{className:"empty-state",children:[(0,t.jsx)("h3",{children:r}),(0,t.jsx)("p",{children:e})]})}export{m as t};

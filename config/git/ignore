@@ -1,7 +1,3 @@
-# Canonical source: config/git/ignore
-# Keep this file at the repository root because Git only reads ignore rules
-# from conventional .gitignore locations.
-
 # Workspace local
 temp/
 nul
@@ -48,6 +44,7 @@ MANIFEST
 # Logs y runtime
 uploads/
 logs/*
+!gestor_tu_espacio/logs/.gitkeep
 *.log
 tmp/
 *.tmp

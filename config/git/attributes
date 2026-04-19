@@ -1,7 +1,3 @@
-# Canonical source: config/git/attributes
-# Keep this file at the repository root because Git only applies attributes
-# from conventional locations such as .gitattributes.
-
 # Scripts POSIX: LF (Linux, /workspace, Git Bash, CI)
 *.sh text eol=lf
 

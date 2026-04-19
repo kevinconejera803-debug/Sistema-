@@ -1,1 +1,0 @@
-import{r as s}from"./Panel-BkJJ7ZPF.js";var r=s();function m({title:t,description:e}){return(0,r.jsxs)("div",{className:"empty-state",children:[(0,r.jsx)("h3",{children:t}),(0,r.jsx)("p",{children:e})]})}export{m as t};

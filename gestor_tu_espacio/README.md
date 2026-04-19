@@ -1,16 +1,41 @@
-# Tu Espacio
+# Tu Espacio - Santuario Digital
 
-La documentacion principal del proyecto vive en `docs/README.md`.
+Tu asistente personal privado con arquitectura local-first.
 
-## Accesos rapidos
+## Inicio Rápido
 
-- Documentacion del producto: `docs/README.md`
-- Configuracion operativa: `docs/AGENTS.md`
-- Docker: `infra/docker/`
-- Configuracion de Kilo: `config/kilo/kilo.json`
+```bash
+# Backend
+cd backend
+python run.py
 
-## Nota
+# Frontend (en otra terminal)
+cd frontend
+npm run dev
+```
 
-Este archivo se mantiene como punto de entrada convencional para herramientas,
-integraciones y flujos de trabajo que esperan `README.md` en la raiz del
-proyecto, aunque la documentacion canónica detallada viva en `docs/`.
+Accede a: **http://localhost:5000**
+
+## Documentación
+
+La documentación detallada vive en [`docs/`](docs/)
+
+- [`docs/README.md`](docs/README.md) - Setup completo
+- [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) - Decisiones de arquitectura  
+- [`docs/API.md`](docs/API.md) - Referencia de endpoints
+
+## Tech Stack
+
+- **Backend**: Flask, SQLAlchemy, SQLite
+- **Frontend**: React 19, TypeScript, Vite
+- **Styling**: CSS custom (Santuario Digital theme)
+
+## Tests
+
+```bash
+# Backend
+cd backend && pytest
+
+# Frontend  
+cd frontend && npm test
+```

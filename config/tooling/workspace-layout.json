@@ -1,0 +1,19 @@
+{
+  "label": "workspace root",
+  "root": ".",
+  "allowed_files": [
+    ".gitattributes",
+    ".gitignore",
+    "CLAUDE.md",
+    "README.md"
+  ],
+  "allowed_directories": [
+    ".claude",
+    ".git",
+    ".github",
+    "config",
+    "docs",
+    "gestor_tu_espacio",
+    "scripts"
+  ]
+}

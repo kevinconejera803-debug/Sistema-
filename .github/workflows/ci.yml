@@ -1,0 +1,44 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Validate repository layout
+        run: python scripts/quality/validate_layout.py
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: gestor_tu_espacio/frontend/package-lock.json
+
+      - name: Install backend dependencies
+        working-directory: gestor_tu_espacio/backend
+        run: pip install -r requirements.txt
+
+      - name: Install frontend dependencies
+        working-directory: gestor_tu_espacio/frontend
+        run: npm ci
+
+      - name: Run backend tests
+        working-directory: gestor_tu_espacio/backend
+        run: pytest -q
+
+      - name: Run frontend checks
+        working-directory: gestor_tu_espacio/frontend
+        run: npm run ci
