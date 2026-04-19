@@ -27,7 +27,7 @@ describe("HomePage", () => {
     );
 
     expect(await screen.findByText("20")).toBeTruthy();
-    expect(screen.getByText("Una base limpia para seguir creciendo")).toBeTruthy();
+    expect(screen.getByText("Digital Sanctuary")).toBeTruthy();
     expect(screen.getByText("Mercados")).toBeTruthy();
     expect(screen.getByText("Asistente")).toBeTruthy();
   });
