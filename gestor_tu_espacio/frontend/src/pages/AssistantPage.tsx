@@ -1,26 +1,62 @@
-import { type FormEvent, startTransition, useState } from "react";
+import { type FormEvent, startTransition, useEffect, useState } from "react";
 import { PageHeader } from "../components/common/PageHeader";
 import { Panel } from "../components/common/Panel";
 import { getErrorMessage } from "../hooks/useAsyncData";
-import { askAssistant } from "../services/assistantService";
+import { askAssistant, getAssistantHistory } from "../services/assistantService";
 
 type Message = {
-  id: number;
+  id: string;
   role: "user" | "assistant";
   content: string;
 };
 
+const INITIAL_ASSISTANT_MESSAGE: Message = {
+  id: "assistant-welcome",
+  role: "assistant",
+  content: "Hola. Este asistente responde con reglas locales del backend y el contexto que ya existe en tu sistema."
+};
+
 export function AssistantPage() {
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: 1,
-      role: "assistant",
-      content: "Hola. Este asistente responde con reglas locales del backend y el contexto que ya existe en tu sistema."
-    }
-  ]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [question, setQuestion] = useState("");
   const [loading, setLoading] = useState(false);
+  const [loadingHistory, setLoadingHistory] = useState(true);
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    let active = true;
+
+    async function loadHistory() {
+      try {
+        const history = await getAssistantHistory();
+        if (!active) {
+          return;
+        }
+
+        startTransition(() => {
+          setMessages(history.messages.length > 0 ? history.messages : [INITIAL_ASSISTANT_MESSAGE]);
+        });
+      } catch {
+        if (!active) {
+          return;
+        }
+
+        startTransition(() => {
+          setMessages([INITIAL_ASSISTANT_MESSAGE]);
+        });
+      } finally {
+        if (active) {
+          setLoadingHistory(false);
+        }
+      }
+    }
+
+    void loadHistory();
+
+    return () => {
+      active = false;
+    };
+  }, []);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -34,7 +70,7 @@ export function AssistantPage() {
     startTransition(() => {
       setMessages((previous) => [
         ...previous,
-        { id: Date.now(), role: "user", content: currentQuestion }
+        { id: `user-${Date.now()}`, role: "user", content: currentQuestion }
       ]);
     });
 
@@ -45,7 +81,7 @@ export function AssistantPage() {
         setMessages((previous) => [
           ...previous,
           {
-            id: Date.now() + 1,
+            id: `assistant-${Date.now()}`,
             role: "assistant",
             content: response.sources
               ? `${response.answer}\n\nFuentes:\n${response.sources}`
@@ -71,6 +107,7 @@ export function AssistantPage() {
       <Panel title="Chat" subtitle="Envios via /api/research/ask">
         <div className="chat">
           <div className="chat__messages">
+            {loadingHistory && messages.length === 0 ? <p className="feedback">Cargando historial...</p> : null}
             {messages.map((message) => (
               <article
                 key={message.id}
@@ -87,9 +124,10 @@ export function AssistantPage() {
               placeholder="Pregunta algo sobre tu agenda, tareas o contexto actual..."
               value={question}
               onChange={(event) => setQuestion(event.target.value)}
+              disabled={loadingHistory}
             />
-            <button className="button" type="submit" disabled={loading}>
-              {loading ? "Consultando..." : "Enviar"}
+            <button className="button" type="submit" disabled={loading || loadingHistory}>
+              {loadingHistory ? "Cargando..." : loading ? "Consultando..." : "Enviar"}
             </button>
           </form>
           {error ? <p className="feedback feedback--error">{error}</p> : null}

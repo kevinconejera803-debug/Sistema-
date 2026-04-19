@@ -1,0 +1,15 @@
+{
+  "http.proxySupport": "fallback",
+  "http.noProxy": ["github.com", ".github.com", "*.github.com"],
+  "explorer.fileNesting.enabled": true,
+  "explorer.fileNesting.expand": false,
+  "files.exclude": {
+    "**/__pycache__": true,
+    "**/.pytest_cache": true,
+    "backend/app/logs": true
+  },
+  "explorer.fileNesting.patterns": {
+    "README.md": "AGENTS.md",
+    "Dockerfile": "Dockerfile.dockerignore"
+  }
+}

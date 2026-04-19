@@ -1,32 +1,13 @@
-# Configuracion de Kilo Code para el proyecto
+# Tu Espacio Agent Entry
 
-## Comandos disponibles
+La guia operativa canónica del proyecto vive en `docs/AGENTS.md`.
 
-### `/run` - Iniciar servidor
-Ejecuta `python run.py` dentro del directorio `backend`.
+## Atajos
 
-### `/test` - Ejecutar tests
-Ejecuta `pytest tests/ -v` dentro de `backend`.
+- Producto: `docs/README.md`
+- Operacion: `docs/AGENTS.md`
+- Docker: `infra/docker/`
+- Kilo: `config/kilo/kilo.json`
 
-### `/frontend` - Levantar Vite
-Ejecuta `npm run dev` dentro de `frontend`.
-
-### `/build` - Build del frontend
-Ejecuta `npm run build` dentro de `frontend`.
-
-### `/status` - Ver estado
-Muestra `git status` y `git log --oneline -5`.
-
-### `/lint` - Verificar codigo
-Ejecuta `ruff check backend/app/` para revisar el backend.
-
-## Agentes
-
-### fullstack
-Desarrollador full stack orientado a Flask, SQLAlchemy, React y TypeScript.
-
-### debug
-Especialista en debugging, verificacion con tests y aislamiento de regresiones.
-
-### improve
-Enfocado en arquitectura, performance, legibilidad y mejoras de mantenibilidad.
+Este archivo se mantiene por compatibilidad con herramientas que buscan
+`AGENTS.md` en la raiz del proyecto.

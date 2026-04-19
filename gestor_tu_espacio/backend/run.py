@@ -11,4 +11,10 @@ if __name__ == "__main__":
     port = app.config["FLASK_PORT"]
     debug = app.config["FLASK_DEBUG"]
     logger.info("Iniciando backend en %s:%s", host, port)
-    app.run(host=host, port=port, debug=debug)
+    app.run(
+        host=host,
+        port=port,
+        debug=debug,
+        use_reloader=debug,
+        use_debugger=debug,
+    )

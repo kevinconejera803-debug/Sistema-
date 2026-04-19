@@ -1,7 +1,3 @@
-# Canonical source: infra/docker/Dockerfile.dockerignore
-# Kept here for compatibility with tooling that expects .dockerignore next to
-# a conventional root Dockerfile.
-
 .git
 .github
 .vscode
@@ -18,6 +14,7 @@ build
 tmp
 temp
 logs
+*.log
 *.db
 *.sqlite
 *.sqlite3

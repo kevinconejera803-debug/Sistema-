@@ -13,9 +13,9 @@ export function HomePage() {
   return (
     <div className="page">
       <PageHeader
-        eyebrow="Sistema organizado"
-        title="Una base limpia para seguir creciendo"
-        description="El proyecto ahora separa backend Flask, frontend React y acceso a datos con una estructura lista para portfolio o despliegue."
+        eyebrow="Digital Sanctuary"
+        title="Tu Espacio Personal Local"
+        description="Un dashboard privado construido con arquitectura modular y enfoque editorial resguardado. Tu información, presentada sin distracciones."
       />
 
       <section className="hero-grid">

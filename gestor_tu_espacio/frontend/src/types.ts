@@ -58,6 +58,18 @@ export type AssistantResponse = {
   sources?: string;
 };
 
+export type AssistantHistoryMessage = {
+  id: string;
+  role: "user" | "assistant";
+  content: string;
+  intent: string;
+  timestamp: string;
+};
+
+export type AssistantHistoryPayload = {
+  messages: AssistantHistoryMessage[];
+};
+
 export type PrayerItem = {
   id: number;
   title: string;

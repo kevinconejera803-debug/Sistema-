@@ -68,7 +68,10 @@ def get_market_data() -> list[dict]:
         for item in fetch_markets()[:6]:
             formatted.append({
                 "symbol": item.get("symbol", ""),
-                "price": item.get("price_fmt", ""),
+                "price": item.get("price", 0),
+                "chg_pct": item.get("chg_pct", 0),
+                "price_fmt": item.get("price_fmt", ""),
+                "chg_fmt": item.get("chg_fmt", ""),
                 "change": item.get("chg_fmt", ""),
             })
         return formatted
@@ -95,8 +98,8 @@ def format_external_data(external_data: list[dict], data_type: str) -> str:
     elif data_type == "economia":
         for item in external_data:
             symbol = item.get("symbol", "")
-            price = item.get("price", "")
-            change = item.get("change", "")
+            price = item.get("price_fmt") or item.get("price", "")
+            change = item.get("chg_fmt") or item.get("change", "")
             if symbol:
                 lines.append(f"- {symbol}: {price} ({change})")
 

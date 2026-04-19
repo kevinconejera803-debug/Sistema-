@@ -1,78 +1,13 @@
-# Virtual environments
+# Project-local ignore rules kept here for compatibility with standard Git
+# tooling that expects a conventional .gitignore inside the application root.
+
 .venv/
-venv/
-env/
-ENV/
-
-# Python cache and build output
-__pycache__/
-*.py[cod]
-*$py.class
-*.so
-.Python
-build/
-dist/
-develop-eggs/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-pip-wheel-metadata/
-share/python-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-MANIFEST
-
-# Test and coverage artifacts
 .pytest_cache/
-.coverage
-htmlcov/
-
-# Logs
+backend/instance/
+backend/app/logs/
 logs/
-*.log
-
-# Local databases
-*.db
-*.sqlite
-*.sqlite3
-
-# Node / frontend artifacts
-node_modules/
-frontend/node_modules/
-.vite/
-frontend/.vite/
-*.tsbuildinfo
-
-# IDE files
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
-
-# Operating system files
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
-
-# Local environment files
 .env
 .env.local
-.env.*.local
-
-# Temporary files
-tmp/
-temp/
-*.tmp
-nul
+.vscode/*
+!.vscode/settings.json
+!.vscode/launch.json

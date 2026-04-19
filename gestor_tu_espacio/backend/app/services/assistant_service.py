@@ -121,9 +121,9 @@ def answer_question(question: str) -> dict:
     sources = get_sources_list(external_data)
 
     if intent == "news" or data_type == "noticias":
-        answer = summarize_news_items(fetch_news())
+        answer = summarize_news_items(external_data or fetch_news())
     elif intent == "markets" or data_type == "economia":
-        answer = analyze_market_data(fetch_markets())
+        answer = analyze_market_data(external_data or fetch_markets())
     elif intent == "calendar":
         answer = _build_calendar_answer(cleaned_question)
     elif intent == "university":

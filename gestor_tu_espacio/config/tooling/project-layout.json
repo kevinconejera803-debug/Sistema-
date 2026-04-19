@@ -1,0 +1,24 @@
+{
+  "label": "project root",
+  "root": "gestor_tu_espacio",
+  "allowed_files": [
+    ".dockerignore",
+    ".gitignore",
+    "AGENTS.md",
+    "Dockerfile",
+    "README.md",
+    "kilo.json"
+  ],
+  "allowed_directories": [
+    ".github",
+    ".venv",
+    ".vscode",
+    "backend",
+    "config",
+    "docs",
+    "frontend",
+    "infra",
+    "logs",
+    "scripts"
+  ]
+}
