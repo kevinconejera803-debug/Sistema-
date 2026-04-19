@@ -743,26 +743,40 @@ button, input, select, textarea {
   justify-content: center;
   min-height: 100vh;
   padding: 32px;
+  background: var(--bg-deep);
 }
 
 .error-boundary__content {
   text-align: center;
   padding: 48px;
   background: var(--bg-base);
-  border: 1px solid var(--surface-border);
+  border: 1px solid rgba(239, 68, 68, 0.3);
   border-radius: var(--radius-lg);
   max-width: 480px;
+}
+
+.error-boundary__icon {
+  font-size: 3rem;
+  display: block;
+  margin-bottom: 16px;
 }
 
 .error-boundary__content h2 {
   font-family: var(--font-display);
   font-style: italic;
-  font-size: 1.5rem;
-  margin: 0 0 16px;
+  font-size: 1.75rem;
+  margin: 0 0 12px;
   color: var(--error);
 }
 
-.error-boundary__content p {
+.error-boundary__message {
   color: var(--text-muted);
   margin: 0 0 24px;
+  font-size: 0.95rem;
+}
+
+.error-boundary__actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
 }
