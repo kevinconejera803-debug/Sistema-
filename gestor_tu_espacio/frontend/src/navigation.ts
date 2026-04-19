@@ -1,12 +1,5 @@
-import type { ComponentType } from "react";
-import { AssistantPage } from "./pages/AssistantPage";
-import { AssignmentsPage } from "./pages/AssignmentsPage";
-import { CalendarPage } from "./pages/CalendarPage";
-import { ContactsPage } from "./pages/ContactsPage";
-import { HomePage } from "./pages/HomePage";
-import { MarketsPage } from "./pages/MarketsPage";
-import { NewsPage } from "./pages/NewsPage";
-import { PrayersPage } from "./pages/PrayersPage";
+import type { ComponentType, LazyExoticComponent } from "react";
+import { lazy } from "react";
 
 export type NavigationItem = {
   path: string;
@@ -16,9 +9,19 @@ export type NavigationItem = {
 };
 
 export type AppRoute = NavigationItem & {
-  component: ComponentType;
+  component: LazyExoticComponent<ComponentType>;
   index?: boolean;
 };
+
+// Lazy load pages for code-splitting
+const HomePage = lazy(() => import("./pages/HomePage").then(m => ({ default: m.HomePage })));
+const CalendarPage = lazy(() => import("./pages/CalendarPage").then(m => ({ default: m.CalendarPage })));
+const AssignmentsPage = lazy(() => import("./pages/AssignmentsPage").then(m => ({ default: m.AssignmentsPage })));
+const ContactsPage = lazy(() => import("./pages/ContactsPage").then(m => ({ default: m.ContactsPage })));
+const MarketsPage = lazy(() => import("./pages/MarketsPage").then(m => ({ default: m.MarketsPage })));
+const NewsPage = lazy(() => import("./pages/NewsPage").then(m => ({ default: m.NewsPage })));
+const AssistantPage = lazy(() => import("./pages/AssistantPage").then(m => ({ default: m.AssistantPage })));
+const PrayersPage = lazy(() => import("./pages/PrayersPage").then(m => ({ default: m.PrayersPage })));
 
 export const appRoutes: AppRoute[] = [
   {
@@ -80,4 +83,5 @@ export const appRoutes: AppRoute[] = [
   }
 ];
 
+// Navigation items without component (for display only)
 export const navigation: NavigationItem[] = appRoutes.map(({ component, index, ...item }) => item);
