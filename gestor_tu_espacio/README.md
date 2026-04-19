@@ -192,6 +192,41 @@ Ver [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) para decisiones de diseño.
 
 ---
 
+## 🤖 Claude Code
+
+El proyecto incluye configuración para Claude Code en `.claude/`:
+
+### Skills Disponibles
+
+| Skill | Propósito |
+|-------|-----------|
+| `tu-espacio-fullstack` | Desarrollador full stack |
+| `tu-espacio-review` | Auditoría y review |
+| `release-check` | Verificación pre-release |
+
+### Subagentes
+
+| Agente | Descripción |
+|--------|-------------|
+| `tu-espacio-reviewer` | Revisor centrado en riesgos |
+| `tu-espacio-fullstack` | Implementador full stack |
+
+### Comandos CLI
+
+```bash
+# /run - Iniciar servidor
+# /test - Ejecutar tests
+# /frontend - Levantar Vite
+# /build - Build del frontend
+# /docker - Build del contenedor
+# /status - Ver estado git
+# /lint - Verificar código
+# /validate-root - Verificar layout
+# /clean - Limpiar artefactos
+```
+
+---
+
 ## 🤝 Contribución
 
 1. Fork el repositorio
