@@ -9,8 +9,9 @@
 | Sala | D-14 |
 | Origen | Apuntes a mano (libreta) |
 
-> Lista de conceptos anotados en clase para investigar y manejar. No es materia desarrollada:
-> son títulos y punteos. Varios quedaron marcados explícitamente como *investigar*.
+> **Conceptos que se están pasando en clase y hay que manejar.** Están anotados como títulos a
+> propósito: el método es capturar el concepto en clase y buscar la definición después. Las
+> definiciones se completan bajo cada punto a medida que se investigan.
 
 ## La idea que enmarca todo: "saber de todo"
 
@@ -20,19 +21,60 @@ riesgo, metodología — no solo la norma tributaria.
 
 Explica por qué en una clase de Derecho Tributario aparece una gráfica de oferta y demanda.
 
-## Conceptos anotados
+## Conceptos
 
-1. **Problema de la agencia** — marcado en la libreta como **(investigar)**.
-2. **Gráfica de oferta y demanda** — punto de equilibrio.
-3. **Q** = cantidad / calidad (ver abajo).
-4. **Tipos de mercados / negocios**
-   - ↳ **Computación cuántica** (anotada como ejemplo o derivada de este punto).
-5. **Razonamientos** — *(demanda / consumidor)*.
-6. **Espacio profesional relacionado con lo jurídico.**
-7. **Riesgo legal.**
-8. **Contratos bien redactados.**
-9. **Criterio jurídico clínico.**
-10. **Metodología de investigación.**
+Estado de avance. La definición de cada uno va en su sección más abajo.
+
+| # | Concepto | Definición |
+|---|---|---|
+| 1 | Problema de la agencia | Pendiente — marcado *(investigar)* en la libreta |
+| 2 | Oferta y demanda · punto de equilibrio | [Ver sección](#la-gráfica) |
+| 3 | Q = cantidad / calidad | [Ver sección](#sobre-la-q-cantidad-y-también-calidad) |
+| 4 | Tipos de mercados / negocios | Pendiente |
+| 5 | Computación cuántica | Pendiente |
+| 6 | Razonamientos (demanda / consumidor) | Pendiente |
+| 7 | Espacio profesional relacionado con lo jurídico | Pendiente |
+| 8 | Riesgo legal | Pendiente |
+| 9 | Contratos bien redactados | Pendiente |
+| 10 | Criterio jurídico clínico | Pendiente |
+| 11 | Metodología de investigación | Pendiente |
+
+### 1. Problema de la agencia
+
+_Pendiente._
+
+### 4. Tipos de mercados / negocios
+
+_Pendiente._ En la libreta aparece con una flecha hacia **computación cuántica**, así que quedó
+anotada como caso o derivada de este punto.
+
+### 5. Computación cuántica
+
+_Pendiente._
+
+### 6. Razonamientos (demanda / consumidor)
+
+_Pendiente._
+
+### 7. Espacio profesional relacionado con lo jurídico
+
+_Pendiente._
+
+### 8. Riesgo legal
+
+_Pendiente._
+
+### 9. Contratos bien redactados
+
+_Pendiente._
+
+### 10. Criterio jurídico clínico
+
+_Pendiente._
+
+### 11. Metodología de investigación
+
+_Pendiente._
 
 ## La gráfica
 
@@ -54,12 +96,6 @@ que se transa se mide por calidad expresada en términos cuantificables.
 
 **Raúl Romero** — número de teléfono anotado en la libreta, **no guardado aquí** por ser dato
 personal de un tercero y estar este repositorio en público. El número sigue en tu libreta.
-
-## Por investigar
-
-- [ ] **Problema de la agencia** — marcado explícitamente para investigar.
-- [ ] Qué es el **criterio jurídico clínico**.
-- [ ] Si estos conceptos son para una evaluación, un trabajo de investigación, o contexto del ramo.
 
 ## Observación
 

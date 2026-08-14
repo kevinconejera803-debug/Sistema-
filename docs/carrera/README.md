@@ -52,7 +52,16 @@ Horario completo en formato semanal: [horario.md](horario.md)
 - **Apunte de clase** (`apuntes/`): un archivo por sesión, nombrado `AAAA-MM-DD-asignatura-tema.md`.
 - Al agregar un apunte, enlázalo desde la ficha de la asignatura y desde la tabla de arriba.
 
+## Método de apuntes
+
+En clase se anotan los **títulos y conceptos**, no definiciones completas. Las definiciones se
+buscan después y se van completando bajo cada concepto en el apunte correspondiente.
+
+Por eso los apuntes de conceptos llevan una tabla de estado arriba: sirve para ver de un vistazo
+qué falta por investigar y qué ya está cerrado.
+
 ## Convenciones
 
 - Fechas en formato `AAAA-MM-DD`.
 - Lo que no está confirmado se marca explícitamente como **por confirmar**, nunca se rellena a ojo.
+- Un concepto sin definición se deja como *pendiente*; no se inventa una definición para rellenar.
