@@ -266,12 +266,32 @@ la resistencia, implementar la transformación y consolidarla como la nueva norm
 - **Acciones:** reforzar las nuevas prácticas con capacitación, actualización de manuales,
   celebración de nuevos hábitos y reconocimiento, para que el cambio sea duradero y no temporal.
 
+### Esquema visual (última lámina del PPT)
+
+Tres columnas, cada una con un ícono que es parte de la metáfora:
+
+| | 💧 **Descongelar** (naranja) | ✋ **Cambiar** (azul) | 🧊 **Recongelar** (rosado) |
+|---|---|---|---|
+| **1** | Reconozca la necesidad de cambio | Se deben planificar los cambios | Los cambios se fortalecen y mantienen |
+| **2** | Decida lo que debe hacer cambiar | Los ajustes deben ser realizados | Integrar lo nuevo como la forma habitual de hacer las cosas |
+| **3** | Manejar y comprender sus pensamientos y problemas | Ayudar a los empleados a entender un nuevo concepto o perspectiva | El éxito debe celebrarse |
+
+**La metáfora de los íconos** — es la ilustración clásica de Lewin, el "cubo de hielo":
+
+- **Gota de agua** → el hielo se derritió: la estructura rígida se soltó y ahora es maleable.
+- **Mano** → se le da la nueva forma mientras está blando.
+- **Cubo** → vuelve a solidificarse, pero ya con la forma nueva.
+
+> La lámina venía con la redacción algo torcida (se nota traducida del inglés: *"Decide lo que debes
+> hacer cambió"*, *"Los cambios se fortalecen y mantenido"*). Arriba está corregida al sentido que
+> tiene cada punto; si en la prueba cita la lámina textual, es esa idea.
+
 ---
 
 ## Para repasar
 
 - Los **3 componentes del compromiso**: quiere (afectivo) / necesita (continuidad) / debe (normativo).
-- Las **3 etapas de Lewin**: descongelar → cambiar → recongelar.
+- Las **3 etapas de Lewin**: descongelar → cambiar → recongelar (gota → mano → cubo).
 - **Mecanicista vs. orgánica** — y que en la práctica se combinan.
 - **Matricial** es la única donde se reporta a dos jefes.
 - **Reactivo vs. proactivo** en el cambio organizacional.
