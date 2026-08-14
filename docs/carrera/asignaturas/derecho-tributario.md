@@ -1,3 +1,17 @@
+---
+tipo: asignatura
+carrera: Ingeniería Comercial
+asignatura: Derecho Tributario
+codigo: 01DRT001081-D001
+dia: Jueves
+horario: "14:40 – 16:50"
+sala: D-14
+tags:
+  - ingenieria-comercial
+  - asignatura
+  - derecho-tributario
+---
+
 # Derecho Tributario
 
 | Campo | Valor |

@@ -1,3 +1,18 @@
+---
+tipo: asignatura
+carrera: Ingeniería Comercial
+asignatura: Negociación y Desarrollo del Liderazgo
+codigo: 01NDC001061-D001
+dia: Viernes
+horario: "10:40 – 12:50"
+sala: S. Gaete
+profesor: Carla Herrera Labra
+tags:
+  - ingenieria-comercial
+  - asignatura
+  - negociacion-liderazgo
+---
+
 # Negociación y Desarrollo del Liderazgo
 
 | Campo | Valor |

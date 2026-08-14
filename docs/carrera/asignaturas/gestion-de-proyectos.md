@@ -1,3 +1,17 @@
+---
+tipo: asignatura
+carrera: Ingeniería Comercial
+asignatura: Gestión de Proyectos
+codigo: 01GEP001081-D001
+dia: Miércoles
+horario: "08:30 – 10:40"
+sala: F-10
+tags:
+  - ingenieria-comercial
+  - asignatura
+  - gestion-de-proyectos
+---
+
 # Gestión de Proyectos
 
 | Campo | Valor |

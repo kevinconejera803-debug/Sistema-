@@ -1,3 +1,18 @@
+---
+tipo: apunte
+carrera: Ingeniería Comercial
+asignatura: Negociación y Desarrollo del Liderazgo
+codigo: 01NDC001061-D001
+fecha: 2026-08-14
+profesor: Carla Herrera Labra
+unidad: Cultura, Comportamiento y Clima Organizacional
+tags:
+  - ingenieria-comercial
+  - apunte
+  - negociacion-liderazgo
+  - comportamiento-organizacional
+---
+
 # Cultura, Comportamiento y Clima Organizacional
 
 | Campo | Valor |

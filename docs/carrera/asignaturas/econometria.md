@@ -1,3 +1,17 @@
+---
+tipo: asignatura
+carrera: Ingeniería Comercial
+asignatura: Econometría
+codigo: 02ECO001061-D001
+dia: Miércoles
+horario: "12:10 – 15:20"
+sala: LAB.COMP.RDZ1
+tags:
+  - ingenieria-comercial
+  - asignatura
+  - econometria
+---
+
 # Econometría
 
 | Campo | Valor |

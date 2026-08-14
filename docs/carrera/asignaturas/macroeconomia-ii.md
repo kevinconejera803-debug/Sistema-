@@ -1,3 +1,18 @@
+---
+tipo: asignatura
+carrera: Ingeniería Comercial
+asignatura: Macroeconomía II
+codigo: 01MAC001052-D001
+cohorte: 2024
+dia: Viernes
+horario: "15:20 – 17:30"
+sala: F-12
+tags:
+  - ingenieria-comercial
+  - asignatura
+  - macroeconomia
+---
+
 # Macroeconomía II
 
 | Campo | Valor |

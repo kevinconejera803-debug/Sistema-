@@ -1,3 +1,16 @@
+---
+tipo: apunte
+carrera: Ingeniería Comercial
+asignatura: Derecho Tributario
+codigo: 01DRT001081-D001
+fecha: 2026-08-13
+tags:
+  - ingenieria-comercial
+  - apunte
+  - derecho-tributario
+  - conceptos
+---
+
 # Conceptos y temas por investigar
 
 | Campo | Valor |

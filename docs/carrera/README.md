@@ -1,3 +1,11 @@
+---
+tipo: indice
+carrera: Ingeniería Comercial
+tags:
+  - ingenieria-comercial
+  - carrera
+---
+
 # Carrera — Registro y Seguimiento
 
 Registro personal del proceso académico: horario, asignaturas, apuntes de clase y avance del semestre.
@@ -12,7 +20,7 @@ Este índice es el punto de entrada. Cada asignatura tiene su ficha propia y los
 | Jornada | Diurno | Horario oficial |
 | Nodo | 2 | Horario oficial |
 | Universidad | Universidad Bernardo O'Higgins (UBO) | Inferido — **por confirmar** |
-| Carrera | Por confirmar | — |
+| Carrera | **Ingeniería Comercial** | Confirmado |
 | Periodo / semestre | Por confirmar | — |
 
 > **Sobre la universidad:** no aparece escrita en el horario. Se infiere desde el archivo que se
@@ -41,7 +49,7 @@ Horario completo en formato semanal: [horario.md](horario.md)
 
 ## Pendientes
 
-- [ ] Confirmar nombre de la carrera y periodo académico.
+- [ ] Confirmar el periodo académico (semestre y año).
 - [ ] Registrar fechas de las 3 evaluaciones de Negociación y Liderazgo.
 - [ ] Registrar evaluaciones de las otras 5 asignaturas.
 - [ ] Registrar nombres de los profesores restantes (el horario los muestra como marcador de posición).
@@ -62,6 +70,24 @@ qué falta por investigar y qué ya está cerrado.
 
 **Regla permanente:** todo concepto que aparezca sin definición se investiga y se explica en el
 apunte, con sus fuentes al final. No se deja pendiente a la espera de que lo pidan.
+
+## Destino: segundo cerebro en Obsidian
+
+Todo esto se va a migrar a una bóveda de Obsidian, donde vivirá el material de Ingeniería
+Comercial. Los archivos ya se escriben pensando en eso:
+
+- **Frontmatter YAML en cada archivo** — `tipo`, `carrera`, `asignatura`, `codigo`, `fecha`,
+  `profesor`, `tags`. Obsidian lo lee como propiedades, así que al copiar la carpeta las notas
+  quedan filtrables y consultables con Dataview sin retocar nada.
+- **Un archivo por clase y por asignatura**, nunca un documento gigante. Es la unidad que Obsidian
+  enlaza y respalda el trabajo por notas atómicas.
+- **Enlaces markdown relativos** (`../asignaturas/x.md`) en vez de `[[wikilinks]]`. Obsidian los
+  resuelve bien y además se ven en GitHub, que es donde vive esto hoy. Si más adelante prefieres
+  wikilinks, la conversión es mecánica.
+- **Nombres de archivo estables**, con fecha al inicio en los apuntes. Renombrar rompe enlaces en
+  Obsidian, así que conviene no tocarlos una vez creados.
+
+Al migrar, la carpeta `docs/carrera/` se copia tal cual dentro de la bóveda.
 
 ## Convenciones
 

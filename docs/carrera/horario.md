@@ -1,3 +1,13 @@
+---
+tipo: horario
+carrera: Ingeniería Comercial
+jornada: Diurno
+nodo: 2
+tags:
+  - ingenieria-comercial
+  - horario
+---
+
 # Horario semanal
 
 Estudiante: Kevin Alonso Conejera Morales · Nodo 2 · Jornada Diurno
