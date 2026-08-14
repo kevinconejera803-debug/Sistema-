@@ -37,6 +37,7 @@ Horario completo en formato semanal: [horario.md](horario.md)
 | Fecha | Asignatura | Tema | Estado |
 |---|---|---|---|
 | 2026-08-14 | Negociación y Liderazgo | [Cultura, Comportamiento y Clima Organizacional](apuntes/2026-08-14-negociacion-estructura-organizacional.md) | Completo |
+| 2026-08-13 | Derecho Tributario | [Conceptos y temas por investigar](apuntes/2026-08-13-derecho-tributario-conceptos.md) | Dudas de transcripción |
 
 ## Pendientes
 

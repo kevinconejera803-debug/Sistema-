@@ -14,7 +14,7 @@
 
 | Fecha | Tema | Apunte |
 |---|---|---|
-| _sin registros_ | | |
+| 2026-08-13 | Conceptos y temas por investigar | [ver](../apuntes/2026-08-13-derecho-tributario-conceptos.md) |
 
 ## Evaluaciones
 
