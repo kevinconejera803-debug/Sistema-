@@ -60,6 +60,9 @@ buscan después y se van completando bajo cada concepto en el apunte correspondi
 Por eso los apuntes de conceptos llevan una tabla de estado arriba: sirve para ver de un vistazo
 qué falta por investigar y qué ya está cerrado.
 
+**Regla permanente:** todo concepto que aparezca sin definición se investiga y se explica en el
+apunte, con sus fuentes al final. No se deja pendiente a la espera de que lo pidan.
+
 ## Convenciones
 
 - Fechas en formato `AAAA-MM-DD`.
