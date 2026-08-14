@@ -10,6 +10,7 @@
     "kilo.json"
   ],
   "allowed_directories": [
+    ".claude",
     ".github",
     ".venv",
     ".vscode",
