@@ -12,14 +12,22 @@
 > Lista de conceptos anotados en clase para investigar y manejar. No es materia desarrollada:
 > son títulos y punteos. Varios quedaron marcados explícitamente como *investigar*.
 
+## La idea que enmarca todo: "saber de todo"
+
+Anotado aparte, junto a la gráfica. Es el encuadre del resto de la página: el ejercicio
+profesional en lo tributario exige manejar un poco de todo — economía, mercados, contratos,
+riesgo, metodología — no solo la norma tributaria.
+
+Explica por qué en una clase de Derecho Tributario aparece una gráfica de oferta y demanda.
+
 ## Conceptos anotados
 
 1. **Problema de la agencia** — marcado en la libreta como **(investigar)**.
 2. **Gráfica de oferta y demanda** — punto de equilibrio.
-3. **Q** — anotado como *cantidad / calidad*.
+3. **Q** = cantidad / calidad (ver abajo).
 4. **Tipos de mercados / negocios**
    - ↳ **Computación cuántica** (anotada como ejemplo o derivada de este punto).
-5. **Razonamientos** — *(demanda / consumidor)* · lectura no del todo segura, ver abajo.
+5. **Razonamientos** — *(demanda / consumidor)*.
 6. **Espacio profesional relacionado con lo jurídico.**
 7. **Riesgo legal.**
 8. **Contratos bien redactados.**
@@ -28,31 +36,28 @@
 
 ## La gráfica
 
-Ejes: **precio** en la vertical, **Q (cantidad)** en la horizontal, marcada `1 2 3 4`.
+Ejes: **precio** en la vertical, **Q** en la horizontal, marcada `1 2 3 4`.
 Dos curvas que se cruzan: **oferta** (ascendente) y **demanda** (descendente). El cruce es el
 **punto de equilibrio**.
+
+### Sobre la Q: cantidad y también calidad
+
+El profesor precisó que la **Q** no representa solo *cantidad*: a veces representa **calidad, en
+la medida en que esa calidad sea cuantificable**. Es decir, cuando la calidad se puede expresar
+en una magnitud medible, entra en el mismo eje.
+
+No es un error de la anotación ni una licencia: es una extensión deliberada del modelo. La lectura
+clásica del eje horizontal es cantidad; el punto del profesor es que el modelo sirve igual si lo
+que se transa se mide por calidad expresada en términos cuantificables.
 
 ## Contacto anotado
 
 **Raúl Romero** — número de teléfono anotado en la libreta, **no guardado aquí** por ser dato
 personal de un tercero y estar este repositorio en público. El número sigue en tu libreta.
 
-## Dudas de transcripción
-
-Puntos donde la letra no permite una lectura segura. Confirmar y corregir:
-
-- [ ] Anotación arriba a la derecha de la gráfica: se lee algo como *"sobre de toda"* / *"sobre de
-      torta"*. Sin resolver.
-- [ ] Punto 5: *"Razonamientos (demanda / consumidor)"* — tanto la primera palabra como la de
-      dentro del paréntesis son dudosas.
-- [ ] Punto 3: la libreta dice **cantidad / calidad**. En oferta y demanda el equilibrio estándar
-      es entre **precio y cantidad**; "calidad" no es un eje habitual. Confirmar si la profesora
-      dijo calidad a propósito o si se traspapeló.
-
 ## Por investigar
 
 - [ ] **Problema de la agencia** — marcado explícitamente para investigar.
-- [ ] Cómo conecta oferta y demanda con la materia de Derecho Tributario.
 - [ ] Qué es el **criterio jurídico clínico**.
 - [ ] Si estos conceptos son para una evaluación, un trabajo de investigación, o contexto del ramo.
 
@@ -60,6 +65,4 @@ Puntos donde la letra no permite una lectura segura. Confirmar y corregir:
 
 El punteo combina economía (oferta y demanda, tipos de mercado, problema de la agencia) con
 temas jurídico-profesionales (riesgo legal, redacción de contratos, criterio jurídico clínico) y
-cierra con **metodología de investigación**. Leído junto, parece más el encuadre de un trabajo de
-investigación o el alcance del ramo que materia de tributación propiamente tal. Confirmar con la
-profesora.
+cierra con **metodología de investigación** — todo bajo el "saber de todo" del encabezado.
