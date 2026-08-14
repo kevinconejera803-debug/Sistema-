@@ -27,7 +27,7 @@ Este índice es el punto de entrada. Cada asignatura tiene su ficha propia y los
 | Gestión de Proyectos | 01GEP001081-D001 | Miércoles | 08:30 – 10:40 | F-10 | [ver](asignaturas/gestion-de-proyectos.md) |
 | Econometría (Lab) | 02ECO001061-D001 | Miércoles | 12:10 – 15:20 | LAB.COMP.RDZ1 | [ver](asignaturas/econometria.md) |
 | Derecho Tributario | 01DRT001081-D001 | Jueves | 14:40 – 16:50 | D-14 | [ver](asignaturas/derecho-tributario.md) |
-| Negociación y Desarrollo de Liderazgo | 01NDC001061-D001 | Viernes | 10:40 – 12:50 | S. Gaete | [ver](asignaturas/negociacion-y-liderazgo.md) |
+| Negociación y Desarrollo del Liderazgo | 01NDC001061-D001 | Viernes | 10:40 – 12:50 | S. Gaete | [ver](asignaturas/negociacion-y-liderazgo.md) |
 | Macroeconomía II | 01MAC001052-D001 | Viernes | 15:20 – 17:30 | F-12 | [ver](asignaturas/macroeconomia-ii.md) |
 
 Horario completo en formato semanal: [horario.md](horario.md)
@@ -36,14 +36,14 @@ Horario completo en formato semanal: [horario.md](horario.md)
 
 | Fecha | Asignatura | Tema | Estado |
 |---|---|---|---|
-| 2026-08-14 | Negociación y Liderazgo | [Estructura Organizacional](apuntes/2026-08-14-negociacion-estructura-organizacional.md) | Material pendiente |
+| 2026-08-14 | Negociación y Liderazgo | [Cultura, Comportamiento y Clima Organizacional](apuntes/2026-08-14-negociacion-estructura-organizacional.md) | Completo |
 
 ## Pendientes
 
 - [ ] Confirmar nombre de la carrera y periodo académico.
-- [ ] Volver a subir el PPT **Estructura Organizacional** (el archivo del 2026-08-14 no era el PPT — ver el apunte).
-- [ ] Registrar fechas de evaluaciones de cada asignatura.
-- [ ] Registrar nombres reales de los profesores (el horario los muestra como marcador de posición).
+- [ ] Registrar fechas de las 3 evaluaciones de Negociación y Liderazgo.
+- [ ] Registrar evaluaciones de las otras 5 asignaturas.
+- [ ] Registrar nombres de los profesores restantes (el horario los muestra como marcador de posición).
 
 ## Cómo se usa esto
 

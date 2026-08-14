@@ -1,4 +1,4 @@
-# Negociación y Desarrollo de Liderazgo
+# Negociación y Desarrollo del Liderazgo
 
 | Campo | Valor |
 |---|---|
@@ -8,26 +8,48 @@
 | Día | Viernes |
 | Horario | 10:40 – 12:50 (3 módulos) |
 | Sala | S. Gaete |
-| Profesor | Por confirmar — el horario muestra un marcador de posición |
+| Profesora | **Carla Herrera Labra** |
+
+## Docente
+
+**Carla Herrera Labra** — PhD en Ciencias de la Administración · Magíster en Administración y
+Dirección de RRHH · Magíster en Ciencias de la Administración · Diplomada en Psicología
+Organizacional · Psicóloga.
+
+## Evaluaciones
+
+| # | Tipo | Ponderación | Fecha | Nota | Estado |
+|---|---|---|---|---|---|
+| 1 | Individual | 30% | _por confirmar_ | — | Pendiente |
+| 2 | Individual | 30% | _por confirmar_ | — | Pendiente |
+| 3 | **Grupal** | 40% | _por confirmar_ | — | Pendiente |
+
+Total: 100% en 3 evaluaciones. La última es grupal y pesa más que las otras dos.
+
+## Unidades vistas
+
+| Unidad | Clases |
+|---|---|
+| Cultura, Comportamiento y Clima Organizacional | 2026-08-14 |
 
 ## Apuntes de clase
 
 | Fecha | Tema | Apunte |
 |---|---|---|
-| 2026-08-14 | Estructura Organizacional | [ver](../apuntes/2026-08-14-negociacion-estructura-organizacional.md) |
-
-## Evaluaciones
-
-| Fecha | Evaluación | Ponderación | Nota | Estado |
-|---|---|---|---|---|
-| _por definir_ | | | | |
+| 2026-08-14 | Estructura, compromiso, satisfacción y cambio organizacional | [ver](../apuntes/2026-08-14-negociacion-estructura-organizacional.md) |
 
 ## Material del ramo
 
-| Fecha | Material | Ubicación |
+| Fecha | Material | Estado |
 |---|---|---|
-| 2026-08-14 | PPT Estructura Organizacional | **Pendiente de subir** — el archivo entregado no era el PPT |
+| 2026-08-14 | PPT "Estructura Organizacional" | Transcrito al apunte |
+
+## Canales del ramo
+
+- **Aula Virtual** — el material se sube ahí.
+- **Grupo de WhatsApp** — se creará; el material también se enviará por ese medio.
 
 ## Notas generales
 
-_(sin registros todavía)_
+- La profesora viene de psicología organizacional, no de administración pura. El enfoque del ramo
+  se nota cargado al comportamiento humano en las organizaciones más que a la estructura formal.
