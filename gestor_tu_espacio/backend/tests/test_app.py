@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 import pytest
@@ -420,12 +421,19 @@ class TestRoutes:
         from app.models import Assignment
         from app.services.chat_service import get_context_by_intent
 
+        # get_upcoming_assignments descarta lo vencido, asi que la fecha se
+        # calcula relativa a ahora: una fecha fija deja de ser futura y el
+        # test empieza a fallar solo al pasar ese dia.
+        due_at = datetime.now(timezone.utc) + timedelta(days=30)
+        due_iso = due_at.strftime("%Y-%m-%dT%H:%M:%S")
+        expected_due_label = due_at.strftime("%Y-%m-%d %H:%M")
+
         with flask_app.app_context():
             db.session.add(
                 Assignment(
                     course="Math",
                     title="Parcial",
-                    due_iso="2026-05-10T09:00:00",
+                    due_iso=due_iso,
                     status="pendiente",
                     weight=30,
                     notes="",
@@ -435,7 +443,7 @@ class TestRoutes:
 
             context = get_context_by_intent("university")
             assert "Parcial" in context
-            assert "2026-05-10 09:00" in context
+            assert expected_due_label in context
 
     def test_answer_question_reuses_prefetched_news(self, flask_app, monkeypatch):
         import app.services.assistant_service as assistant_service
