@@ -25,6 +25,27 @@ This repository is a workspace. The main product lives in `gestor_tu_espacio/`.
 - Scripts: `scripts/`
 - Local runtime artifacts: `gestor_tu_espacio/logs`, `gestor_tu_espacio/backend/instance`, `gestor_tu_espacio/.venv`
 
+## Registro Académico (`docs/carrera/`)
+
+Segunda línea de trabajo del workspace, independiente de la app. Registro personal de la carrera
+de **Ingeniería Comercial**: horario, fichas de asignatura y apuntes de clase. Empieza por
+`docs/carrera/README.md`.
+
+Reglas permanentes al trabajar sobre estos archivos:
+
+1. **Todo concepto sin definición se investiga y se explica**, con sus fuentes al final del
+   apunte. No se deja pendiente esperando que lo pidan.
+2. **Nunca se inventa para rellenar.** Lo que no consta en una fuente se marca *por confirmar*.
+   Si una lectura es ambigua, se dejan las dos y se anota la duda.
+3. **Método de apuntes:** en clase se capturan títulos y conceptos; las definiciones se completan
+   después. Los apuntes de conceptos llevan una tabla de estado arriba.
+4. **Destino Obsidian.** Frontmatter YAML en cada archivo (`tipo`, `carrera`, `asignatura`,
+   `codigo`, `fecha`, `profesor`, `tags`). Enlaces markdown relativos, no `[[wikilinks]]`, para que
+   rendericen también en GitHub. Un archivo por clase y por asignatura. Nombres de archivo
+   estables: renombrar rompe enlaces en la bóveda.
+5. **Sin datos personales de terceros.** Este repositorio es público; teléfonos, correos y datos de
+   contacto ajenos no se registran, aunque aparezcan en el material original.
+
 ## Root Policy
 
 - Root files are intentionally restricted.
